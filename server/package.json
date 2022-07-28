@@ -1,27 +1,30 @@
 {
   "name": "server",
-  "version": "1.0.0",
-  "description": "This project was bootstrapped with Fastify-CLI.",
-  "main": "app.js",
-  "directories": {
-    "test": "test"
-  },
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "tap \"test/**/*.test.js\"",
-    "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P app.js"
+    "start": "nodemon ./bin/www"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "fastify": "^4.0.0",
-    "fastify-plugin": "^3.0.0",
-    "@fastify/autoload": "^5.0.0",
-    "@fastify/sensible": "^4.1.0",
-    "fastify-cli": "^4.3.0"
+    "connect-session-sequelize": "^7.1.4",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "express-session": "^1.17.3",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1",
+    "passport": "^0.6.0",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3",
+    "sequelize-cli": "^6.4.1",
+    "spdy": "^4.0.2",
+    "sqlite3": "^5.0.10"
   },
   "devDependencies": {
-    "tap": "^16.1.0"
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.19"
   }
 }
