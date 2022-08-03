@@ -1,23 +1,57 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+require("dotenv").config();
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const bodyParser = require("body-parser");
 const cors = require("cors");
 const session = require("express-session");
+const passport = require("passport");
+
+const indexRouter = require("./routes/index");
+const usersRouter = require("./api/users");
+const authRouter = require("./api/auth");
 const db = require("./db");
+const User = require("./db/models/user");
+
 // initalize sequelize with session store
-// const SequelizeStore = require("connect-session-sequelize")(session.Store);
-// const sessionStore = new SequelizeStore({ db });
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./api/users");
+const app = express();
 
-var app = express();
+// passport registration
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => {
+  User.findByPk(id)
+    .then((user) => done(null, user))
+    .catch(done);
+});
+
+const myStore = new SequelizeStore({
+  db: db,
+});
+
+// session middleware with passport
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "this is my SeCret",
+    store: myStore,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
+
+// body parsing middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -25,28 +59,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// cors
+app.use(cors());
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
-
-// cors
-app.use(cors());
-
-// session middleware with passport
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET || "this is my SeCret",
-//     store: sessionStore,
-//     resave: false,
-//     saveUninitialized: false,
-//   }),
-// );
-// app.use(passport.initialize());
-// app.use(passport.session());
 
 // error handler
 app.use(function (err, req, res, next) {
