@@ -4,11 +4,11 @@
     "slug": "vicar",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/vicarLogo1.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/vicarscreen.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
