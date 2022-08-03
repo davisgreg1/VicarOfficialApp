@@ -33,7 +33,9 @@ module.exports = router;
 router.post("/signup", async (req, res, next) => {
   try {
     let user = await User.create(req.body);
-    res.json({ user: user, message: "Welcome!" });
+    req.logIn(user, (err) =>
+      err ? next(err) : res.json({ user: user, userAuthenticated: true }),
+    );
   } catch (err) {
     if (err.name === "SequelizeUniqueConstraintError") {
       res.status(403).send("User already exists.");
@@ -44,7 +46,7 @@ router.post("/signup", async (req, res, next) => {
 });
 
 router.post("/login", (req, res, next) => {
-  User.findOne({ where: { id: req.body.id } })
+  User.findOne({ where: { email: req.body.email } })
     .then((user) => {
       if (!user) {
         res.status(401).json({
@@ -53,7 +55,7 @@ router.post("/login", (req, res, next) => {
         });
       } else if (!user.correctPassword(req.body.password)) {
         res.status(403).json({
-          message: "Wrong username and/or password",
+          message: "Wrong email and/or password",
           userAuthenticated: false,
         });
       } else {

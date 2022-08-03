@@ -20,61 +20,77 @@ import EditScreenInfo from "../components/EditScreenInfo";
 import { FormField } from "../components/FormField";
 import { RootTabScreenProps } from "../types";
 import axios from "../utils/axios";
-import { loginUser } from "../redux/actions/authActions/loginUser";
+import { createAccount } from "../redux/actions/authActions/createAccount";
 
-export default function WelcomeScreen({
+export default function SignUpScreen({
   navigation,
-}: RootTabScreenProps<"WelcomeScreen">) {
+}: RootTabScreenProps<"SignUpScreen">) {
   const { colors } = useTheme();
   const colorStyle = { color: colors.text };
   const backGroundStyle = { color: colors.background };
 
   const dispatch = useDispatch();
-
   return (
     <Formik
       initialValues={{
         email: "",
         password: "",
+        firstName: "",
+        lastName: "",
+        confirmPassword: "",
       }}
       validationSchema={Yup.object({
         email: Yup.string().email().required("Provide a valid email."),
+        firstName: Yup.string().required("First name is required."),
+        lastName: Yup.string().required("Last name is required."),
         password: Yup.string().required("Password is required."),
+        confirmPassword: Yup.string().required("Password is required."),
       })}
       onSubmit={(values, formikActions) => {
         try {
           const data = {
             email: values.email,
             password: values.password,
+            firstName: values.firstName,
+            lastName: values.lastName,
           };
-          // TODO: type dispatch
-          dispatch(loginUser(data));
+          dispatch(createAccount(data));
         } catch (error) {
           console.error("SIGN IN ERROR -> render -> error", error);
         }
       }}>
       {(props) => {
-        const {
-          errors,
-          status,
-          touched,
-          isSubmitting,
-          dirty,
-          handleSubmit,
-          values,
-          handleChange,
-        } = props;
         const handleLoginPress = () => {
-          handleSubmit();
+          props.handleSubmit();
         };
         return (
           <SafeAreaView style={styles.container}>
             <View style={[styles.contentContainer]}>
               <FormField
                 {...props}
+                keyboardType="default"
+                value={props.values.firstName}
+                onChangeText={props.handleChange("firstName")}
+                label="Your First Name"
+                returnKeyType={"next"}
+                // ref={signInEmailInput}
+                // onSubmitEditing={() => handleEmailInput()}
+              />
+              <FormField
+                {...props}
+                keyboardType="default"
+                value={props.values.lastName}
+                onChangeText={props.handleChange("lastName")}
+                label="Your Last Name"
+                returnKeyType={"next"}
+                // ref={signInEmailInput}
+                // onSubmitEditing={() => handleEmailInput()}
+              />
+              <FormField
+                {...props}
                 keyboardType="email-address"
-                value={values.email}
-                onChangeText={handleChange("email")}
+                value={props.values.email}
+                onChangeText={props.handleChange("email")}
                 label="Your Email Address"
                 returnKeyType={"next"}
                 // ref={signInEmailInput}
@@ -83,12 +99,25 @@ export default function WelcomeScreen({
               <FormField
                 {...props}
                 // ref={signInPasswordInput}
-                value={values.password}
-                onChangeText={handleChange("password")}
+                value={props.values.password}
+                onChangeText={props.handleChange("password")}
                 label="Your Password"
                 maxLength={16}
                 secureTextEntry
+                returnKeyType={"next"}
+                keyboardType="visible-password"
+                // onSubmitEditing={() => handlePasswordInput()}
+              />
+              <FormField
+                {...props}
+                // ref={signInPasswordInput}
+                value={props.values.confirmPassword}
+                onChangeText={props.handleChange("confirmPassword")}
+                label="Confirm Password"
+                maxLength={16}
+                secureTextEntry
                 returnKeyType={"done"}
+                keyboardType="visible-password"
                 // onSubmitEditing={() => handlePasswordInput()}
               />
               {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
@@ -100,20 +129,19 @@ export default function WelcomeScreen({
             </View>
             <View style={styles.signInLinks}>
               <TouchableOpacity
-                disabled={!values.email && !values.password}
+                disabled={
+                  !props.values.email &&
+                  !props.values.password &&
+                  !props.values.firstName &&
+                  !props.values.lastName &&
+                  !props.values.confirmPassword &&
+                  props.values.password !== props.values.confirmPassword
+                }
                 style={styles.buttonTouch}
                 onPress={() => handleLoginPress()}>
-                <Text style={styles.getStartedText}>{`Sign In`}</Text>
+                <Text style={styles.getStartedText}>{`Sign Up`}</Text>
               </TouchableOpacity>
-              <View style={styles.signInButton}>
-                <Text
-                  style={[styles.signInText, colorStyle]}
-                  onPress={(): void => {
-                    navigation.navigate("SignUpScreen");
-                  }}>
-                  Don't have an account? Sign up now
-                </Text>
-              </View>
+              <View style={styles.signInButton}></View>
             </View>
           </SafeAreaView>
         );

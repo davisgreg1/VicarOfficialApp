@@ -5,10 +5,10 @@ interface LoginDataType {
   password: string;
 }
 export const loginUser = (data: LoginDataType) => {
-  const { id, password } = data;
+  const { email, password } = data;
   return (dispatch) => {
     const request = axios.post("/auth/login", {
-      id: id,
+      email: email,
       password: password,
     });
     request
@@ -19,6 +19,7 @@ export const loginUser = (data: LoginDataType) => {
         const user = data?.user;
         dispatch({
           type: "auth/login",
+          userEmail: user.email,
           userId: user.id,
           userFirstName: user.firstName,
           userLastName: user.lastName,

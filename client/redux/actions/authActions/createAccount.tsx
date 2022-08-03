@@ -1,34 +1,35 @@
-import  axios  from "../../../utils/axios";
+import axios from "../../../utils/axios";
 // import { generateErrorMsg } from "../utils";
 
-export const setEmailNamePW = (data) => {
-  const { userFirstName, userLastName, userEmail, userPassword } = data;
+export const createAccount = (data) => {
+  const { firstName, lastName, email, password } = data;
   return (dispatch) => {
     const request = axios.post("/auth/signup", {
-      firstName: userFirstName,
-      lastName: userLastName,
-      email: userEmail,
-      password: userPassword,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
     });
     request
       .then((res) => {
         const { data, status } = res;
-        console.log('GREG LOOK!  ~ file: createAccount.js ~ line 16 ~ .then ~ data', data);
+        const userAuthenticated = data?.userAuthenticated;
+        const user = data?.user;
         dispatch({
-          type: "user/createNewAccount",
+          type: "auth/createNewAccount",
           accountCreated: status === 200,
-          userFirstName: data?.user?.firstName,
-          userLastName: data?.user?.lastName,
-        //   userEmail: data?.user?.email,
-          id: data?.user?.id,
-          message: data.message,
+          userFirstName: user?.firstName,
+          userLastName: user?.lastName,
+          userEmail: user?.email,
+          id: user?.id,
+          userAuthenticated: userAuthenticated,
         });
       })
       .catch((err) => {
         const errorCode = err.response.status;
         dispatch({
-          type: "user/createNewAccount_error",
-        //   message: generateErrorMsg(errorCode),
+          type: "auth/createNewAccount_error",
+          //   message: generateErrorMsg(errorCode),
           accountCreated: false,
         });
       });

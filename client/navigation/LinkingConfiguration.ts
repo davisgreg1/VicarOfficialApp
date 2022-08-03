@@ -15,6 +15,11 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Root: {
         screens: {
+          SignUpScreen: {
+            screens: {
+              SignUpScreen: "SignUpScreen",
+            },
+          },
           WelcomeScreen: {
             screens: {
               WelcomeScreen: "Welcome",

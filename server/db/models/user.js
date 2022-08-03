@@ -33,11 +33,11 @@ const User = sequelize.define("user", {
       return () => this.getDataValue("salt");
     },
   },
-  //   email: {
-  //     type: Sequelize.STRING,
-  //     unique: true,
-  //     allowNull: false,
-  //   },
+    email: {
+      type: Sequelize.STRING,
+      unique: true,
+      allowNull: false,
+    },
 
   //   zipCode: {
   //     type: Sequelize.STRING,
