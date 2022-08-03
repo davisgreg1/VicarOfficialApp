@@ -8,54 +8,48 @@ import {
   Button,
   SafeAreaView,
 } from "react-native";
+import { useSelector, useDispatch, connect } from "react-redux";
 import { Text, View } from "../components/Themed";
 import EditScreenInfo from "../components/EditScreenInfo";
 import { RootTabScreenProps } from "../types";
 import axios from "../utils/axios";
+import { loginUser } from "../redux/actions/authActions/loginUser";
 
-export default function TabOneScreen({
+export default function WelcomeScreen({
   navigation,
-}: RootTabScreenProps<"TabOne">) {
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
+}: RootTabScreenProps<"WelcomeScreen">) {
+  const dispatch = useDispatch();
+  const [id, setId] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const handleSubmit = () => {
+    const data = {
+      id: id,
+      password: password,
+    };
     try {
-      axios.post("auth/signup", {
-        lastName: lastName,
-        firstName: firstName,
-        password: password,
-      });
+      // TODO: type dispatch
+      dispatch(loginUser(data));
     } catch (error) {
       console.error(error);
     } finally {
-      setFirstName("");
-      setLastName("");
-      setPassword("")
+      setId("");
+      setPassword("");
     }
   };
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>Tab One</Text>
+        <Text style={styles.title}>Welcome</Text>
         <View
           style={styles.separator}
           lightColor="#eee"
           darkColor="rgba(255,255,255,0.1)"
         />
-        <EditScreenInfo path="/screens/TabOneScreen.tsx" />
-        <TextInput
-          style={styles.input}
-          onChangeText={setFirstName}
-          value={firstName}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={setLastName}
-          value={lastName}
-        />
+        <Text>ID here:</Text>
+        <TextInput style={styles.input} onChangeText={setId} value={id} />
+        <Text>Password here:</Text>
         <TextInput
           style={styles.input}
           onChangeText={setPassword}
@@ -63,7 +57,7 @@ export default function TabOneScreen({
         />
         <Button
           onPress={handleSubmit}
-          title="Sign up"
+          title="Sign in"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />
