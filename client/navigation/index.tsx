@@ -22,6 +22,7 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import TabOneScreen from "../screens/TabOneScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
+import SignUpScreen from "../screens/SignUpScreen";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -82,9 +83,13 @@ function RootNavigator() {
           <Stack.Screen
             name="WelcomeScreen"
             component={WelcomeScreen}
-            // options={{ headerShown: false }}
+            options={{ headerShown: false }}
           />
-
+          <Stack.Screen
+            name="SignUpScreen"
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
           <Stack.Group screenOptions={{ presentation: "modal" }}>
             <Stack.Screen name="Modal" component={ModalScreen} />
           </Stack.Group>

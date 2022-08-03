@@ -44,6 +44,7 @@ const authReducer = (state = initialState, action: any) => {
         userFirstName: action.userFirstName,
         userLastName: action.userLastName,
         userEmail: action.userEmail,
+        userAuthenticated: action.userAuthenticated
       };
     case "auth/createNewAccount_error":
       return {
