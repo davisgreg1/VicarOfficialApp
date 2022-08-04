@@ -6,8 +6,17 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 });
 
 const Vehicle = sequelize.define("vehicle", {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   userId: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    references: {
+      model: "users", // <----- name of the table
+      key: "id", // <----- primary key
+    },
   },
   nickName: {
     type: Sequelize.STRING,
@@ -43,7 +52,7 @@ const Vehicle = sequelize.define("vehicle", {
 
 Vehicle.sync({
   force: false,
-  alter: true
+  alter: true,
 });
 
 module.exports = Vehicle;

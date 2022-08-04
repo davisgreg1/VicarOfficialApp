@@ -25,6 +25,11 @@ const linking: LinkingOptions<RootStackParamList> = {
               WelcomeScreen: "Welcome",
             },
           },
+          AddVehicleScreen: {
+            screens: {
+              AddVehicleScreen: "AddVehicleScreen",
+            },
+          },
           TabOne: {
             screens: {
               TabOneScreen: "one",

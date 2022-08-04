@@ -1,5 +1,5 @@
 const User = require("./user");
-const Vehicle = require('./vehicle');
+const Vehicle = require("./vehicle");
 // const Transaction = require('./transaction');
 // const Item = require('./item');
 // const Budget = require('./budget');
@@ -12,7 +12,9 @@ const Vehicle = require('./vehicle');
  *
  *    BlogPost.belongsTo(User)
  */
-User.hasMany(Vehicle);
+User.hasMany(Vehicle, {
+  foreignKey: "id",
+});
 Vehicle.belongsTo(User);
 
 // User.hasMany(Goal);

@@ -8,6 +8,11 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 });
 
 const User = sequelize.define("user", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+},
   firstName: {
     type: Sequelize.STRING,
     unique: false,

@@ -14,21 +14,23 @@ export const loginUser = (data: LoginDataType) => {
     request
       .then((res) => {
         const { data, status } = res;
-
         const userAuthenticated = data?.userAuthenticated;
         const user = data?.user;
+        const vehicles = user.slice(1);
         dispatch({
           type: "auth/login",
-          userEmail: user.email,
-          userId: user.id,
-          userFirstName: user.firstName,
-          userLastName: user.lastName,
           userAuthenticated: userAuthenticated,
-          // userEmail: data.email,
-          // userName: data.userName,
+        });
+        dispatch({
+          type: "user/setUser",
+          userId: user[0].id,
+          userEmail: user[0].email,
+          userFirstName: user[0].firstName,
+          userLastName: user[0].lastName,
+          vehicles: vehicles
           // userPhoneNumber: data.phoneNumber,
           // userZipCode: data.zipCode,
-        });
+        })
       })
       .catch((err) => {
         console.error("userSignIn fn() catch block in the network call:", err);
