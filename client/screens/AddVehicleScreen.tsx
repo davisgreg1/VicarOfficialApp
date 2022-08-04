@@ -26,6 +26,8 @@ import { addVehicle } from "../redux/actions/userActions/addVehicle";
 export default function AddVehicleScreen({
   navigation,
 }: RootTabScreenProps<"AddVehicleScreen">) {
+  const { colors } = useTheme();
+  const colorStyle = { color: colors.text };
   const dispatch = useDispatch();
   return (
     <Formik
@@ -110,15 +112,23 @@ export default function AddVehicleScreen({
                 returnKeyType={"next"}
               />
               <View style={styles.radioBtnsContainer}>
-                <Text>Type of Transmission:</Text>
+                <Text style={[styles.btnHeadingText, colorStyle]}>
+                  Type of Transmission:
+                </Text>
                 <View style={styles.radioBtns}>
                   <RadioButton.Group
                     onValueChange={props.handleChange("type")}
                     value={props.values.type}>
-                    <Text style={styles.btnText}>Automatic</Text>
-                    <RadioButton value="Automatic"></RadioButton>
-                    <Text style={styles.btnText}>Manual</Text>
-                    <RadioButton value="Manual"></RadioButton>
+                    <Text style={[styles.btnText, colorStyle]}>Automatic</Text>
+                    <RadioButton
+                      uncheckedColor="red"
+                      color="red"
+                      value="Automatic"></RadioButton>
+                    <Text style={[styles.btnText, colorStyle]}>Manual</Text>
+                    <RadioButton
+                      uncheckedColor="red"
+                      color="red"
+                      value="Manual"></RadioButton>
                   </RadioButton.Group>
                 </View>
               </View>
@@ -144,19 +154,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   contentContainer: {
-    paddingTop: 8,
     display: "flex",
   },
   radioBtnsContainer: {
-    alignSelf: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    width: Dimensions.get("window").width,
+  },
+  btnHeadingText: {
+    marginLeft: 42,
   },
   btnText: {
     alignItems: "center",
   },
   radioBtns: {
     flexDirection: "row",
-    alignSelf: "center",
+    alignItems: "center",
   },
   signInLinks: {
     justifyContent: "center",
@@ -179,11 +192,5 @@ const styles = StyleSheet.create({
   },
   signInButton: {
     alignItems: "center",
-    padding: 16,
-  },
-  signInText: {
-    textDecorationLine: "underline",
-    padding: 8,
-    marginBottom: 16,
   },
 });
