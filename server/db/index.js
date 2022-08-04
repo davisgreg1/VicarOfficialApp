@@ -1,8 +1,6 @@
 require("dotenv").config();
 const Sequelize = require("sequelize");
-const util = require("util");
 const databaseName = "vicar";
-require("./models/index.js");
 
 const db =
   process.env.NODE_ENV === "production"

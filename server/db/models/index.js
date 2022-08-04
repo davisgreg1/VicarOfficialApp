@@ -1,5 +1,5 @@
 const User = require("./user");
-// const Account = require('./account');
+const Vehicle = require('./vehicle');
 // const Transaction = require('./transaction');
 // const Item = require('./item');
 // const Budget = require('./budget');
@@ -12,8 +12,8 @@ const User = require("./user");
  *
  *    BlogPost.belongsTo(User)
  */
-// User.hasMany(Item);
-// Item.belongsTo(User);
+User.hasMany(Vehicle);
+Vehicle.belongsTo(User);
 
 // User.hasMany(Goal);
 // Goal.belongsTo(User);

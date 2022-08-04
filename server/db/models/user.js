@@ -1,5 +1,6 @@
 require("dotenv").config();
 const crypto = require("crypto");
+const {DATE}=require("sequelize");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   host: "localhost",
@@ -33,64 +34,29 @@ const User = sequelize.define("user", {
       return () => this.getDataValue("salt");
     },
   },
-    email: {
-      type: Sequelize.STRING,
-      unique: true,
-      allowNull: false,
-    },
+  email: {
+    type: Sequelize.STRING,
+    unique: true,
+    allowNull: false,
+  },
 
-  //   zipCode: {
-  //     type: Sequelize.STRING,
-  //     // allowNull: true
-  //   },
-  //   phoneNumber: {
-  //     type: Sequelize.BIGINT,
-  //     // unique: true
-  //   },
-  //   personalityType: {
-  //     type: Sequelize.STRING,
-  //   },
-  //   userIdentity: {
-  //     type: Sequelize.STRING,
-  //   },
-  //   userFamilyStatus: {
-  //     type: Sequelize.STRING,
-  //   },
-  //   userHasChildren: {
-  //     type: Sequelize.BOOLEAN,
-  //   },
-  //   userPayingStudentLoans: {
-  //     type: Sequelize.BOOLEAN,
-  //   },
-  //   userAccounts: {
-  //     type: Sequelize.INTEGER,
-  //   },
-  //   loginAmount: {
-  //     type: Sequelize.INTEGER,
-  //     defaultValue: 0,
-  //   },
-  //   isBeta: {
-  //     type: Sequelize.BOOLEAN,
-  //   },
-  //   linkedAccounts: {
-  //     type: Sequelize.INTEGER,
-  //     defaultValue: 0,
-  //   },
-  //   isConnectedAccounts: {
-  //     type: Sequelize.INTEGER,
-  //   },
-  //   yearlySalary: {
-  //     type: Sequelize.FLOAT,
-  //   },
-  //   monthlySalary: {
-  //     type: Sequelize.FLOAT,
-  //   },
-  // incomeStreams: {
-  //   type: Sequelize.ARRAY(Sequelize.STRING)
-  // },
-  //   monthlyRent: {
-  //     type: Sequelize.FLOAT,
-  //   },
+  zipCode: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  phoneNumber: {
+    type: Sequelize.BIGINT,
+    unique: true,
+  },
+  isAdmin: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  lastLogin: {
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
+  },
+
   //   resetPasswordCode: {
   //     type: Sequelize.STRING,
   //   },
@@ -109,9 +75,11 @@ const User = sequelize.define("user", {
   //   pushToken: {
   //     type: Sequelize.STRING,
   //   },
-  //   lastLogin: {
-  //     type: Sequelize.DATE,
-  //   },
+});
+
+User.sync({
+  force: false,
+  alter: true
 });
 
 module.exports = User;
