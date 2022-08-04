@@ -1,6 +1,7 @@
 require("dotenv").config();
 const router = require("express").Router();
 const User = require("../db/models/user");
+const Vehicle = require("../db/models/vehicle");
 // const crypto = require("crypto");
 // const seedrandom = require("seedrandom");
 // const moment = require("moment");
@@ -47,7 +48,7 @@ router.post("/signup", async (req, res, next) => {
 
 router.post("/login", (req, res, next) => {
   User.findOne({ where: { email: req.body.email } })
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         res.status(401).json({
           message: "No user found.",
@@ -59,8 +60,14 @@ router.post("/login", (req, res, next) => {
           userAuthenticated: false,
         });
       } else {
+        const vehicles = await Vehicle.findAll({
+          where: {
+            userId: user.id,
+          },
+        });
+        const data = [user, ...vehicles];
         req.logIn(user, (err) =>
-          err ? next(err) : res.json({ user: user, userAuthenticated: true }),
+          err ? next(err) : res.json({ user: data, userAuthenticated: true }),
         );
       }
     })

@@ -13,7 +13,7 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { ColorSchemeName, Pressable } from "react-native";
+import { ColorSchemeName, Pressable, Image } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -23,6 +23,7 @@ import TabOneScreen from "../screens/TabOneScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import SignUpScreen from "../screens/SignUpScreen";
+import AddVehicleScreen from "../screens/AddVehicleScreen";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -30,12 +31,24 @@ import {
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 
+type VehicleType = {
+  year: number;
+  make: string;
+  model: string;
+  type: string;
+  nickName?: string;
+};
 interface AuthState {
   userAuthenticated: boolean;
 }
+interface UserState {
+  vehicles: Array<any>;
+}
 interface RootState {
   auth: AuthState;
+  user: UserState;
 }
+
 export default function Navigation({
   colorScheme,
 }: {
@@ -60,39 +73,104 @@ function RootNavigator() {
   const userAuthenticated: boolean = useSelector(
     (state: RootState) => state.auth.userAuthenticated,
   );
+  const vehicles: Array<VehicleType> = useSelector(
+    (state: RootState) => state.user.vehicles,
+  );
+  console.log(
+    "GREG LOOK!  ~ file: index.tsx ~ line 78 ~ RootNavigator ~ vehicles",
+    vehicles,
+  );
+  const hasVehicles = vehicles.length > 0;
   return (
     <>
-      {userAuthenticated ? (
+      {!userAuthenticated ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="WelcomeScreen"
+            component={WelcomeScreen}
+            options={{
+              headerShown: true,
+              headerTitle: (props) => (
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={require("../assets/images/vicarLogo1.png")}
+                  resizeMode="contain"
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="SignUpScreen"
+            component={SignUpScreen}
+            options={{
+              headerShown: true,
+              headerTitle: (props) => (
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={require("../assets/images/vicarLogo1.png")}
+                  resizeMode="contain"
+                />
+              ),
+            }}
+          />
+          <Stack.Group screenOptions={{ presentation: "modal" }}>
+            <Stack.Screen name="Modal" component={ModalScreen} />
+          </Stack.Group>
+        </Stack.Navigator>
+      ) : !hasVehicles ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="AddVehicleScreen"
+            component={AddVehicleScreen}
+            options={{
+              title: "",
+              headerTitle: (props) => (
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={require("../assets/images/vicarLogo1.png")}
+                  resizeMode="contain"
+                />
+              ),
+            }}
+          />
+        </Stack.Navigator>
+      ) : (
         <Stack.Navigator>
           <Stack.Screen
             name="Root"
             component={BottomTabNavigator}
             options={{ headerShown: false }}
           />
+          <Stack.Group screenOptions={{ presentation: "modal" }}>
+            <Stack.Screen
+              options={{
+                title: "Settings",
+                headerTitle: (props) => (
+                  <Image
+                    style={{ width: 60, height: 60 }}
+                    source={require("../assets/images/vicarLogo1.png")}
+                    resizeMode="contain"
+                  />
+                ),
+              }}
+              name="Modal"
+              component={ModalScreen}
+            />
+          </Stack.Group>
           <Stack.Screen
             name="NotFound"
             component={NotFoundScreen}
-            options={{ title: "Oops!" }}
+            options={{
+              title: "Oops!",
+              headerTitle: (props) => (
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={require("../assets/images/vicarLogo1.png")}
+                  resizeMode="contain"
+                />
+              ),
+            }}
           />
-          <Stack.Group screenOptions={{ presentation: "modal" }}>
-            <Stack.Screen name="Modal" component={ModalScreen} />
-          </Stack.Group>
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator>
-          <Stack.Screen
-            name="WelcomeScreen"
-            component={WelcomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SignUpScreen"
-            component={SignUpScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Group screenOptions={{ presentation: "modal" }}>
-            <Stack.Screen name="Modal" component={ModalScreen} />
-          </Stack.Group>
         </Stack.Navigator>
       )}
     </>
@@ -118,7 +196,7 @@ function BottomTabNavigator() {
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
-          title: "Tab One",
+          title: "",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
@@ -127,12 +205,19 @@ function BottomTabNavigator() {
                 opacity: pressed ? 0.5 : 1,
               })}>
               <FontAwesome
-                name="info-circle"
+                name="cogs"
                 size={25}
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 15 }}
               />
             </Pressable>
+          ),
+          headerTitle: (props) => (
+            <Image
+              style={{ width: 60, height: 60 }}
+              source={require("../assets/images/vicarLogo1.png")}
+              resizeMode="contain"
+            />
           ),
         })}
       />
@@ -140,7 +225,14 @@ function BottomTabNavigator() {
         name="TabTwo"
         component={TabTwoScreen}
         options={{
-          title: "Tab Two",
+          title: "",
+          headerTitle: (props) => (
+            <Image
+              style={{ width: 60, height: 60 }}
+              source={require("../assets/images/vicarLogo1.png")}
+              resizeMode="contain"
+            />
+          ),
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

@@ -6,6 +6,7 @@ const initialState = {
   userName: "",
   userPhoneNumber: "",
   userZipCode: "",
+  vehicles: [],
 };
 
 const userReducer = (state = initialState, action) => {
@@ -16,7 +17,7 @@ const userReducer = (state = initialState, action) => {
         ...action,
       };
 
-    case "user/updateInformation":
+    case "user/setUser":
       return {
         ...state,
         userFirstName: action.userFirstName,
@@ -26,8 +27,14 @@ const userReducer = (state = initialState, action) => {
         userName: action.userName,
         userPhoneNumber: action.userPhoneNumber,
         userZipCode: action.zipCode,
+        vehicles: [...state.vehicles, ...action.vehicles],
       };
 
+    case "user/addVehicle":
+      return {
+        ...state,
+        vehicles: [...state.vehicles, ...action.vehicles],
+      };
 
     // case "user/resetPWConfirmEmail":
     //   return {
