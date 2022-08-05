@@ -30,14 +30,29 @@ const linking: LinkingOptions<RootStackParamList> = {
               AddVehicleScreen: "AddVehicleScreen",
             },
           },
-          TabOne: {
+          HomeScreen: {
             screens: {
-              TabOneScreen: "one",
+              HomeScreen: "HomeScreen",
             },
           },
-          TabTwo: {
+          ProfileScreen: {
             screens: {
-              TabTwoScreen: "two",
+              ProfileScreen: "ProfileScreen",
+            },
+          },
+          ParkCarScreen: {
+            screens: {
+              ParkCarScreen: "ParkCarScreen",
+            },
+          },
+          FetchCarScreen: {
+            screens: {
+              FetchCarScreen: "FetchCarScreen",
+            },
+          },
+          VicarAnimationScreen: {
+            screens: {
+              VicarAnimationScreen: "VicarAnimationScreen",
             },
           },
         },

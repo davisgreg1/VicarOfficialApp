@@ -19,11 +19,14 @@ import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import TabOneScreen from "../screens/TabOneScreen";
-import TabTwoScreen from "../screens/TabTwoScreen";
+import HomeScreen from "../screens/HomeScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import AddVehicleScreen from "../screens/AddVehicleScreen";
+import ParkCarScreen from "../screens/ParkCarScreen";
+import FetchCarScreen from "../screens/FetchCarScreen";
+import VicarAnimationScreen from "../screens/VicarAnimationScreen";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -75,10 +78,6 @@ function RootNavigator() {
   );
   const vehicles: Array<VehicleType> = useSelector(
     (state: RootState) => state.user.vehicles,
-  );
-  console.log(
-    "GREG LOOK!  ~ file: index.tsx ~ line 78 ~ RootNavigator ~ vehicles",
-    vehicles,
   );
   const hasVehicles = vehicles.length > 0;
   return (
@@ -158,6 +157,48 @@ function RootNavigator() {
             />
           </Stack.Group>
           <Stack.Screen
+            name="ParkCarScreen"
+            component={ParkCarScreen}
+            options={{
+              title: "",
+              headerTitle: (props) => (
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={require("../assets/images/vicarLogo1.png")}
+                  resizeMode="contain"
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="FetchCarScreen"
+            component={FetchCarScreen}
+            options={{
+              title: "",
+              headerTitle: (props) => (
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={require("../assets/images/vicarLogo1.png")}
+                  resizeMode="contain"
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="VicarAnimationScreen"
+            component={VicarAnimationScreen}
+            options={{
+              title: "",
+              headerTitle: (props) => (
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={require("../assets/images/vicarLogo1.png")}
+                  resizeMode="contain"
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
             name="NotFound"
             component={NotFoundScreen}
             options={{
@@ -188,16 +229,20 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="HomeScreen"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
+        name="HomeScreen"
+        component={HomeScreen}
+        options={({ navigation }: RootTabScreenProps<"HomeScreen">) => ({
+          tabBarLabel: "Home",
+          tabBarLabelStyle: { color: "#c64141" },
           title: "",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="home" color={"#c64141"} />
+          ),
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate("Modal")}
@@ -222,9 +267,11 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
+        name="ProfileScreen"
+        component={ProfileScreen}
         options={{
+          tabBarLabel: "Account",
+          tabBarLabelStyle: { color: "#c64141" },
           title: "",
           headerTitle: (props) => (
             <Image
@@ -233,7 +280,9 @@ function BottomTabNavigator() {
               resizeMode="contain"
             />
           ),
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="user" color={"#c64141"} />
+          ),
         }}
       />
     </BottomTab.Navigator>

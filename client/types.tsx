@@ -18,8 +18,11 @@ export type RootStackParamList = {
   Modal: undefined;
   NotFound: undefined;
   WelcomeScreen: undefined;
-  SignUpScreen: undefined
-  AddVehicleScreen: undefined
+  SignUpScreen: undefined;
+  AddVehicleScreen: undefined;
+  ParkCarScreen: undefined;
+  FetchCarScreen: undefined;
+  VicarAnimationScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -28,11 +31,14 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >;
 
 export type RootTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+  HomeScreen: undefined;
+  ProfileScreen: undefined;
   WelcomeScreen: undefined;
   SignUpScreen: undefined;
   AddVehicleScreen: undefined;
+  ParkCarScreen: undefined;
+  FetchCarScreen: undefined;
+  VicarAnimationScreen: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
