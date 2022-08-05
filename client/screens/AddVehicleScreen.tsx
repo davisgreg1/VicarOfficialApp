@@ -38,6 +38,7 @@ export default function AddVehicleScreen({
         color: "",
         nickName: "",
         type: "",
+        isCarParked: "no",
       }}
       validationSchema={Yup.object({
         year: Yup.number()
@@ -48,6 +49,7 @@ export default function AddVehicleScreen({
         model: Yup.string().required("Vehicle model is required."),
         type: Yup.string().required("Vehicle transmission type is required."),
         color: Yup.string().required("Vehicle color is required."),
+        isCarParked: Yup.string().required("This field must be checked"),
         nickName: Yup.string(),
       })}
       onSubmit={(values, formikActions) => {
@@ -59,10 +61,11 @@ export default function AddVehicleScreen({
             color: values.color,
             nickName: values.nickName,
             type: values.type,
+            isCarParked: values.isCarParked === "yes" ? true : false,
           };
           dispatch(addVehicle(data));
         } catch (error) {
-          console.error("SIGN IN ERROR -> render -> error", error);
+          console.error("ADD VEHICLE ERROR -> render -> error", error);
         }
       }}>
       {(props) => {
@@ -113,6 +116,27 @@ export default function AddVehicleScreen({
               />
               <View style={styles.radioBtnsContainer}>
                 <Text style={[styles.btnHeadingText, colorStyle]}>
+                  Is your vehicle already parked?
+                </Text>
+                <View style={styles.radioBtns}>
+                  <RadioButton.Group
+                    onValueChange={props.handleChange("isCarParked")}
+                    value={props.values.isCarParked}>
+                    <Text style={[styles.btnText, colorStyle]}>Yes</Text>
+                    <RadioButton
+                      uncheckedColor="#c64141"
+                      color="#c64141"
+                      value={"yes"}></RadioButton>
+                    <Text style={[styles.btnText, colorStyle]}>No</Text>
+                    <RadioButton
+                      uncheckedColor="#c64141"
+                      color="#c64141"
+                      value={"no"}></RadioButton>
+                  </RadioButton.Group>
+                </View>
+              </View>
+              <View style={styles.radioBtnsContainer}>
+                <Text style={[styles.btnHeadingText, colorStyle]}>
                   Type of Transmission:
                 </Text>
                 <View style={styles.radioBtns}>
@@ -129,6 +153,11 @@ export default function AddVehicleScreen({
                       uncheckedColor="#c64141"
                       color="#c64141"
                       value="Manual"></RadioButton>
+                    <Text style={[styles.btnText, colorStyle]}>Electric</Text>
+                    <RadioButton
+                      uncheckedColor="#c64141"
+                      color="#c64141"
+                      value="Electric"></RadioButton>
                   </RadioButton.Group>
                 </View>
               </View>

@@ -1,7 +1,17 @@
 import axios from "../../../utils/axios";
 
-export const addVehicle = (data) => {
-  const { year, make, model, type, color, nickName } = data;
+interface AddVehicleData {
+  year: number;
+  make: string;
+  model: string;
+  type: string;
+  color: string;
+  nickName?: string;
+  isCarParked: boolean;
+}
+
+export const addVehicle = (data: AddVehicleData) => {
+  const { year, make, model, type, color, nickName, isCarParked } = data;
 
   return (dispatch) => {
     const request = axios.post("/users/addVehicle", {
@@ -11,6 +21,7 @@ export const addVehicle = (data) => {
       type: type,
       color: color,
       nickName: nickName,
+      isCarParked: isCarParked,
     });
     request
       .then((res) => {

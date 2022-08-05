@@ -16,6 +16,17 @@ const userReducer = (state = initialState, action) => {
         ...state,
         ...action,
       };
+    case "user/clearUserData":
+      return {
+        userId: null,
+        userFirstName: "",
+        userLastName: "",
+        userEmail: "",
+        userName: "",
+        userPhoneNumber: "",
+        userZipCode: "",
+        vehicles: [],
+      };
 
     case "user/setUser":
       return {
