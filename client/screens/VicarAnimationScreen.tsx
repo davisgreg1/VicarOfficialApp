@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextInputProps,
   TextInput,
@@ -8,17 +8,24 @@ import {
   Button,
   SafeAreaView,
   View,
+  Text,
 } from "react-native";
-import EditScreenInfo from "../components/EditScreenInfo";
+import KeyHandOverAnim from "../components/KeyHandOverAnim";
 import { RootTabScreenProps } from "../types";
-import axios from "../utils/axios";
 
-export default function TabOneScreen({
+export default function VicarAnimationScreen({
   navigation,
-}: RootTabScreenProps<"TabOne">) {
+}: RootTabScreenProps<"VicarAnimationScreen">) {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate("HomeScreen");
+    }, 4999);
+  }, []);
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
-      <View style={styles.container}></View>
+      <View style={styles.container}>
+        <KeyHandOverAnim />
+      </View>
     </SafeAreaView>
   );
 }

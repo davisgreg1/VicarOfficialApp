@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     left: 10,
   },
   buttonTouch: {
-    backgroundColor: "red",
+    backgroundColor: "#c64141",
     borderRadius: 24,
     width: 315,
     padding: 16,

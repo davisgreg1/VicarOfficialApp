@@ -121,13 +121,13 @@ export default function AddVehicleScreen({
                     value={props.values.type}>
                     <Text style={[styles.btnText, colorStyle]}>Automatic</Text>
                     <RadioButton
-                      uncheckedColor="red"
-                      color="red"
+                      uncheckedColor="#c64141"
+                      color="#c64141"
                       value="Automatic"></RadioButton>
                     <Text style={[styles.btnText, colorStyle]}>Manual</Text>
                     <RadioButton
-                      uncheckedColor="red"
-                      color="red"
+                      uncheckedColor="#c64141"
+                      color="#c64141"
                       value="Manual"></RadioButton>
                   </RadioButton.Group>
                 </View>
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     left: 10,
   },
   buttonTouch: {
-    backgroundColor: "red",
+    backgroundColor: "#c64141",
     borderRadius: 24,
     width: 315,
     padding: 16,
