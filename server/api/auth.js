@@ -79,14 +79,16 @@ router.post("/logout", async (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
   });
   req.session.destroy(function (err, next) {
     if (err) {
       return next(err);
     }
   });
-  res.send("User Successfully Logged Out");
+  res.json({
+    userAuthenticated: false,
+    message: "User successfully logged out",
+  });
 });
 
 // router.patch("/updatePW", (req, res, next) => {

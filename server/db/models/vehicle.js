@@ -48,6 +48,11 @@ const Vehicle = sequelize.define("vehicle", {
     unique: false,
     allowNull: false,
   },
+  isCarParked: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  }
 });
 
 Vehicle.sync({

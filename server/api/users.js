@@ -6,7 +6,7 @@ module.exports = router;
 
 router.post("/addVehicle", async (req, res, next) => {
   const user = req.user;
-  const { year, make, model, color, type, nickName } = req.body;
+  const { year, make, model, color, type, nickName, isCarParked } = req.body;
   try {
     const userID = user.id;
     if (!Boolean(user)) return res.json({ message: "No User Found" });
@@ -20,6 +20,7 @@ router.post("/addVehicle", async (req, res, next) => {
       type,
       nickName,
       userId: userID,
+      isCarParked: isCarParked
     });
     const vehicles = await Vehicle.findAll({
       where: {
@@ -31,6 +32,7 @@ router.post("/addVehicle", async (req, res, next) => {
   } catch (err) {
     if (err) {
       res.status(403).send({ error: err });
+      console.error('GREG LOOK!  ~ file: users.js ~ line 36 ~ router.post ~ err', err);
     } else {
       next(err);
     }
