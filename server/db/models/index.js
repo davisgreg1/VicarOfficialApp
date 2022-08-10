@@ -1,6 +1,6 @@
 const User = require("./user");
 const Vehicle = require("./vehicle");
-// const Transaction = require('./transaction');
+const VehicleService = require("./VehicleService");
 // const Item = require('./item');
 // const Budget = require('./budget');
 // const Goal = require('./goal');
@@ -17,8 +17,8 @@ User.hasMany(Vehicle, {
 });
 Vehicle.belongsTo(User);
 
-// User.hasMany(Goal);
-// Goal.belongsTo(User);
+Vehicle.hasMany(VehicleService);
+VehicleService.belongsTo(Vehicle);
 
 // User.hasMany(Account);
 // Account.belongsTo(User);
@@ -37,8 +37,8 @@ Vehicle.belongsTo(User);
 
 module.exports = {
   User,
-  //   Account,
-  //   Transaction,
+  Vehicle,
+  VehicleService,
   //   Item,
   //   Budget,
   //   Goal,
