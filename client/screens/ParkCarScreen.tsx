@@ -1,23 +1,32 @@
-import { useState } from "react";
-import { StyleSheet, Alert } from "react-native";
-import { Text, View } from "../components/Themed";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { StyleSheet, Text, View } from "react-native";
+// import { Text, View } from "../components/Themed";
+import VehicleList from "../components/VehicleList";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import { RootTabScreenProps } from "../types";
+import { RootTabScreenProps, VehicleType, RootState } from "../types";
 
 export default function ParkCarScreen({
   navigation,
 }: RootTabScreenProps<"ParkCarScreen">) {
+  const vehicles: Array<VehicleType> = useSelector(
+    (state: RootState) => state.user.vehicles,
+  );
+  
   const handleOnSubmit = () => {
-    Alert.alert("submitting");
     navigation.navigate("VicarAnimationScreen");
   };
   return (
     <View style={{ flex: 1 }}>
-      <ProgressSteps>
+      <ProgressSteps
+        activeStepIconBorderColor="#c64141"
+        activeLabelColor="#c64141"
+        activeStepNumColor="#c64141">
         <ProgressStep label="Vehicle">
           <View style={{ alignItems: "center" }}>
             <Text>Which vehicle would you like us to park?</Text>
           </View>
+          <VehicleList vehicles={vehicles} />
         </ProgressStep>
         <ProgressStep label="Schedule">
           <View style={{ alignItems: "center" }}>

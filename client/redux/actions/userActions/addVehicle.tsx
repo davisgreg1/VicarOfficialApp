@@ -1,6 +1,7 @@
 import axios from "../../../utils/axios";
 
 interface AddVehicleData {
+  licenseNumber: string;
   year: number;
   make: string;
   model: string;
@@ -11,7 +12,7 @@ interface AddVehicleData {
 }
 
 export const addVehicle = (data: AddVehicleData) => {
-  const { year, make, model, type, color, nickName, isCarParked } = data;
+  const { year, make, model, type, color, nickName, isCarParked, licenseNumber } = data;
 
   return (dispatch) => {
     const request = axios.post("/users/addVehicle", {
@@ -22,6 +23,7 @@ export const addVehicle = (data: AddVehicleData) => {
       color: color,
       nickName: nickName,
       isCarParked: isCarParked,
+      licenseNumber: licenseNumber,
     });
     request
       .then((res) => {

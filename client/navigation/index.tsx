@@ -31,26 +31,10 @@ import {
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
+  VehicleType,
+  RootState
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-
-type VehicleType = {
-  year: number;
-  make: string;
-  model: string;
-  type: string;
-  nickName?: string;
-};
-interface AuthState {
-  userAuthenticated: boolean;
-}
-interface UserState {
-  vehicles: Array<any>;
-}
-interface RootState {
-  auth: AuthState;
-  user: UserState;
-}
 
 export default function Navigation({
   colorScheme,

@@ -5,11 +5,18 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
 });
 
-const Vehicle = sequelize.define("vehicle", {
+const VehicleService = sequelize.define("vehicleService", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
+  },
+  vehicleId: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: "vehicles", // <----- name of the table
+      key: "id", // <----- primary key
+    },
   },
   userId: {
     type: Sequelize.INTEGER,
@@ -18,51 +25,47 @@ const Vehicle = sequelize.define("vehicle", {
       key: "id", // <----- primary key
     },
   },
-  nickName: {
+  pickUpTime: {
+    type: Sequelize.TIME,
+  },
+  pickUpDate: {
+    type: Sequelize.DATE,
+  },
+  pickUpAddress1: {
     type: Sequelize.STRING,
-    unique: false,
-    allowNull: true,
   },
-  year: {
-    type: Sequelize.INTEGER,
-    unique: false,
-    allowNull: false,
-  },
-  make: {
+  pickUpCity: {
     type: Sequelize.STRING,
-    unique: false,
-    allowNull: false,
   },
-  licenseNumber: {
+  pickUpState: {
     type: Sequelize.STRING,
-    unique: true,
-    allowNull: false,
   },
-  model: {
+  pickUpZipCode: {
     type: Sequelize.STRING,
-    unique: false,
-    allowNull: false,
   },
-  color: {
+  dropOffTime: {
+    type: Sequelize.TIME,
+  },
+  dropOffDate: {
+    type: Sequelize.DATE,
+  },
+  dropOffAddress1: {
     type: Sequelize.STRING,
-    unique: false,
-    allowNull: false,
   },
-  type: {
+  dropOffCity: {
     type: Sequelize.STRING,
-    unique: false,
-    allowNull: false,
   },
-  isCarParked: {
-    type: Sequelize.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
+  dropOffState: {
+    type: Sequelize.STRING,
+  },
+  dropOffZipCode: {
+    type: Sequelize.STRING,
   },
 });
 
-Vehicle.sync({
+VehicleService.sync({
   force: false,
   alter: true,
 });
 
-module.exports = Vehicle;
+module.exports = VehicleService;
