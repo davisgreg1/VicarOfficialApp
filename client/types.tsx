@@ -63,7 +63,16 @@ export type AuthState = {
 export type UserState = {
   vehicles: Array<any>;
 };
+export type ServiceState = {
+  vehicle: VehicleType;
+  date: Date | any;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+};
 export type RootState = {
   auth: AuthState;
   user: UserState;
+  service: ServiceState;
 };
