@@ -9,8 +9,10 @@ import VehicleList from "../components/VehicleList";
 import DateTimePicker from "../components/DateTimePicker";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { RootTabScreenProps, VehicleType, RootState } from "../types";
-import { setPickUpAddress } from "../redux/actions/serviceActions";
-import { createPickUpJob } from "../redux/actions/serviceActions";
+import {
+  setPickUpAddress,
+  createPickUpJob,
+} from "../redux/actions/serviceActions";
 import dayjs from "dayjs";
 
 export default function ParkCarScreen({
@@ -21,9 +23,11 @@ export default function ParkCarScreen({
   const vehicles: Array<VehicleType> = useSelector(
     (state: RootState) => state.user.vehicles,
   );
+
   const vehicleToPark = useSelector(
     (state: RootState) => state.service.vehicle,
   );
+
   const date = useSelector((state: RootState) => state.service.date);
   const address = useSelector((state: RootState) => state.service.address);
   const city = useSelector((state: RootState) => state.service.city);
@@ -33,7 +37,6 @@ export default function ParkCarScreen({
   const handleOnSubmit = () => {
     const timeVal = dayjs(date).format("hh:mm A");
     const dateVal = dayjs(date).format("MMM DD");
-
     const data = {
       pickUpTime: timeVal,
       pickUpDate: dateVal,
@@ -43,8 +46,10 @@ export default function ParkCarScreen({
       pickUpZipCode: zipCode,
       vehicleId: vehicleToPark.id,
     };
-    navigation.navigate("VicarAnimationScreen");
+
     dispatch(createPickUpJob(data));
+
+    navigation.navigate("VicarAnimationScreen");
   };
 
   const vehicleSelected = vehicleToPark === null ? false : true;
@@ -57,6 +62,8 @@ export default function ParkCarScreen({
     !validAddress || !validCity || !validState || !validZipCode;
 
   const parsedDate = date ? dayjs(date).format("MMM DD, YYYY hh:mm A") : "";
+  const allCarsAreParked = vehicles.every((vehicle) => vehicle.isCarParked);
+  const vehiclesToPark = vehicles.filter((vehicle) => !vehicle.isCarParked);
 
   return (
     <View style={{ flex: 1 }}>
@@ -64,16 +71,22 @@ export default function ParkCarScreen({
         activeStepIconBorderColor="#c64141"
         activeLabelColor="#c64141"
         activeStepNumColor="#c64141">
-        <ProgressStep errors={!vehicleSelected} label="Vehicle">
+        <ProgressStep
+          errors={!vehicleSelected || allCarsAreParked}
+          label="Vehicle">
           <View style={{ alignItems: "center" }}>
-            <Text>Which vehicle would you like us to park?</Text>
+            {allCarsAreParked ? (
+              <Text>No available vehicles to park.</Text>
+            ) : (
+              <Text>Which vehicle would you like us to park?</Text>
+            )}
           </View>
-          <VehicleList vehicles={vehicles} />
+          <VehicleList vehicles={vehiclesToPark} isReturningToOwner={false} />
         </ProgressStep>
         <ProgressStep label="Schedule" errors={!dateSelected}>
           <View style={{ alignItems: "center" }}>
             <DateTimePicker
-              typeOfSchedule={"returnVehicleToUser"}
+              typeOfSchedule={"pick up"}
               buttonTitle={"When would you like it returned?"}
               selectedDate={parsedDate}
             />

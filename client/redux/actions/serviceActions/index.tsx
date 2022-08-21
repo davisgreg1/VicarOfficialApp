@@ -12,7 +12,7 @@ interface AddVehicleData {
 }
 interface AddressType {
   address: string;
-  state: number;
+  state: string;
   city: string;
   zipCode: string;
 }
@@ -25,6 +25,19 @@ interface PickUpData {
   pickUpState: string;
   pickUpZipCode: string;
   vehicleId: number;
+  returnToOwnerVehicleId: number;
+  returnToOwnerDate: Date | any;
+  returnToOwnerAddress: string;
+  returnToOwnerCity: string;
+  returnToOwnerState: string;
+  returnToOwnerZipCode: string;
+
+  dropOffTime: Date | any;
+  dropOffDate: Date | any;
+  dropOffAddress1: string;
+  dropOffCity: string;
+  dropOffState: string;
+  dropOffZipCode: string;
 }
 
 export const setPickUpVehicle = (data: AddVehicleData) => {
@@ -50,6 +63,29 @@ export const setPickUpVehicle = (data: AddVehicleData) => {
     }
   };
 };
+export const setReturnVehicle = (data: AddVehicleData) => {
+  const {
+    year,
+    make,
+    model,
+    type,
+    color,
+    nickName,
+    isCarParked,
+    licenseNumber,
+  } = data;
+
+  return (dispatch) => {
+    try {
+      dispatch({
+        type: "service/setReturnVehicle",
+        returnToOwnerVehicle: data,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+};
 
 export const setPickUpAddress = (data: AddressType) => {
   const { address, state, city, zipCode } = data;
@@ -61,6 +97,22 @@ export const setPickUpAddress = (data: AddressType) => {
         city: city,
         state: state,
         zipCode: zipCode,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+};
+export const setReturnAddress = (data: AddressType) => {
+  const { address, state, city, zipCode } = data;
+  return (dispatch) => {
+    try {
+      dispatch({
+        type: "service/setReturnAddress",
+        returnToOwnerAddress: address,
+        returnToOwnerCity: city,
+        returnToOwnerState: state,
+        returnToOwnerZipCode: zipCode,
       });
     } catch (err) {
       console.error(err);
@@ -80,6 +132,18 @@ export const setPickUpDate = (date: Date) => {
     }
   };
 };
+export const setReturnDate = (date: Date) => {
+  return (dispatch) => {
+    try {
+      dispatch({
+        type: "service/setReturnDate",
+        returnToOwnerDate: date,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+};
 
 export const createPickUpJob = (data: PickUpData) => {
   const {
@@ -92,8 +156,8 @@ export const createPickUpJob = (data: PickUpData) => {
     vehicleId,
   } = data;
 
-  return (dispatch) => {
-    const request = axios.post("/users/createJob/parkVehicle", {
+  return async (dispatch) => {
+    const request = await axios.post("/users/createJob/parkVehicle", {
       pickUpTime: pickUpTime,
       pickUpDate: pickUpDate,
       pickUpAddress1: pickUpAddress1,
@@ -103,21 +167,66 @@ export const createPickUpJob = (data: PickUpData) => {
       vehicleId: vehicleId,
     });
 
-    request
-      .then((res) => {
-        const { data } = res;
-        console.log(
-          "GREG LOOK!  ~ file: index.tsx ~ line 109 ~ .then ~ data",
-          data,
-        );
-        // const vehicles = data?.vehicles;
-        dispatch({
-          type: "service/createPickUpJob",
-          // vehicles: vehicles,
-        });
-      })
-      .catch((err) => {
-        console.error(err);
+    try {
+      const { data } = request;
+      dispatch({
+        type: "service/createPickUpJob",
+        // vehicles: vehicles,
       });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const createReturnJob = (data: PickUpData) => {
+  const {
+    dropOffTime,
+    dropOffDate,
+    dropOffAddress1,
+    dropOffCity,
+    dropOffState,
+    dropOffZipCode,
+    vehicleId,
+  } = data;
+
+  return async (dispatch) => {
+    const request = await axios.patch(
+      `/users/createJob/fetchVehicle/${vehicleId}`,
+      {
+        dropOffTime: dropOffTime,
+        dropOffDate: dropOffDate,
+        dropOffAddress1: dropOffAddress1,
+        dropOffCity: dropOffCity,
+        dropOffState: dropOffState,
+        dropOffZipCode: dropOffZipCode,
+      },
+    );
+
+    try {
+      const { data } = request;
+      dispatch({
+        type: "service/createReturnJob",
+        // vehicles: vehicles,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const refreshVehicles = () => {
+  return async (dispatch) => {
+    const request = await axios.get("/users/getAllVehicles");
+    try {
+      const { data } = request;
+      const vehicles = data?.vehicles;
+      dispatch({
+        type: "user/updateVehicle",
+        vehicles: vehicles,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 };

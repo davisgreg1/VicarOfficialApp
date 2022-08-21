@@ -3,21 +3,29 @@ import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { VehicleType } from "../types";
 import { useDispatch } from "react-redux";
-import { setPickUpVehicle } from "../redux/actions/serviceActions";
+import {
+  setPickUpVehicle,
+  setReturnVehicle,
+} from "../redux/actions/serviceActions";
 
 interface VehiclePropType {
   vehicle: VehicleType;
+  isReturningToOwner: boolean;
 }
 
 export default function Vehicle(props: VehiclePropType) {
   const dispatch = useDispatch();
   const {
     vehicle: { color, year, make, model, licenseNumber },
+    isReturningToOwner,
   } = props;
 
   const handleOnPress = () => {
-    dispatch(setPickUpVehicle(props.vehicle));
+    isReturningToOwner
+      ? dispatch(setReturnVehicle(props.vehicle))
+      : dispatch(setPickUpVehicle(props.vehicle));
   };
+
   return (
     <TouchableOpacity onPress={handleOnPress} style={styles.container}>
       <View style={styles.carView}>

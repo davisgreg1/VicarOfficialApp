@@ -56,6 +56,7 @@ export type VehicleType = {
   nickName?: string;
   color: string;
   licenseNumber: string;
+  isCarParked: boolean;
 };
 export type AuthState = {
   userAuthenticated: boolean;
@@ -70,6 +71,12 @@ export type ServiceState = {
   city: string;
   state: string;
   zipCode: string;
+  returnToOwnerDate: Date | any;
+  returnToOwnerAddress: string;
+  returnToOwnerCity: string;
+  returnToOwnerState: string;
+  returnToOwnerZipCode: string;
+  returnToOwnerVehicle: VehicleType;
 };
 export type RootState = {
   auth: AuthState;

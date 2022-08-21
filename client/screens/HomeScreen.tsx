@@ -14,6 +14,7 @@ import EditScreenInfo from "../components/EditScreenInfo";
 import { RootTabScreenProps } from "../types";
 import axios from "../utils/axios";
 import { logoutUser } from "../redux/actions/authActions/logoutUser";
+import { refreshVehicles } from "../redux/actions/serviceActions";
 
 export default function HomeScreen({
   navigation,
@@ -22,17 +23,27 @@ export default function HomeScreen({
 
   const handleLogOut = () => dispatch(logoutUser());
 
+  const handleParkMyCarClick = () => {
+    dispatch(refreshVehicles());
+    navigation.navigate("ParkCarScreen");
+  };
+  
+  const handleFetchMyCarClick = () => {
+    dispatch(refreshVehicles());
+    navigation.navigate("FetchCarScreen");
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
         <Button
-          onPress={() => navigation.navigate("ParkCarScreen")}
+          onPress={handleParkMyCarClick}
           title="Park My Car"
           color="#c64141"
           accessibilityLabel="Learn more about this purple button"
         />
         <Button
-          onPress={() => navigation.navigate("FetchCarScreen")}
+          onPress={handleFetchMyCarClick}
           title="Bring My Car"
           color="#c64141"
           accessibilityLabel="Learn more about this purple button"
