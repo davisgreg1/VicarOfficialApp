@@ -3,7 +3,7 @@ import { Button, View, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import dayjs from "dayjs";
-import { setPickUpDate } from "../redux/actions/serviceActions";
+import { setPickUpDate, setReturnDate } from "../redux/actions/serviceActions";
 
 type Props = {
   buttonTitle: string;
@@ -28,7 +28,9 @@ const DateTimePicker = (props: Props) => {
   const handleConfirm = (date: Date | any) => {
     const parsedDate = dayjs(date).format("MMM DD, YYYY hh:mm A");
     setDateValue(parsedDate);
-    dispatch(setPickUpDate(date));
+    typeOfSchedule === "return"
+      ? dispatch(setReturnDate(date))
+      : dispatch(setPickUpDate(date))
     hideDatePicker();
   };
 
@@ -37,10 +39,8 @@ const DateTimePicker = (props: Props) => {
       {selectedDate ? (
         <Text>
           Your vehicle will be scheduled to be{" "}
-          {typeOfSchedule === "returnVehicleToUser"
-            ? "picked up"
-            : "dropped off"}{" "}
-          on: {selectedDate}
+          {typeOfSchedule === "pick up" ? "picked up" : "dropped off"} on:{" "}
+          {selectedDate}
         </Text>
       ) : !dateValue ? (
         <Button title={buttonTitle} onPress={showDatePicker} />
@@ -58,10 +58,8 @@ const DateTimePicker = (props: Props) => {
       ) : dateValue ? (
         <Text>
           Your vehicle will be{" "}
-          {typeOfSchedule === "returnVehicleToUser"
-            ? "picked up"
-            : "dropped off"}{" "}
-          on: {dateValue}
+          {typeOfSchedule === "pick up" ? "picked up" : "dropped off"} on:{" "}
+          {dateValue}
         </Text>
       ) : (
         <Text></Text>

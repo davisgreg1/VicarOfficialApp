@@ -6,14 +6,21 @@ import React from "react";
 
 interface VehicleListProps {
   vehicles: Array<VehicleType>;
+  isReturningToOwner: boolean;
 }
 
 export default function VehicleList(props: VehicleListProps) {
-  const { vehicles } = props;
+  const { vehicles, isReturningToOwner } = props;
   return (
     <View>
       {vehicles.map((vehicle) => {
-        return <Vehicle key={vehicle.id} vehicle={vehicle} />;
+        return (
+          <Vehicle
+            isReturningToOwner={isReturningToOwner}
+            key={vehicle.id}
+            vehicle={vehicle}
+          />
+        );
       })}
     </View>
   );

@@ -7,7 +7,16 @@ module.exports = router;
 
 router.post("/addVehicle", async (req, res, next) => {
   const user = req.user;
-  const { year, make, model, color, type, nickName, isCarParked, licenseNumber } = req.body;
+  const {
+    year,
+    make,
+    model,
+    color,
+    type,
+    nickName,
+    isCarParked,
+    licenseNumber,
+  } = req.body;
   try {
     const userID = user.id;
     if (!Boolean(user)) return res.json({ message: "No User Found" });
@@ -22,7 +31,7 @@ router.post("/addVehicle", async (req, res, next) => {
       nickName,
       userId: userID,
       isCarParked: isCarParked,
-      licenseNumber: licenseNumber
+      licenseNumber: licenseNumber,
     });
     const vehicles = await Vehicle.findAll({
       where: {
@@ -68,7 +77,57 @@ router.post("/createJob/parkVehicle", async (req, res, next) => {
       userId,
       vehicleId,
     });
+    Vehicle.update({ isCarParked: true }, { where: { id: vehicleId } });
     return res.json({ message: "Job Created Successfully!", newJob: newJob });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/createJob/fetchVehicle/:id", async (req, res, next) => {
+  const vehicleId = req.params.id;
+  const {
+    dropOffTime,
+    dropOffDate,
+    dropOffAddress1,
+    dropOffCity,
+    dropOffState,
+    dropOffZipCode,
+  } = req.body;
+
+  try {
+    let editedJob = await VehicleService.update(
+      {
+        dropOffTime,
+        dropOffDate,
+        dropOffAddress1,
+        dropOffCity,
+        dropOffState,
+        dropOffZipCode,
+      },
+      { where: { vehicleId: vehicleId } },
+    );
+    await Vehicle.update({ isCarParked: false }, { where: { id: vehicleId } });
+    return res.json({
+      message: "Job Edited Successfully!",
+      editedJob: editedJob,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/getAllVehicles", async (req, res, next) => {
+  const user = req.user;
+  const userId = user.id;
+
+  try {
+    let vehicles = await Vehicle.findAll({
+      where: {
+        userId: userId,
+      },
+    });
+    return res.json({ message: "Got all vehicles!", vehicles: vehicles });
   } catch (err) {
     next(err);
   }

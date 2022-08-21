@@ -47,6 +47,12 @@ const userReducer = (state = initialState, action) => {
         vehicles: [...state.vehicles, ...action.vehicles],
       };
 
+    case "user/updateVehicle":
+      return {
+        ...state,
+        vehicles: action.vehicles,
+      };
+
     // case "user/resetPWConfirmEmail":
     //   return {
     //     ...state,
