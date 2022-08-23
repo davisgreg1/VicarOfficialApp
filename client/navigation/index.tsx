@@ -13,26 +13,26 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { useSelector } from "react-redux";
-import { ColorSchemeName, Pressable, Image } from "react-native";
-
+import { ColorSchemeName, Pressable, Image, View, Text } from "react-native";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import HomeScreen from "../screens/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import AccountScreen from "../screens/AccountScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import AddVehicleScreen from "../screens/AddVehicleScreen";
 import ParkCarScreen from "../screens/ParkCarScreen";
 import FetchCarScreen from "../screens/FetchCarScreen";
 import VicarAnimationScreen from "../screens/VicarAnimationScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import {
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
   VehicleType,
-  RootState
+  RootState,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 
@@ -124,6 +124,11 @@ function RootNavigator() {
             component={BottomTabNavigator}
             options={{ headerShown: false }}
           />
+          {/* <Stack.Screen
+            name="Drawer"
+            component={MyDrawer}
+            options={{ headerShown: true }}
+          /> */}
           <Stack.Group screenOptions={{ presentation: "modal" }}>
             <Stack.Screen
               options={{
@@ -157,6 +162,20 @@ function RootNavigator() {
           <Stack.Screen
             name="FetchCarScreen"
             component={FetchCarScreen}
+            options={{
+              title: "",
+              headerTitle: (props) => (
+                <Image
+                  style={{ width: 60, height: 60 }}
+                  source={require("../assets/images/vicarLogo1.png")}
+                  resizeMode="contain"
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
             options={{
               title: "",
               headerTitle: (props) => (
@@ -217,6 +236,11 @@ function BottomTabNavigator() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
+      {/* <Stack.Screen
+        name="Drawer"
+        component={MyDrawer}
+        options={{ headerShown: true }}
+      /> */}
       <BottomTab.Screen
         name="HomeScreen"
         component={HomeScreen}
@@ -227,20 +251,20 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="home" color={"#c64141"} />
           ),
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate("Modal")}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="cogs"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
+          // headerRight: () => (
+          //   <Pressable
+          //     onPress={() => navigation.navigate("Modal")}
+          //     style={({ pressed }) => ({
+          //       opacity: pressed ? 0.5 : 1,
+          //     })}>
+          //     <FontAwesome
+          //       name="cogs"
+          //       size={25}
+          //       color={Colors[colorScheme].text}
+          //       style={{ marginRight: 15 }}
+          //     />
+          //   </Pressable>
+          // ),
           headerTitle: (props) => (
             <Image
               style={{ width: 60, height: 60 }}
@@ -251,8 +275,8 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
+        name="AccountScreen"
+        component={AccountScreen}
         options={{
           tabBarLabel: "Account",
           tabBarLabelStyle: { color: "#c64141" },

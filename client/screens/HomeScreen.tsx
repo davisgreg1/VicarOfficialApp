@@ -9,11 +9,8 @@ import {
   SafeAreaView,
   View,
 } from "react-native";
-import { useSelector, useDispatch, connect } from "react-redux";
-import EditScreenInfo from "../components/EditScreenInfo";
+import { useDispatch } from "react-redux";
 import { RootTabScreenProps } from "../types";
-import axios from "../utils/axios";
-import { logoutUser } from "../redux/actions/authActions/logoutUser";
 import { refreshVehicles } from "../redux/actions/serviceActions";
 
 export default function HomeScreen({
@@ -21,13 +18,11 @@ export default function HomeScreen({
 }: RootTabScreenProps<"HomeScreen">) {
   const dispatch = useDispatch();
 
-  const handleLogOut = () => dispatch(logoutUser());
-
   const handleParkMyCarClick = () => {
     dispatch(refreshVehicles());
     navigation.navigate("ParkCarScreen");
   };
-  
+
   const handleFetchMyCarClick = () => {
     dispatch(refreshVehicles());
     navigation.navigate("FetchCarScreen");
@@ -45,12 +40,6 @@ export default function HomeScreen({
         <Button
           onPress={handleFetchMyCarClick}
           title="Bring My Car"
-          color="#c64141"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => handleLogOut()}
-          title="Log Out"
           color="#c64141"
           accessibilityLabel="Learn more about this purple button"
         />

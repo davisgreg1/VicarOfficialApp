@@ -19,6 +19,7 @@ declare global {
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
+  Drawer: undefined;
   NotFound: undefined;
   WelcomeScreen: undefined;
   SignUpScreen: undefined;
@@ -26,6 +27,7 @@ export type RootStackParamList = {
   ParkCarScreen: undefined;
   FetchCarScreen: undefined;
   VicarAnimationScreen: undefined;
+  ProfileScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -33,6 +35,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 
 export type RootTabParamList = {
   HomeScreen: undefined;
+  AccountScreen: undefined;
   ProfileScreen: undefined;
   WelcomeScreen: undefined;
   SignUpScreen: undefined;
@@ -63,6 +66,8 @@ export type AuthState = {
 };
 export type UserState = {
   vehicles: Array<any>;
+  userFirstName: string;
+  userLastName: string;
 };
 export type ServiceState = {
   vehicle: VehicleType;
