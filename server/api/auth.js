@@ -96,7 +96,8 @@ router.post("/deleteAccount", async (req, res, next) => {
   const user = req.user;
   const userID = user.id;
   try {
-    VehicleService.destroy({
+
+    await VehicleService.destroy({
       where: {
         userId: userID,
       },
@@ -104,7 +105,7 @@ router.post("/deleteAccount", async (req, res, next) => {
       cascade: true,
     });
 
-    Vehicle.destroy({
+    await Vehicle.destroy({
       where: {
         userId: userID,
       },
@@ -112,12 +113,18 @@ router.post("/deleteAccount", async (req, res, next) => {
       cascade: true,
     });
 
-    User.destroy({
+    await User.destroy({
       where: {
         id: userID,
       },
       paranoid: false,
       cascade: true,
+    });
+    
+    req.session.destroy(function (err, next) {
+      if (err) {
+        return next(err);
+      }
     });
 
     res.json({
