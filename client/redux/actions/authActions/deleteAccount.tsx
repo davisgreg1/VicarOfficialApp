@@ -7,9 +7,6 @@ export const deleteAccount = () => {
       .then((request) => {
         const { data } = request;
         dispatch({
-          type: "user/clearUserData",
-        });
-        dispatch({
           type: "auth/deleteAccount",
           userAuthenticated: data.userAuthenticated,
           message: data.message
@@ -19,6 +16,9 @@ export const deleteAccount = () => {
         });
         dispatch({
           type: "service/clearReturnServiceData",
+        });
+        dispatch({
+          type: "user/clearUserData",
         });
       })
       .catch((err) => {

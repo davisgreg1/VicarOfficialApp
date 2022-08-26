@@ -32,7 +32,7 @@ export default function ProfileScreen({
     (state: RootState) => state.user.userPhoneNumber,
   );
   const userName = useSelector((state: RootState) => state.user.userName);
-  // deleteAccount
+
   const handleOnClose = () => {
     setModalVisible(!modalVisible);
   };
