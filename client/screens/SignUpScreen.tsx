@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   View,
   Text,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { useSelector, useDispatch, connect } from "react-redux";
@@ -64,85 +66,87 @@ export default function SignUpScreen({
           props.handleSubmit();
         };
         return (
-          <SafeAreaView style={styles.container}>
-            <View style={[styles.contentContainer]}>
-              <FormField
-                {...props}
-                keyboardType="default"
-                value={props.values.firstName}
-                onChangeText={props.handleChange("firstName")}
-                label="Your First Name"
-                returnKeyType={"next"}
-                // ref={signInEmailInput}
-                // onSubmitEditing={() => handleEmailInput()}
-              />
-              <FormField
-                {...props}
-                keyboardType="default"
-                value={props.values.lastName}
-                onChangeText={props.handleChange("lastName")}
-                label="Your Last Name"
-                returnKeyType={"next"}
-                // ref={signInEmailInput}
-                // onSubmitEditing={() => handleEmailInput()}
-              />
-              <FormField
-                {...props}
-                keyboardType="email-address"
-                value={props.values.email}
-                onChangeText={props.handleChange("email")}
-                label="Your Email Address"
-                returnKeyType={"next"}
-                // ref={signInEmailInput}
-                // onSubmitEditing={() => handleEmailInput()}
-              />
-              <FormField
-                {...props}
-                // ref={signInPasswordInput}
-                value={props.values.password}
-                onChangeText={props.handleChange("password")}
-                label="Your Password"
-                maxLength={16}
-                secureTextEntry
-                returnKeyType={"next"}
-                keyboardType="visible-password"
-                // onSubmitEditing={() => handlePasswordInput()}
-              />
-              <FormField
-                {...props}
-                // ref={signInPasswordInput}
-                value={props.values.confirmPassword}
-                onChangeText={props.handleChange("confirmPassword")}
-                label="Confirm Password"
-                maxLength={16}
-                secureTextEntry
-                returnKeyType={"done"}
-                keyboardType="visible-password"
-                // onSubmitEditing={() => handlePasswordInput()}
-              />
-              {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
+          <SafeAreaView>
+            <KeyboardAvoidingView
+              style={styles.container}
+              behavior={Platform.OS === "ios" ? "padding" : "padding"}
+              keyboardVerticalOffset={150}>
+              <View>
+                <View>
+                  <FormField
+                    {...props}
+                    keyboardType="default"
+                    value={props.values.firstName}
+                    onChangeText={props.handleChange("firstName")}
+                    label="Your First Name"
+                    returnKeyType={"next"}
+                    // ref={signInEmailInput}
+                    // onSubmitEditing={() => handleEmailInput()}
+                  />
+                  <FormField
+                    {...props}
+                    keyboardType="default"
+                    value={props.values.lastName}
+                    onChangeText={props.handleChange("lastName")}
+                    label="Your Last Name"
+                    returnKeyType={"next"}
+                    // ref={signInEmailInput}
+                    // onSubmitEditing={() => handleEmailInput()}
+                  />
+                  <FormField
+                    {...props}
+                    keyboardType="email-address"
+                    value={props.values.email}
+                    onChangeText={props.handleChange("email")}
+                    label="Your Email Address"
+                    returnKeyType={"next"}
+                    // ref={signInEmailInput}
+                    // onSubmitEditing={() => handleEmailInput()}
+                  />
+                  <FormField
+                    // ref={signInPasswordInput}
+                    {...props}
+                    value={props.values.password}
+                    onChangeText={props.handleChange("password")}
+                    label="Your Password"
+                    secureTextEntry={true}
+                    returnKeyType={"next"}
+                    // onSubmitEditing={() => handlePasswordInput()}
+                  />
+                  <FormField
+                    // ref={signInPasswordInput}
+                    {...props}
+                    value={props.values.confirmPassword}
+                    onChangeText={props.handleChange("confirmPassword")}
+                    label="Confirm Password"
+                    secureTextEntry
+                    returnKeyType={"done"}
+                    // onSubmitEditing={() => handlePasswordInput()}
+                  />
+                  {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
                 <ForgotPasswordLink>I forgot my password</ForgotPasswordLink>
                 <GoForwardButtonContainer>
                   <GoForwardButton />
                 </GoForwardButtonContainer>
               </ForgotPasswordContainer> */}
-            </View>
-            <View style={styles.signInLinks}>
-              <TouchableOpacity
-                disabled={
-                  !props.values.email &&
-                  !props.values.password &&
-                  !props.values.firstName &&
-                  !props.values.lastName &&
-                  !props.values.confirmPassword &&
-                  props.values.password !== props.values.confirmPassword
-                }
-                style={styles.buttonTouch}
-                onPress={() => handleLoginPress()}>
-                <Text style={styles.getStartedText}>{`Sign Up`}</Text>
-              </TouchableOpacity>
-              <View style={styles.signInButton}></View>
-            </View>
+                </View>
+                <View style={styles.signUpBtn}>
+                  <TouchableOpacity
+                    disabled={
+                      !props.values.email &&
+                      !props.values.password &&
+                      !props.values.firstName &&
+                      !props.values.lastName &&
+                      !props.values.confirmPassword &&
+                      props.values.password !== props.values.confirmPassword
+                    }
+                    style={styles.buttonTouch}
+                    onPress={() => handleLoginPress()}>
+                    <Text>{`Sign Up`}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </KeyboardAvoidingView>
           </SafeAreaView>
         );
       }}
@@ -151,24 +155,15 @@ export default function SignUpScreen({
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    // height: Dimensions.get("screen").height,
-    // marginTop: 30,
-  },
-  contentContainer: {
-    paddingTop: 8,
-    display: "flex",
-  },
-  signInLinks: {
-    justifyContent: "center",
-    alignContent: "center",
+    paddingTop: 50,
     alignItems: "center",
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    left: 10,
+    justifyContent: "center",
+  },
+  signUpBtn: {
+    justifyContent: "flex-end",
+    alignSelf: "center",
+    alignItems: "center",
+    padding: 8,
   },
   buttonTouch: {
     backgroundColor: "#c64141",
@@ -176,17 +171,5 @@ const styles = StyleSheet.create({
     width: 315,
     padding: 16,
     alignItems: "center",
-  },
-  getStartedText: {
-    // color: "white",
-  },
-  signInButton: {
-    alignItems: "center",
-    padding: 16,
-  },
-  signInText: {
-    textDecorationLine: "underline",
-    padding: 8,
-    marginBottom: 16,
   },
 });

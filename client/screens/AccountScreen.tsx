@@ -6,7 +6,6 @@ import { Text, View } from "../components/Themed";
 import { RootTabScreenProps, RootState } from "../types";
 import { logoutUser } from "../redux/actions/authActions/logoutUser";
 import dayjs from "dayjs";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function AccountScreen({
   navigation,

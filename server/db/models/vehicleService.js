@@ -10,9 +10,11 @@ const VehicleService = sequelize.define("vehicleService", {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
+    onDelete: 'CASCADE',
   },
   vehicleId: {
     type: Sequelize.INTEGER,
+    onDelete: "CASCADE",
     references: {
       model: "vehicles", // <----- name of the table
       key: "id", // <----- primary key
@@ -20,6 +22,7 @@ const VehicleService = sequelize.define("vehicleService", {
   },
   userId: {
     type: Sequelize.INTEGER,
+    onDelete: "CASCADE",
     references: {
       model: "users", // <----- name of the table
       key: "id", // <----- primary key

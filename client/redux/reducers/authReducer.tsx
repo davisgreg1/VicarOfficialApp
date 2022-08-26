@@ -31,6 +31,12 @@ const authReducer = (state = initialState, action: any) => {
         accountCreated: action.accountCreated,
         message: action.message,
       };
+    case "auth/deleteAccount":
+      return {
+        ...state,
+        userAuthenticated: action.userAuthenticated,
+        message: action.message,
+      };
     // case "auth/updatePW":
     //   return {
     //     ...state,

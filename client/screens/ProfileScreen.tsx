@@ -1,38 +1,142 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FontAwesome } from "@expo/vector-icons";
-import { Linking, Modal, StyleSheet, Pressable, Platform } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  Modal,
+  ScrollView,
+  Dimensions,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Text, View } from "../components/Themed";
+import EditProfileSection from "../components/EditProfileSection";
 import { RootTabScreenProps, RootState } from "../types";
-import { logoutUser } from "../redux/actions/authActions/logoutUser";
-import dayjs from "dayjs";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { deleteAccount } from "../redux/actions/authActions/deleteAccount";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen({
   navigation,
 }: RootTabScreenProps<"ProfileScreen">) {
+  const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
   const userFirstName = useSelector(
     (state: RootState) => state.user.userFirstName,
   );
+  const userLastName = useSelector(
+    (state: RootState) => state.user.userLastName,
+  );
+  const userEmail = useSelector((state: RootState) => state.user.userEmail);
+  const userPhoneNumber = useSelector(
+    (state: RootState) => state.user.userPhoneNumber,
+  );
+  const userName = useSelector((state: RootState) => state.user.userName);
+  // deleteAccount
+  const handleOnClose = () => {
+    setModalVisible(!modalVisible);
+  };
 
-  //   const handleLogOut = () => {
-  //     dispatch(logoutUser());
-  //     setModalVisible(!modalVisible);
-  //   };
+  const myProfileData = {
+    userFirstName: userFirstName,
+    userLastName: userLastName,
+    userPhoneNumber: userPhoneNumber,
+    userName: userName,
+    userEmail: userEmail,
+  };
+
+  const myProfileLoginData = {
+    userEmail: userEmail,
+  };
+
+  const handleOnDeleteAccount = () => dispatch(deleteAccount());
 
   return (
-    <View style={styles.container}>
-      <Text>PROFILE HERE</Text>
-    </View>
+    <KeyboardAvoidingView
+      keyboardVerticalOffset={10}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <EditProfileSection
+          heading="My Profile"
+          data={myProfileData}
+          type="personal">
+          <Text style={styles.profileSectionText}>
+            {myProfileData.userFirstName} {myProfileData.userLastName}
+          </Text>
+          <Text style={styles.profileSectionText}>
+            {myProfileData.userPhoneNumber}
+          </Text>
+        </EditProfileSection>
+        <View
+          style={styles.separator}
+          lightColor="#eee"
+          darkColor="rgba(255,255,255,0.1)"
+        />
+        <EditProfileSection
+          heading="Login & Password"
+          data={myProfileLoginData}
+          type="auth">
+          <Text style={styles.profileSectionText}>
+            {myProfileData.userEmail}{" "}
+          </Text>
+        </EditProfileSection>
+        <View
+          style={styles.separator}
+          lightColor="#eee"
+          darkColor="rgba(255,255,255,0.1)"
+        />
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="fade"
+            transparent={false}
+            visible={modalVisible}
+            onRequestClose={handleOnClose}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>Hello, {userFirstName}!</Text>
+                <Pressable
+                  accessibilityLabel="Delete Account"
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={handleOnDeleteAccount}>
+                  <Text style={styles.textStyle}>
+                    Are you sure you want to delete your account?
+                  </Text>
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Cancel Delete Account"
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={handleOnClose}>
+                  <Text style={styles.textStyle}>Cancel</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+        </View>
+        <Pressable style={styles.deleteAccountBtn} onPress={handleOnClose}>
+          <Text style={styles.headingText}>Delete Account</Text>
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  centeredView: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  container: {
+    flexGrow: 1,
     justifyContent: "flex-start",
     padding: 16,
+    height: Dimensions.get("window").height - StatusBar?.currentHeight,
+    backgroundColor: "white",
+  },
+  headingText: {
+    fontWeight: "600",
+    color: "#c64141",
   },
   viewProfileText: {
     color: "#63666A",
@@ -42,6 +146,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  profileSectionText: {
+    color: "#63666A",
+    paddingBottom: 8,
   },
   separator: {
     marginVertical: 30,
@@ -80,12 +188,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: "white",
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
   modalView: {
     margin: 20,
     backgroundColor: "white",
@@ -120,5 +222,11 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+  },
+  deleteAccountBtn: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 20,
+    alignSelf: "center",
   },
 });

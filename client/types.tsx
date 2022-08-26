@@ -68,6 +68,9 @@ export type UserState = {
   vehicles: Array<any>;
   userFirstName: string;
   userLastName: string;
+  userEmail: string;
+  userPhoneNumber: string;
+  userName: string;
 };
 export type ServiceState = {
   vehicle: VehicleType;

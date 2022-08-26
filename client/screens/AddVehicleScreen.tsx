@@ -13,17 +13,18 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from "react-native";
+
 import { RadioButton } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import EditScreenInfo from "../components/EditScreenInfo";
 import { FormField } from "../components/FormField";
 import { RootTabScreenProps } from "../types";
-import axios from "../utils/axios";
 import { addVehicle } from "../redux/actions/userActions/addVehicle";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function AddVehicleScreen({
   navigation,
@@ -32,188 +33,202 @@ export default function AddVehicleScreen({
   const colorStyle = { color: colors.text };
   const dispatch = useDispatch();
   return (
-    <Formik
-      initialValues={{
-        licenseNumber: "",
-        year: "",
-        make: "",
-        model: "",
-        color: "",
-        nickName: "",
-        type: "",
-        isCarParked: "no",
-      }}
-      validationSchema={Yup.object({
-        year: Yup.number()
-          .required()
-          .positive()
-          .integer("Provide a valid year."),
-        make: Yup.string().required("Vehicle make is required."),
-        licenseNumber: Yup.string().required(
-          "Vehicle license number is required.",
-        ),
-        model: Yup.string().required("Vehicle model is required."),
-        type: Yup.string().required("Vehicle transmission type is required."),
-        color: Yup.string().required("Vehicle color is required."),
-        isCarParked: Yup.string().required("This field must be checked"),
-        nickName: Yup.string(),
-      })}
-      onSubmit={(values, formikActions) => {
-        try {
-          const data = {
-            year: values.year,
-            make: values.make,
-            model: values.model,
-            color: values.color,
-            nickName: values.nickName,
-            type: values.type,
-            isCarParked: values.isCarParked === "yes" ? true : false,
-            licenseNumber: values.licenseNumber,
+    <ScrollView contentContainerStyle={styles.container}>
+      <Formik
+        initialValues={{
+          licenseNumber: "",
+          year: "",
+          make: "",
+          model: "",
+          color: "",
+          nickName: "",
+          type: "",
+          isCarParked: "no",
+        }}
+        validationSchema={Yup.object({
+          year: Yup.number()
+            .required()
+            .positive()
+            .integer("Provide a valid year."),
+          make: Yup.string().required("Vehicle make is required."),
+          licenseNumber: Yup.string().required(
+            "Vehicle license number is required.",
+          ),
+          model: Yup.string().required("Vehicle model is required."),
+          type: Yup.string().required("Vehicle transmission type is required."),
+          color: Yup.string().required("Vehicle color is required."),
+          isCarParked: Yup.string().required("This field must be checked"),
+          nickName: Yup.string(),
+        })}
+        onSubmit={(values, formikActions) => {
+          try {
+            const data = {
+              year: values.year,
+              make: values.make,
+              model: values.model,
+              color: values.color,
+              nickName: values.nickName,
+              type: values.type,
+              isCarParked: values.isCarParked === "yes" ? true : false,
+              licenseNumber: values.licenseNumber,
+            };
+            dispatch(addVehicle(data));
+          } catch (error) {
+            console.error("ADD VEHICLE ERROR -> render -> error", error);
+          }
+        }}>
+        {(props) => {
+          const handleAddVehicle = () => {
+            return props.handleSubmit();
           };
-          dispatch(addVehicle(data));
-        } catch (error) {
-          console.error("ADD VEHICLE ERROR -> render -> error", error);
-        }
-      }}>
-      {(props) => {
-        const handleAddVehicle = () => {
-          return props.handleSubmit();
-        };
-        return (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}>
-            <View style={[styles.contentContainer]}>
-              <FormField
-                {...props}
-                value={props.values.licenseNumber}
-                onChangeText={props.handleChange("licenseNumber")}
-                label="Vehicle License Number"
-                returnKeyType={"next"}
-              />
-              <FormField
-                {...props}
-                keyboardType="numeric"
-                value={props.values.year}
-                onChangeText={props.handleChange("year")}
-                label="Vehicle Year"
-                returnKeyType={"next"}
-              />
-              <FormField
-                {...props}
-                keyboardType="default"
-                value={props.values.make}
-                onChangeText={props.handleChange("make")}
-                label="Vehicle Make"
-                returnKeyType={"next"}
-              />
-              <FormField
-                {...props}
-                keyboardType="default"
-                value={props.values.model}
-                onChangeText={props.handleChange("model")}
-                label="Vehicle Model"
-                returnKeyType={"next"}
-              />
-              <FormField
-                {...props}
-                value={props.values.color}
-                onChangeText={props.handleChange("color")}
-                label="Vehicle Color"
-                returnKeyType={"next"}
-              />
-              <FormField
-                {...props}
-                value={props.values.nickName}
-                onChangeText={props.handleChange("nickName")}
-                label="Vehicle Nick Name"
-                maxLength={16}
-                returnKeyType={"next"}
-              />
-              <View style={styles.radioBtnsContainer}>
-                <Text style={[styles.btnHeadingText, colorStyle]}>
-                  Is your vehicle already parked?
-                </Text>
-                <View style={styles.radioBtns}>
-                  <RadioButton.Group
-                    onValueChange={props.handleChange("isCarParked")}
-                    value={props.values.isCarParked}>
-                    <Text style={[styles.btnText, colorStyle]}>Yes</Text>
-                    <RadioButton
-                      uncheckedColor="#c64141"
-                      color="#c64141"
-                      value={"yes"}></RadioButton>
-                    <Text style={[styles.btnText, colorStyle]}>No</Text>
-                    <RadioButton
-                      uncheckedColor="#c64141"
-                      color="#c64141"
-                      value={"no"}></RadioButton>
-                  </RadioButton.Group>
+          return (
+            <KeyboardAwareScrollView>
+              <View style={[styles.contentContainer]}>
+                <FormField
+                  {...props}
+                  value={props.values.licenseNumber}
+                  onChangeText={props.handleChange("licenseNumber")}
+                  label="Vehicle License Plate ID"
+                  returnKeyType={"next"}
+                />
+                <FormField
+                  {...props}
+                  keyboardType="numeric"
+                  value={props.values.year}
+                  onChangeText={props.handleChange("year")}
+                  label="Vehicle Year"
+                  returnKeyType={"next"}
+                />
+                <FormField
+                  {...props}
+                  keyboardType="default"
+                  value={props.values.make}
+                  onChangeText={props.handleChange("make")}
+                  label="Vehicle Make"
+                  returnKeyType={"next"}
+                />
+                <FormField
+                  {...props}
+                  keyboardType="default"
+                  value={props.values.model}
+                  onChangeText={props.handleChange("model")}
+                  label="Vehicle Model"
+                  returnKeyType={"next"}
+                />
+                <FormField
+                  {...props}
+                  value={props.values.color}
+                  onChangeText={props.handleChange("color")}
+                  label="Vehicle Color"
+                  returnKeyType={"next"}
+                />
+                <FormField
+                  {...props}
+                  value={props.values.nickName}
+                  onChangeText={props.handleChange("nickName")}
+                  label="Vehicle Nick Name"
+                  maxLength={16}
+                  returnKeyType={"next"}
+                />
+                <View style={styles.radios}>
+                  <View>
+                    <Text style={[styles.btnHeadingText, colorStyle]}>
+                      Is your vehicle already parked?
+                    </Text>
+                    <View style={styles.radioBtns}>
+                      <RadioButton.Group
+                        onValueChange={props.handleChange("isCarParked")}
+                        value={props.values.isCarParked}>
+                        <RadioButton.Item
+                          uncheckedColor="#c64141"
+                          color="#c64141"
+                          label="Yes"
+                          value="yes"
+                        />
+                        <RadioButton.Item
+                          uncheckedColor="#c64141"
+                          color="#c64141"
+                          label="No"
+                          value="no"
+                        />
+                      </RadioButton.Group>
+                    </View>
+                  </View>
+                  <View>
+                    <Text style={[styles.btnHeadingText, colorStyle]}>
+                      Type of Transmission:
+                    </Text>
+                    <View style={styles.radioBtns}>
+                      <RadioButton.Group
+                        onValueChange={props.handleChange("type")}
+                        value={props.values.type}>
+                        <RadioButton.Item
+                          uncheckedColor="#c64141"
+                          color="#c64141"
+                          label="Automatic"
+                          value="Automatic"
+                        />
+                        <RadioButton.Item
+                          uncheckedColor="#c64141"
+                          color="#c64141"
+                          label="Manual"
+                          value="Manual"
+                        />
+                        <RadioButton.Item
+                          uncheckedColor="#c64141"
+                          color="#c64141"
+                          label="Electric"
+                          value="Electric"
+                        />
+                      </RadioButton.Group>
+                    </View>
+                  </View>
                 </View>
               </View>
-              <View style={styles.radioBtnsContainer}>
-                <Text style={[styles.btnHeadingText, colorStyle]}>
-                  Type of Transmission:
-                </Text>
-                <View style={styles.radioBtns}>
-                  <RadioButton.Group
-                    onValueChange={props.handleChange("type")}
-                    value={props.values.type}>
-                    <Text style={[styles.btnText, colorStyle]}>Automatic</Text>
-                    <RadioButton
-                      uncheckedColor="#c64141"
-                      color="#c64141"
-                      value="Automatic"></RadioButton>
-                    <Text style={[styles.btnText, colorStyle]}>Manual</Text>
-                    <RadioButton
-                      uncheckedColor="#c64141"
-                      color="#c64141"
-                      value="Manual"></RadioButton>
-                    <Text style={[styles.btnText, colorStyle]}>Electric</Text>
-                    <RadioButton
-                      uncheckedColor="#c64141"
-                      color="#c64141"
-                      value="Electric"></RadioButton>
-                  </RadioButton.Group>
-                </View>
-              </View>
-            </View>
-            <View style={styles.signInLinks}>
+
               <TouchableOpacity
-                style={styles.buttonTouch}
+                // style={styles.buttonTouch}
+                style={styles.addVehicleBtn}
                 onPress={() => handleAddVehicle()}>
-                <Text style={styles.getStartedText}>{`Add Vehicle`}</Text>
+                <Text>{`Add Vehicle`}</Text>
               </TouchableOpacity>
-              <View style={styles.signInButton}></View>
-            </View>
-          </KeyboardAvoidingView>
-        );
-      }}
-    </Formik>
+            </KeyboardAwareScrollView>
+          );
+        }}
+      </Formik>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     // display: "flex",
-    // justifyContent: "center",
+    height: Dimensions.get("window").height - StatusBar?.currentHeight,
+    marginTop: 16,
   },
   contentContainer: {
     display: "flex",
   },
   radioBtnsContainer: {
-    justifyContent: "flex-start",
+    // justifyContent: "flex-start",
     flexDirection: "row",
-    width: Dimensions.get("window").width,
+    // width: Dimensions.get("window").width,
   },
   btnHeadingText: {
-    marginLeft: 42,
+    // marginLeft: 42,
   },
   btnText: {
     alignItems: "center",
   },
+  radios: {
+    display: "flex",
+    // backgroundColor: "red",
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
   radioBtns: {
     flexDirection: "row",
-    alignItems: "center",
+    // alignItems: "center",
   },
   signInLinks: {
     justifyContent: "center",
@@ -224,17 +239,29 @@ const styles = StyleSheet.create({
     right: 10,
     left: 10,
   },
-  buttonTouch: {
-    backgroundColor: "#c64141",
-    borderRadius: 24,
-    width: 315,
-    padding: 16,
-    alignItems: "center",
-  },
+  // buttonTouch: {
+  //   backgroundColor: "#c64141",
+  //   borderRadius: 24,
+  //   width: 315,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
   getStartedText: {
     // color: "white",
   },
   signInButton: {
     alignItems: "center",
+  },
+  addVehicleBtn: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 20,
+    alignSelf: "center",
+
+    backgroundColor: "#c64141",
+    borderRadius: 24,
+    width: 315,
+    alignItems: "center",
+    padding: 8,
   },
 });
