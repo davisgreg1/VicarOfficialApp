@@ -2,6 +2,7 @@ require("dotenv").config();
 const router = require("express").Router();
 const User = require("../db/models/user");
 const Vehicle = require("../db/models/vehicle");
+const VehicleService = require("../db/models/vehicleService");
 // const crypto = require("crypto");
 // const seedrandom = require("seedrandom");
 // const moment = require("moment");
@@ -89,6 +90,43 @@ router.post("/logout", async (req, res, next) => {
     userAuthenticated: false,
     message: "User successfully logged out",
   });
+});
+
+router.post("/deleteAccount", async (req, res, next) => {
+  const user = req.user;
+  const userID = user.id;
+  try {
+    VehicleService.destroy({
+      where: {
+        userId: userID,
+      },
+      paranoid: false,
+      cascade: true,
+    });
+
+    Vehicle.destroy({
+      where: {
+        userId: userID,
+      },
+      paranoid: false,
+      cascade: true,
+    });
+
+    User.destroy({
+      where: {
+        id: userID,
+      },
+      paranoid: false,
+      cascade: true,
+    });
+
+    res.json({
+      userAuthenticated: false,
+      message: "Account successfully deleted",
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // router.patch("/updatePW", (req, res, next) => {

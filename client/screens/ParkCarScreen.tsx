@@ -14,6 +14,8 @@ import {
   createPickUpJob,
 } from "../redux/actions/serviceActions";
 import dayjs from "dayjs";
+import { ScrollView } from "react-native-gesture-handler";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function ParkCarScreen({
   navigation,
@@ -93,115 +95,118 @@ export default function ParkCarScreen({
           </View>
         </ProgressStep>
         <ProgressStep label="Location" errors={locationErrors}>
-          <View style={{ alignItems: "center" }}>
-            <Text>
-              Where would you like the valet to return your vehicle, if needed?
-            </Text>
-            <Formik
-              initialValues={{
-                address: "",
-                city: "",
-                state: "",
-                zipCode: "",
-              }}
-              validationSchema={Yup.object({
-                address: Yup.string().required("Provide a valid address."),
-                city: Yup.string().required("Provide a valid city."),
-                state: Yup.string().required("Provide a valid state."),
-                zipCode: Yup.string().required("Provide a valid zipCode."),
-              })}
-              onSubmit={(values, formikActions) => {
-                try {
-                  const data = {
-                    address: values.address,
-                    city: values.city,
-                    state: values.state,
-                    zipCode: values.zipCode,
+          <KeyboardAwareScrollView>
+            <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+              <Text>
+                Where would you like the valet to return your vehicle, if
+                needed?
+              </Text>
+              <Formik
+                initialValues={{
+                  address: "",
+                  city: "",
+                  state: "",
+                  zipCode: "",
+                }}
+                validationSchema={Yup.object({
+                  address: Yup.string().required("Provide a valid address."),
+                  city: Yup.string().required("Provide a valid city."),
+                  state: Yup.string().required("Provide a valid state."),
+                  zipCode: Yup.string().required("Provide a valid zipCode."),
+                })}
+                onSubmit={(values, formikActions) => {
+                  try {
+                    const data = {
+                      address: values.address,
+                      city: values.city,
+                      state: values.state,
+                      zipCode: values.zipCode,
+                    };
+                    // TODO: type dispatch
+                    dispatch(setPickUpAddress(data));
+                  } catch (error) {
+                    console.error("SIGN IN SET ADDRESS -> error", error);
+                  }
+                }}>
+                {(props) => {
+                  const handleSetAddress = () => {
+                    props.handleSubmit();
                   };
-                  // TODO: type dispatch
-                  dispatch(setPickUpAddress(data));
-                } catch (error) {
-                  console.error("SIGN IN SET ADDRESS -> error", error);
-                }
-              }}>
-              {(props) => {
-                const handleSetAddress = () => {
-                  props.handleSubmit();
-                };
-                const {
-                  errors,
-                  status,
-                  touched,
-                  isSubmitting,
-                  dirty,
-                  handleSubmit,
-                  values,
-                  handleChange,
-                } = props;
+                  const {
+                    errors,
+                    status,
+                    touched,
+                    isSubmitting,
+                    dirty,
+                    handleSubmit,
+                    values,
+                    handleChange,
+                  } = props;
 
-                const disabled =
-                  !values.address &&
-                  !values.city &&
-                  !values.state &&
-                  !values.zipCode;
+                  const disabled =
+                    !values.address &&
+                    !values.city &&
+                    !values.state &&
+                    !values.zipCode;
 
-                return (
-                  <View style={[styles.contentContainer]}>
-                    <FormField
-                      {...props}
-                      placeholder={address ? address : "Address"}
-                      keyboardType="default"
-                      value={values.address}
-                      onChangeText={handleChange("address")}
-                      label="Address"
-                      returnKeyType={"next"}
-                      // ref={signInEmailInput}
-                      // onSubmitEditing={() => handleEmailInput()}
-                    />
-                    <FormField
-                      {...props}
-                      placeholder={city ? city : "City"}
-                      keyboardType="default"
-                      value={values.city}
-                      onChangeText={handleChange("city")}
-                      label="City"
-                      returnKeyType={"next"}
-                      // ref={signInEmailInput}
-                      // onSubmitEditing={() => handleEmailInput()}
-                    />
-                    <FormField
-                      {...props}
-                      placeholder={state ? state : "State"}
-                      keyboardType="default"
-                      value={values.state}
-                      onChangeText={handleChange("state")}
-                      label="State"
-                      returnKeyType={"next"}
-                      // ref={signInEmailInput}
-                      // onSubmitEditing={() => handleEmailInput()}
-                    />
-                    <FormField
-                      {...props}
-                      placeholder={zipCode ? zipCode : "Zip Code"}
-                      keyboardType="default"
-                      value={values.zipCode}
-                      onChangeText={handleChange("zipCode")}
-                      label="Zip Code"
-                      returnKeyType={"done"}
-                      // ref={signInEmailInput}
-                      // onSubmitEditing={() => handleEmailInput()}
-                    />
-                    <TouchableOpacity
-                      disabled={disabled}
-                      style={styles.buttonTouch}
-                      onPress={() => handleSetAddress()}>
-                      <Text>{`Set Address`}</Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              }}
-            </Formik>
-          </View>
+                  return (
+                    <View style={[styles.contentContainer]}>
+                      <FormField
+                        {...props}
+                        placeholder={address ? address : "Address"}
+                        keyboardType="default"
+                        value={values.address}
+                        onChangeText={handleChange("address")}
+                        label="Address"
+                        returnKeyType={"next"}
+                        // ref={signInEmailInput}
+                        // onSubmitEditing={() => handleEmailInput()}
+                      />
+                      <FormField
+                        {...props}
+                        placeholder={city ? city : "City"}
+                        keyboardType="default"
+                        value={values.city}
+                        onChangeText={handleChange("city")}
+                        label="City"
+                        returnKeyType={"next"}
+                        // ref={signInEmailInput}
+                        // onSubmitEditing={() => handleEmailInput()}
+                      />
+                      <FormField
+                        {...props}
+                        placeholder={state ? state : "State"}
+                        keyboardType="default"
+                        value={values.state}
+                        onChangeText={handleChange("state")}
+                        label="State"
+                        returnKeyType={"next"}
+                        // ref={signInEmailInput}
+                        // onSubmitEditing={() => handleEmailInput()}
+                      />
+                      <FormField
+                        {...props}
+                        placeholder={zipCode ? zipCode : "Zip Code"}
+                        keyboardType="default"
+                        value={values.zipCode}
+                        onChangeText={handleChange("zipCode")}
+                        label="Zip Code"
+                        returnKeyType={"done"}
+                        // ref={signInEmailInput}
+                        // onSubmitEditing={() => handleEmailInput()}
+                      />
+                      <TouchableOpacity
+                        disabled={disabled}
+                        style={styles.buttonTouch}
+                        onPress={() => handleSetAddress()}>
+                        <Text>{`Set Address`}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                }}
+              </Formik>
+            </ScrollView>
+          </KeyboardAwareScrollView>
         </ProgressStep>
         <ProgressStep label="Confirm" onSubmit={handleOnSubmit}>
           <View style={{ alignItems: "center" }}>
@@ -240,6 +245,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 8,
     display: "flex",
+    flexGrow:1
   },
   buttonTouch: {
     backgroundColor: "#c64141",

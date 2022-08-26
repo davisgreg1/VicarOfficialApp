@@ -12,6 +12,7 @@ const User = sequelize.define("user", {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
+    onDelete: 'CASCADE',
 },
   firstName: {
     type: Sequelize.STRING,

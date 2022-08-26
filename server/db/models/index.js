@@ -14,10 +14,16 @@ const VehicleService = require("./VehicleService");
  */
 User.hasMany(Vehicle, {
   foreignKey: "id",
+  onDelete: "cascade",
+  hooks: true,
 });
 Vehicle.belongsTo(User);
 
-Vehicle.hasMany(VehicleService);
+Vehicle.hasMany(VehicleService, {
+  foreignKey: "id",
+  onDelete: "cascade",
+  hooks: true,
+});
 VehicleService.belongsTo(Vehicle);
 
 // User.hasMany(Account);

@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   View,
   Text,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { useSelector, useDispatch, connect } from "react-redux";
@@ -68,54 +70,58 @@ export default function WelcomeScreen({
           handleSubmit();
         };
         return (
-          <SafeAreaView style={styles.container}>
-            <View style={[styles.contentContainer]}>
-              <FormField
-                {...props}
-                keyboardType="email-address"
-                value={values.email}
-                onChangeText={handleChange("email")}
-                label="Your Email Address"
-                returnKeyType={"next"}
-                // ref={signInEmailInput}
-                // onSubmitEditing={() => handleEmailInput()}
-              />
-              <FormField
-                {...props}
-                // ref={signInPasswordInput}
-                value={values.password}
-                onChangeText={handleChange("password")}
-                label="Your Password"
-                maxLength={16}
-                secureTextEntry
-                returnKeyType={"done"}
-                // onSubmitEditing={() => handlePasswordInput()}
-              />
-              {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}>
+            <SafeAreaView>
+              <View style={styles.mainCont}>
+                <View>
+                  <FormField
+                    {...props}
+                    keyboardType="email-address"
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    label="Your Email Address"
+                    returnKeyType={"next"}
+                    // ref={signInEmailInput}
+                    // onSubmitEditing={() => handleEmailInput()}
+                  />
+                  <FormField
+                    {...props}
+                    // ref={signInPasswordInput}
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    label="Your Password"
+                    maxLength={16}
+                    secureTextEntry
+                    returnKeyType={"done"}
+                    // onSubmitEditing={() => handlePasswordInput()}
+                  />
+                  {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
                 <ForgotPasswordLink>I forgot my password</ForgotPasswordLink>
                 <GoForwardButtonContainer>
                   <GoForwardButton />
                 </GoForwardButtonContainer>
               </ForgotPasswordContainer> */}
-            </View>
-            <View style={styles.signInLinks}>
-              <TouchableOpacity
-                disabled={!values.email && !values.password}
-                style={styles.buttonTouch}
-                onPress={() => handleLoginPress()}>
-                <Text style={styles.getStartedText}>{`Sign In`}</Text>
-              </TouchableOpacity>
-              <View style={styles.signInButton}>
-                <Text
-                  style={[styles.signInText, colorStyle]}
-                  onPress={(): void => {
-                    navigation.navigate("SignUpScreen");
-                  }}>
-                  Don't have an account? Sign up now
-                </Text>
+                </View>
+                <View style={styles.signInLinks}>
+                  <TouchableOpacity
+                    disabled={!values.email && !values.password}
+                    style={styles.buttonTouch}
+                    onPress={() => handleLoginPress()}>
+                    <Text>{`Sign In`}</Text>
+                  </TouchableOpacity>
+                  <Text
+                    style={[styles.signInText, colorStyle]}
+                    onPress={(): void => {
+                      navigation.navigate("SignUpScreen");
+                    }}>
+                    Don't have an account? Sign up now
+                  </Text>
+                </View>
               </View>
-            </View>
-          </SafeAreaView>
+            </SafeAreaView>
+          </KeyboardAvoidingView>
         );
       }}
     </Formik>
@@ -124,23 +130,19 @@ export default function WelcomeScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    // height: Dimensions.get("screen").height,
-    // marginTop: 30,
+    alignItems: "center",
+    justifyContent: 'center',
+    flexGrow: 1,
   },
-  contentContainer: {
-    paddingTop: 8,
-    display: "flex",
+  mainCont: {
+    display: 'flex'
   },
   signInLinks: {
-    justifyContent: "center",
-    alignContent: "center",
+    justifyContent: "flex-end",
+    marginBottom: 20,
+    alignSelf: "center",
     alignItems: "center",
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    left: 10,
+    padding: 8,
   },
   buttonTouch: {
     backgroundColor: "#c64141",
@@ -148,13 +150,6 @@ const styles = StyleSheet.create({
     width: 315,
     padding: 16,
     alignItems: "center",
-  },
-  getStartedText: {
-    // color: "white",
-  },
-  signInButton: {
-    alignItems: "center",
-    padding: 16,
   },
   signInText: {
     textDecorationLine: "underline",

@@ -10,6 +10,7 @@ const Vehicle = sequelize.define("vehicle", {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
+    onDelete: 'CASCADE',
   },
   userId: {
     type: Sequelize.INTEGER,
