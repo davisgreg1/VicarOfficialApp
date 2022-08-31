@@ -47,11 +47,11 @@ const FormField = React.forwardRef(
     return (
       <View>
         <View style={styles.inputContainer}>
-          <ScrollView scrollEnabled={false} keyboardShouldPersistTaps="never">
+          <ScrollView scrollEnabled={false}>
             <Text style={styles.vicarText}>{label}</Text>
             <TextInput
               style={[styles.vicarTextInput, colorStyle]}
-              // ref={ref}
+              ref={ref}
               // onSubmit={Keyboard.dismiss}
               // name={name}
               autoCapitalize="none"

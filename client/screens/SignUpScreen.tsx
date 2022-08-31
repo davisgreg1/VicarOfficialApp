@@ -1,37 +1,30 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
-  TextInputProps,
-  TextInput,
   ScrollView,
-  Keyboard,
   StyleSheet,
-  Button,
   SafeAreaView,
-  Dimensions,
   TouchableOpacity,
   View,
   Text,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { VStack, TextInput, Spacer } from "@react-native-material/core";
+import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import EditScreenInfo from "../components/EditScreenInfo";
-import { FormField } from "../components/FormField";
 import { RootTabScreenProps } from "../types";
-import axios from "../utils/axios";
 import { createAccount } from "../redux/actions/authActions/createAccount";
 
 export default function SignUpScreen({
   navigation,
 }: RootTabScreenProps<"SignUpScreen">) {
-  const { colors } = useTheme();
-  const colorStyle = { color: colors.text };
-  const backGroundStyle = { color: colors.background };
-
   const dispatch = useDispatch();
+
+  const firstNameInput = useRef<HTMLInputElement>(null);
+  const lastNameInput = useRef<HTMLInputElement>(null);
+  const emailInput = useRef<HTMLInputElement>(null);
+  const passwordInput = useRef<HTMLInputElement>(null);
+  const confirmPWInput = useRef<HTMLInputElement>(null);
+
   return (
     <Formik
       initialValues={{
@@ -48,7 +41,7 @@ export default function SignUpScreen({
         password: Yup.string().required("Password is required."),
         confirmPassword: Yup.string().required("Password is required."),
       })}
-      onSubmit={(values, formikActions) => {
+      onSubmit={(values) => {
         try {
           const data = {
             email: values.email,
@@ -66,96 +59,97 @@ export default function SignUpScreen({
           props.handleSubmit();
         };
         return (
-          <SafeAreaView>
-            <KeyboardAvoidingView
-              style={styles.container}
-              behavior={Platform.OS === "ios" ? "padding" : "padding"}
-              keyboardVerticalOffset={150}>
-              <View>
-                <View>
-                  <FormField
-                    {...props}
-                    keyboardType="default"
-                    value={props.values.firstName}
-                    onChangeText={props.handleChange("firstName")}
-                    label="Your First Name"
-                    returnKeyType={"next"}
-                    // ref={signInEmailInput}
-                    // onSubmitEditing={() => handleEmailInput()}
-                  />
-                  <FormField
-                    {...props}
-                    keyboardType="default"
-                    value={props.values.lastName}
-                    onChangeText={props.handleChange("lastName")}
-                    label="Your Last Name"
-                    returnKeyType={"next"}
-                    // ref={signInEmailInput}
-                    // onSubmitEditing={() => handleEmailInput()}
-                  />
-                  <FormField
-                    {...props}
-                    keyboardType="email-address"
-                    value={props.values.email}
-                    onChangeText={props.handleChange("email")}
-                    label="Your Email Address"
-                    returnKeyType={"next"}
-                    // ref={signInEmailInput}
-                    // onSubmitEditing={() => handleEmailInput()}
-                  />
-                  <FormField
-                    // ref={signInPasswordInput}
-                    {...props}
-                    value={props.values.password}
-                    onChangeText={props.handleChange("password")}
-                    label="Your Password"
-                    secureTextEntry={true}
-                    returnKeyType={"next"}
-                    // onSubmitEditing={() => handlePasswordInput()}
-                  />
-                  <FormField
-                    // ref={signInPasswordInput}
-                    {...props}
-                    value={props.values.confirmPassword}
-                    onChangeText={props.handleChange("confirmPassword")}
-                    label="Confirm Password"
-                    secureTextEntry
-                    returnKeyType={"done"}
-                    // onSubmitEditing={() => handlePasswordInput()}
-                  />
-                  {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
+          <ScrollView contentContainerStyle={styles.contentContainer}>
+              <VStack m={4} spacing={4}>
+                <Spacer style={{ margin: 16 }} />
+                <TextInput
+                  variant="standard"
+                  ref={firstNameInput}
+                  value={props.values.firstName}
+                  onChangeText={props.handleChange("firstName")}
+                  label="Your First Name"
+                  returnKeyType={"next"}
+                  onSubmitEditing={() => lastNameInput?.current?.focus()}
+                />
+                <Spacer style={{ margin: 16 }} />
+                <TextInput
+                  variant="standard"
+                  ref={lastNameInput}
+                  value={props.values.lastName}
+                  onChangeText={props.handleChange("lastName")}
+                  label="Your Last Name"
+                  returnKeyType={"next"}
+                  onSubmitEditing={() => emailInput?.current?.focus()}
+                />
+                <Spacer style={{ margin: 16 }} />
+                <TextInput
+                  variant="standard"
+                  ref={emailInput}
+                  keyboardType="email-address"
+                  value={props.values.email}
+                  onChangeText={props.handleChange("email")}
+                  label="Your Email Address"
+                  returnKeyType={"next"}
+                  onSubmitEditing={() => passwordInput?.current?.focus()}
+                />
+                <Spacer style={{ marginVertical: 80 }} />
+                <TextInput
+                  variant="standard"
+                  ref={passwordInput}
+                  value={props.values.password}
+                  onChangeText={props.handleChange("password")}
+                  label="Your Password"
+                  secureTextEntry={true}
+                  returnKeyType={"next"}
+                  onSubmitEditing={() => confirmPWInput?.current?.focus()}
+                />
+                <Spacer style={{ margin: 16 }} />
+                <TextInput
+                  variant="standard"
+                  ref={confirmPWInput}
+                  value={props.values.confirmPassword}
+                  onChangeText={props.handleChange("confirmPassword")}
+                  label="Repeat Password"
+                  secureTextEntry
+                  returnKeyType={"done"}
+                  // onSubmitEditing={() => handlePasswordInput()}
+                />
+                <Spacer style={{ margin: 16 }} />
+                {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
                 <ForgotPasswordLink>I forgot my password</ForgotPasswordLink>
                 <GoForwardButtonContainer>
                   <GoForwardButton />
                 </GoForwardButtonContainer>
               </ForgotPasswordContainer> */}
-                </View>
-                <View style={styles.signUpBtn}>
-                  <TouchableOpacity
-                    disabled={
-                      !props.values.email &&
-                      !props.values.password &&
-                      !props.values.firstName &&
-                      !props.values.lastName &&
-                      !props.values.confirmPassword &&
-                      props.values.password !== props.values.confirmPassword
-                    }
-                    style={styles.buttonTouch}
-                    onPress={() => handleLoginPress()}>
-                    <Text>{`Sign Up`}</Text>
-                  </TouchableOpacity>
-                </View>
+              </VStack>
+              <View style={styles.signUpBtn}>
+                <TouchableOpacity
+                  disabled={
+                    !props.values.email &&
+                    !props.values.password &&
+                    !props.values.firstName &&
+                    !props.values.lastName &&
+                    !props.values.confirmPassword &&
+                    props.values.password !== props.values.confirmPassword
+                  }
+                  style={styles.buttonTouch}
+                  onPress={() => handleLoginPress()}>
+                  <Text>{`Sign Up`}</Text>
+                </TouchableOpacity>
               </View>
-            </KeyboardAvoidingView>
-          </SafeAreaView>
+            </ScrollView>
+          // </SafeAreaView>
         );
       }}
     </Formik>
   );
 }
+
 const styles = StyleSheet.create({
+  contentContainer: {
+    padding: 20
+  },
   container: {
-    paddingTop: 50,
     alignItems: "center",
     justifyContent: "center",
   },

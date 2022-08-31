@@ -15,6 +15,7 @@ import EditProfileSection from "../components/EditProfileSection";
 import { RootTabScreenProps, RootState } from "../types";
 import { deleteAccount } from "../redux/actions/authActions/deleteAccount";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {Spacer} from "@react-native-material/core";
 
 export default function ProfileScreen({
   navigation,
@@ -33,9 +34,7 @@ export default function ProfileScreen({
   );
   const userName = useSelector((state: RootState) => state.user.userName);
 
-  const handleOnClose = () => {
-    setModalVisible(!modalVisible);
-  };
+  const handleOnClose = () => setModalVisible(!modalVisible);
 
   const myProfileData = {
     userFirstName: userFirstName,
@@ -56,6 +55,8 @@ export default function ProfileScreen({
       keyboardVerticalOffset={10}
       behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ScrollView contentContainerStyle={styles.container}>
+      <Spacer style={{ margin: 16 }} />
+
         <EditProfileSection
           heading="My Profile"
           data={myProfileData}

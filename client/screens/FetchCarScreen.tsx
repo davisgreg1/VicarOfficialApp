@@ -1,10 +1,10 @@
-import { useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { StyleSheet, Alert, TouchableOpacity } from "react-native";
 import dayjs from "dayjs";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { FormField } from "../components/FormField";
+import { VStack, TextInput, Spacer } from "@react-native-material/core";
 import { Text, View } from "../components/Themed";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import VehicleList from "../components/VehicleList";
@@ -19,6 +19,12 @@ export default function FetchCarScreen({
   navigation,
 }: RootTabScreenProps<"FetchCarScreen">) {
   const dispatch = useDispatch();
+
+  const addressRef = useRef<HTMLInputElement>(null);
+  const cityRef = useRef<HTMLInputElement>(null);
+  const stateRef = useRef<HTMLInputElement>(null);
+  const zipCodeRef = useRef<HTMLInputElement>(null);
+
   const vehicles: Array<VehicleType> = useSelector(
     (state: RootState) => state.user.vehicles,
   );
@@ -67,16 +73,13 @@ export default function FetchCarScreen({
   return (
     <View style={{ flex: 1 }}>
       <ProgressSteps>
-        <ProgressStep
-          errors={!returnToOwnerVehicle}
-          label="Vehicle">
+        <ProgressStep errors={!returnToOwnerVehicle} label="Vehicle">
           <View style={{ alignItems: "center" }}>
-          {!returnToOwnerVehicle ? (
+            {!returnToOwnerVehicle ? (
               <Text>You have no parked vehicles.</Text>
             ) : (
               <Text>Which vehicle would you like us to bring?</Text>
             )}
-
           </View>
           <VehicleList vehicles={vehiclesToFetch} isReturningToOwner={true} />
         </ProgressStep>
@@ -104,7 +107,7 @@ export default function FetchCarScreen({
               address: Yup.string().required("Provide a valid address."),
               city: Yup.string().required("Provide a valid city."),
               state: Yup.string().required("Provide a valid state."),
-              zipCode: Yup.string().required("Provide a valid zipCode."),
+              zipCode: Yup.number().required("Provide a valid zipCode."),
             })}
             onSubmit={(values, formikActions) => {
               try {
@@ -143,8 +146,10 @@ export default function FetchCarScreen({
 
               return (
                 <View style={[styles.contentContainer]}>
-                  <FormField
-                    {...props}
+                  <Spacer style={{ margin: 16 }} />
+
+                  <TextInput
+                    variant="standard"
                     placeholder={
                       returnToOwnerAddress ? returnToOwnerAddress : "Address"
                     }
@@ -153,22 +158,30 @@ export default function FetchCarScreen({
                     onChangeText={handleChange("address")}
                     label="Address"
                     returnKeyType={"next"}
-                    // ref={signInEmailInput}
-                    // onSubmitEditing={() => handleEmailInput()}
+                    ref={addressRef}
+                    onSubmitEditing={() => {
+                      cityRef.current?.focus();
+                    }}
                   />
-                  <FormField
-                    {...props}
+                  <Spacer style={{ margin: 16 }} />
+
+                  <TextInput
+                    variant="standard"
                     placeholder={returnToOwnerCity ? returnToOwnerCity : "City"}
                     keyboardType="default"
                     value={values.city}
                     onChangeText={handleChange("city")}
                     label="City"
                     returnKeyType={"next"}
-                    // ref={signInEmailInput}
-                    // onSubmitEditing={() => handleEmailInput()}
+                    ref={cityRef}
+                    onSubmitEditing={() => {
+                      stateRef.current?.focus();
+                    }}
                   />
-                  <FormField
-                    {...props}
+                  <Spacer style={{ margin: 16 }} />
+
+                  <TextInput
+                    variant="standard"
                     placeholder={
                       returnToOwnerState ? returnToOwnerState : "State"
                     }
@@ -177,21 +190,25 @@ export default function FetchCarScreen({
                     onChangeText={handleChange("state")}
                     label="State"
                     returnKeyType={"next"}
-                    // ref={signInEmailInput}
-                    // onSubmitEditing={() => handleEmailInput()}
+                    ref={stateRef}
+                    onSubmitEditing={() => {
+                      zipCodeRef.current?.focus();
+                    }}
                   />
-                  <FormField
-                    {...props}
+                  <Spacer style={{ margin: 16 }} />
+
+                  <TextInput
+                    variant="standard"
                     placeholder={
                       returnToOwnerZipCode ? returnToOwnerZipCode : "Zip Code"
                     }
-                    keyboardType="default"
+                    keyboardType="number-pad"
                     value={values.zipCode}
                     onChangeText={handleChange("zipCode")}
                     label="Zip Code"
                     returnKeyType={"done"}
-                    // ref={signInEmailInput}
-                    // onSubmitEditing={() => handleEmailInput()}
+                    ref={zipCodeRef}
+                    onSubmitEditing={handleSetReturnAddress}
                   />
                   <TouchableOpacity
                     disabled={disabled}
@@ -230,8 +247,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   contentContainer: {
-    paddingTop: 8,
+    padding: 16,
     display: "flex",
+
   },
   title: {
     fontSize: 20,
@@ -248,5 +266,7 @@ const styles = StyleSheet.create({
     width: 315,
     padding: 16,
     alignItems: "center",
+    marginTop: 50,
+    alignSelf: "center",
   },
 });

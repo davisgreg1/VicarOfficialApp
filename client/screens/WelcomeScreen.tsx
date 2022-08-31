@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   TextInputProps,
-  TextInput,
   ScrollView,
   Keyboard,
   StyleSheet,
@@ -14,14 +13,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { VStack, TextInput, Divider } from "@react-native-material/core";
 import { useTheme } from "@react-navigation/native";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import EditScreenInfo from "../components/EditScreenInfo";
-import { FormField } from "../components/FormField";
 import { RootTabScreenProps } from "../types";
-import axios from "../utils/axios";
 import { loginUser } from "../redux/actions/authActions/loginUser";
 
 export default function WelcomeScreen({
@@ -32,6 +29,9 @@ export default function WelcomeScreen({
   const backGroundStyle = { color: colors.background };
 
   const dispatch = useDispatch();
+
+  const emailInput = useRef<HTMLInputElement>(null);
+  const passwordInput = useRef<HTMLInputElement>(null);
 
   return (
     <Formik
@@ -70,40 +70,42 @@ export default function WelcomeScreen({
           handleSubmit();
         };
         return (
-          <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}>
-            <SafeAreaView>
-              <View style={styles.mainCont}>
-                <View>
-                  <FormField
-                    {...props}
-                    keyboardType="email-address"
-                    value={values.email}
-                    onChangeText={handleChange("email")}
-                    label="Your Email Address"
-                    returnKeyType={"next"}
-                    // ref={signInEmailInput}
-                    // onSubmitEditing={() => handleEmailInput()}
-                  />
-                  <FormField
-                    {...props}
-                    // ref={signInPasswordInput}
-                    value={values.password}
-                    onChangeText={handleChange("password")}
-                    label="Your Password"
-                    maxLength={16}
-                    secureTextEntry
-                    returnKeyType={"done"}
-                    // onSubmitEditing={() => handlePasswordInput()}
-                  />
-                  {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
+          <SafeAreaView>
+            <View style={styles.mainCont}>
+              <VStack m={12} spacing={24}>
+                <Divider style={{ marginTop: 60 }} />
+
+                <TextInput
+                  ref={emailInput}
+                  color={"black"}
+                  variant="outlined"
+                  keyboardType="email-address"
+                  value={values.email}
+                  onChangeText={handleChange("email")}
+                  label="Email"
+                  returnKeyType={"next"}
+                  onSubmitEditing={() => passwordInput?.current?.focus()}
+                />
+                <TextInput
+                  ref={passwordInput}
+                  variant="outlined"
+                  value={values.password}
+                  onChangeText={handleChange("password")}
+                  label="Your Password"
+                  maxLength={16}
+                  secureTextEntry
+                  returnKeyType={"done"}
+                  // onFocus={() => {
+                  //   alert('fuck you');
+                  // }}
+                  onSubmitEditing={() => handleLoginPress()}
+                />
+                {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
                 <ForgotPasswordLink>I forgot my password</ForgotPasswordLink>
                 <GoForwardButtonContainer>
                   <GoForwardButton />
                 </GoForwardButtonContainer>
               </ForgotPasswordContainer> */}
-                </View>
                 <View style={styles.signInLinks}>
                   <TouchableOpacity
                     disabled={!values.email && !values.password}
@@ -119,9 +121,9 @@ export default function WelcomeScreen({
                     Don't have an account? Sign up now
                   </Text>
                 </View>
-              </View>
-            </SafeAreaView>
-          </KeyboardAvoidingView>
+              </VStack>
+            </View>
+          </SafeAreaView>
         );
       }}
     </Formik>
@@ -131,11 +133,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
     flexGrow: 1,
   },
   mainCont: {
-    display: 'flex'
+    // display: "flex",
+    // justifyContent: "center",
+    // alignSelf: "center",
+    // height: "100%",
   },
   signInLinks: {
     justifyContent: "flex-end",

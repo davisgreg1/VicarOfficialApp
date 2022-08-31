@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   Pressable,
@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
+import { VStack, TextInput, Spacer } from "@react-native-material/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Text, View } from "./Themed";
@@ -23,6 +24,13 @@ interface Props {
 export default function EditProfileSection(props: Props) {
   const { heading, children, data, type } = props;
   const [editOpen, setEditOpen] = useState(false);
+
+  const firstNameInput = useRef<HTMLInputElement>(null);
+  const lastNameInput = useRef<HTMLInputElement>(null);
+  const phoneInput = useRef<HTMLInputElement>(null);
+  const emailInput = useRef<HTMLInputElement>(null);
+  const passwordInput = useRef<HTMLInputElement>(null);
+  const confirmPasswordInput = useRef<HTMLInputElement>(null);
 
   const handleOnPress = () => {
     setEditOpen(!editOpen);
@@ -72,28 +80,42 @@ export default function EditProfileSection(props: Props) {
                       keyboardVerticalOffset={10}
                       behavior={Platform.OS === "ios" ? "padding" : "height"}>
                       <View style={[styles.contentContainer]}>
-                        <FormField
-                          {...props}
+                        <TextInput
+                          variant="standard"
                           value={props.values.userFirstName}
                           onChangeText={props.handleChange("userFirstName")}
                           label="First name"
                           returnKeyType={"next"}
+                          ref={firstNameInput}
+                          onSubmitEditing={() => {
+                            lastNameInput.current?.focus();
+                          }}
                         />
-                        <FormField
-                          {...props}
+                        <Spacer style={{ margin: 16 }} />
+                        <TextInput
+                          variant="standard"
                           value={props.values.userLastName}
                           onChangeText={props.handleChange("userLastName")}
                           label="Last name"
                           returnKeyType={"next"}
+                          ref={lastNameInput}
+                          onSubmitEditing={() => {
+                            phoneInput.current?.focus();
+                          }}
                         />
-                        <FormField
-                          {...props}
+                        <Spacer style={{ margin: 16 }} />
+
+                        <TextInput
+                          variant="standard"
                           keyboardType="phone-pad"
                           value={props.values.userPhoneNumber}
                           onChangeText={props.handleChange("userPhoneNumber")}
                           label="Phone Number"
                           returnKeyType={"done"}
+                          ref={phoneInput}
+                          onSubmitEditing={handleOnSubmit}
                         />
+                        <Spacer style={{ margin: 16 }} />
                       </View>
                       <View style={styles.signInLinks}>
                         <TouchableOpacity
@@ -146,30 +168,43 @@ export default function EditProfileSection(props: Props) {
                     return props.handleSubmit();
                   };
                   return (
-                    <>
-                      <FormField
-                        {...props}
+                    <VStack>
+                      <TextInput
+                        variant="standard"
                         value={props.values.userEmail}
                         onChangeText={props.handleChange("userEmail")}
                         label="Email"
                         returnKeyType={"next"}
+                        ref={emailInput}
+                        onSubmitEditing={() => {
+                          passwordInput.current?.focus();
+                        }}
                       />
-                      <FormField
-                        {...props}
+                      <Spacer style={{ margin: 16 }} />
+                      <TextInput
+                        variant="standard"
                         keyboardType="visible-password"
                         value={props.values.userPassword}
                         onChangeText={props.handleChange("userPassword")}
                         label="Password"
                         returnKeyType={"next"}
+                        ref={passwordInput}
+                        onSubmitEditing={() => {
+                          confirmPasswordInput.current?.focus();
+                        }}
                       />
-                      <FormField
-                        {...props}
+                      <Spacer style={{ margin: 16 }} />
+                      <TextInput
+                        variant="standard"
                         keyboardType="visible-password"
                         value={props.values.confirmUserPassword}
                         onChangeText={props.handleChange("confirmUserPassword")}
                         label="Confirm Password"
                         returnKeyType={"done"}
+                        ref={confirmPasswordInput}
+                        onSubmitEditing={handleOnSubmit}
                       />
+                      <Spacer style={{ margin: 16 }} />
 
                       <View style={styles.signInLinks}>
                         <TouchableOpacity
@@ -180,7 +215,7 @@ export default function EditProfileSection(props: Props) {
                           </Text>
                         </TouchableOpacity>
                       </View>
-                    </>
+                    </VStack>
                   );
                 }}
               </Formik>
