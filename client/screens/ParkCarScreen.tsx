@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { FormField } from "../components/FormField";
-// import { Text, View } from "../components/Themed";
+import { VStack, TextInput, Spacer } from "@react-native-material/core";
 import VehicleList from "../components/VehicleList";
 import DateTimePicker from "../components/DateTimePicker";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
@@ -21,6 +21,11 @@ export default function ParkCarScreen({
   navigation,
 }: RootTabScreenProps<"ParkCarScreen">) {
   const dispatch = useDispatch();
+
+  const addressRef = useRef<HTMLInputElement>(null);
+  const cityRef = useRef<HTMLInputElement>(null);
+  const stateRef = useRef<HTMLInputElement>(null);
+  const zipCodeRef = useRef<HTMLInputElement>(null);
 
   const vehicles: Array<VehicleType> = useSelector(
     (state: RootState) => state.user.vehicles,
@@ -94,12 +99,19 @@ export default function ParkCarScreen({
             />
           </View>
         </ProgressStep>
-        <ProgressStep label="Location" errors={locationErrors}>
+        <ProgressStep
+          nextBtnStyle={{ padding: 0 }}
+          prevBtnStyle={{ padding: 0 }}
+          label="Location"
+          errors={locationErrors}>
           <KeyboardAwareScrollView>
-            <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+            <ScrollView
+              contentContainerStyle={{
+                alignItems: "center",
+                marginHorizontal: 16,
+              }}>
               <Text>
-                Where would you like the valet to return your vehicle, if
-                needed?
+                From where would you like the valet to retrieve your vehicle?
               </Text>
               <Formik
                 initialValues={{
@@ -112,7 +124,7 @@ export default function ParkCarScreen({
                   address: Yup.string().required("Provide a valid address."),
                   city: Yup.string().required("Provide a valid city."),
                   state: Yup.string().required("Provide a valid state."),
-                  zipCode: Yup.string().required("Provide a valid zipCode."),
+                  zipCode: Yup.number().required("Provide a valid zipCode."),
                 })}
                 onSubmit={(values, formikActions) => {
                   try {
@@ -132,16 +144,7 @@ export default function ParkCarScreen({
                   const handleSetAddress = () => {
                     props.handleSubmit();
                   };
-                  const {
-                    errors,
-                    status,
-                    touched,
-                    isSubmitting,
-                    dirty,
-                    handleSubmit,
-                    values,
-                    handleChange,
-                  } = props;
+                  const { values, handleChange } = props;
 
                   const disabled =
                     !values.address &&
@@ -151,50 +154,61 @@ export default function ParkCarScreen({
 
                   return (
                     <View style={[styles.contentContainer]}>
-                      <FormField
-                        {...props}
-                        placeholder={address ? address : "Address"}
+                      <Spacer style={{ margin: 16 }} />
+                      <TextInput
+                        variant="standard"
+                        placeholder={address ? address : ""}
                         keyboardType="default"
                         value={values.address}
                         onChangeText={handleChange("address")}
                         label="Address"
                         returnKeyType={"next"}
-                        // ref={signInEmailInput}
-                        // onSubmitEditing={() => handleEmailInput()}
+                        ref={addressRef}
+                        onSubmitEditing={() => {
+                          cityRef.current?.focus();
+                        }}
                       />
-                      <FormField
-                        {...props}
-                        placeholder={city ? city : "City"}
+                      <Spacer style={{ margin: 16 }} />
+                      <TextInput
+                        variant="standard"
+                        placeholder={city ? city : ""}
                         keyboardType="default"
                         value={values.city}
                         onChangeText={handleChange("city")}
                         label="City"
                         returnKeyType={"next"}
-                        // ref={signInEmailInput}
-                        // onSubmitEditing={() => handleEmailInput()}
+                        ref={cityRef}
+                        onSubmitEditing={() => {
+                          stateRef.current?.focus();
+                        }}
                       />
-                      <FormField
-                        {...props}
-                        placeholder={state ? state : "State"}
+                      <Spacer style={{ margin: 16 }} />
+                      <TextInput
+                        variant="standard"
+                        placeholder={state ? state : ""}
                         keyboardType="default"
                         value={values.state}
                         onChangeText={handleChange("state")}
                         label="State"
                         returnKeyType={"next"}
-                        // ref={signInEmailInput}
-                        // onSubmitEditing={() => handleEmailInput()}
+                        ref={stateRef}
+                        onSubmitEditing={() => {
+                          zipCodeRef.current?.focus();
+                        }}
                       />
-                      <FormField
-                        {...props}
-                        placeholder={zipCode ? zipCode : "Zip Code"}
-                        keyboardType="default"
+                      <Spacer style={{ margin: 16 }} />
+                      <TextInput
+                        variant="standard"
+                        placeholder={zipCode ? zipCode : ""}
+                        keyboardType="number-pad"
                         value={values.zipCode}
                         onChangeText={handleChange("zipCode")}
                         label="Zip Code"
                         returnKeyType={"done"}
-                        // ref={signInEmailInput}
-                        // onSubmitEditing={() => handleEmailInput()}
+                        ref={zipCodeRef}
+                        onSubmitEditing={handleSetAddress}
                       />
+                      <Spacer style={{ margin: 16 }} />
                       <TouchableOpacity
                         disabled={disabled}
                         style={styles.buttonTouch}
@@ -228,24 +242,8 @@ export default function ParkCarScreen({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
   contentContainer: {
-    paddingTop: 8,
     display: "flex",
-    flexGrow:1
   },
   buttonTouch: {
     backgroundColor: "#c64141",

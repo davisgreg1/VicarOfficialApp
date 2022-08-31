@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   TextInputProps,
-  TextInput,
   ScrollView,
   Keyboard,
   StyleSheet,
@@ -15,7 +14,7 @@ import {
   Platform,
   StatusBar,
 } from "react-native";
-
+import { VStack, TextInput, Divider } from "@react-native-material/core";
 import { RadioButton } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
@@ -32,6 +31,14 @@ export default function AddVehicleScreen({
   const { colors } = useTheme();
   const colorStyle = { color: colors.text };
   const dispatch = useDispatch();
+
+  const makeRef = useRef<HTMLInputElement>(null);
+  const modelRef = useRef<HTMLInputElement>(null);
+  const yearRef = useRef<HTMLInputElement>(null);
+  const colorRef = useRef<HTMLInputElement>(null);
+  const licenseRef = useRef<HTMLInputElement>(null);
+  const nickNameRef = useRef<HTMLInputElement>(null);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Formik
@@ -84,51 +91,74 @@ export default function AddVehicleScreen({
           return (
             <KeyboardAwareScrollView>
               <View style={[styles.contentContainer]}>
-                <FormField
-                  {...props}
+              <Divider style={{ marginTop: 60 }}/>
+
+                <TextInput
+                  variant="outlined"
                   value={props.values.licenseNumber}
                   onChangeText={props.handleChange("licenseNumber")}
                   label="Vehicle License Plate ID"
                   returnKeyType={"next"}
+                  ref={licenseRef}
+                  onSubmitEditing={() => {
+                    yearRef.current?.focus();
+                  }}
                 />
-                <FormField
-                  {...props}
+                <TextInput
+                  variant="outlined"
                   keyboardType="numeric"
                   value={props.values.year}
                   onChangeText={props.handleChange("year")}
                   label="Vehicle Year"
                   returnKeyType={"next"}
+                  ref={yearRef}
+                  onSubmitEditing={() => {
+                    makeRef.current?.focus();
+                  }}
                 />
-                <FormField
-                  {...props}
+                <TextInput
+                  variant="outlined"
                   keyboardType="default"
                   value={props.values.make}
                   onChangeText={props.handleChange("make")}
                   label="Vehicle Make"
                   returnKeyType={"next"}
+                  ref={makeRef}
+                  onSubmitEditing={() => {
+                    modelRef.current?.focus();
+                  }}
                 />
-                <FormField
-                  {...props}
+                <TextInput
+                  variant="outlined"
                   keyboardType="default"
                   value={props.values.model}
                   onChangeText={props.handleChange("model")}
                   label="Vehicle Model"
                   returnKeyType={"next"}
+                  ref={modelRef}
+                  onSubmitEditing={() => {
+                    colorRef.current?.focus();
+                  }}
                 />
-                <FormField
-                  {...props}
+                <TextInput
+                  variant="outlined"
                   value={props.values.color}
                   onChangeText={props.handleChange("color")}
                   label="Vehicle Color"
                   returnKeyType={"next"}
+                  ref={colorRef}
+                  onSubmitEditing={() => {
+                    nickNameRef.current?.focus();
+                  }}
                 />
-                <FormField
-                  {...props}
+                <TextInput
+                  variant="outlined"
                   value={props.values.nickName}
                   onChangeText={props.handleChange("nickName")}
                   label="Vehicle Nick Name"
                   maxLength={16}
                   returnKeyType={"next"}
+                  ref={nickNameRef}
                 />
                 <View style={styles.radios}>
                   <View>
