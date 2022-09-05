@@ -5,10 +5,11 @@ import {
   ScrollView,
   Keyboard,
   StyleSheet,
-  Button,
+  // Button,
   SafeAreaView,
   View,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { useDispatch } from "react-redux";
 import { RootTabScreenProps } from "../types";
 import { refreshVehicles } from "../redux/actions/serviceActions";
@@ -33,16 +34,23 @@ export default function HomeScreen({
       <View style={styles.container}>
         <Button
           onPress={handleParkMyCarClick}
-          title="Park My Car"
-          color="#c64141"
-          accessibilityLabel="Learn more about this purple button"
-        />
+          mode="elevated"
+          textColor="#c64141"
+          style={styles.button}
+          accessibilityLabel="Park My Car Button"
+          icon="car-key">
+          Park My Car
+        </Button>
+
         <Button
           onPress={handleFetchMyCarClick}
-          title="Bring My Car"
-          color="#c64141"
-          accessibilityLabel="Learn more about this purple button"
-        />
+          mode="elevated"
+          textColor="#c64141"
+          accessibilityLabel="Bring My Car Button"
+          style={styles.button}
+          icon="car-arrow-right">
+          Bring My Car
+        </Button>
       </View>
     </SafeAreaView>
   );
@@ -58,5 +66,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  button: {
+    marginVertical: 10,
+    width: 300,
   },
 });

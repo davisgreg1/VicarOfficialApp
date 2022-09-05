@@ -145,6 +145,8 @@ router.patch("/updatePW/:id", async (req, res, next) => {
       res.status(200).send({ message: "Password successfully Updated" });
     }
   } catch (error) {
+    res.status(500).send({ message: "Please try a different phone number." });
+
     next(error);
   }
 });

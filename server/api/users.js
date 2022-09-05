@@ -133,7 +133,7 @@ router.get("/getAllVehicles", async (req, res, next) => {
   }
 });
 
-router.put("/editProfile", async (req, res, next) => {
+router.patch("/editProfile", async (req, res, next) => {
   const user = req.user;
   const userId = user.id;
   if (!user) {
@@ -151,15 +151,13 @@ router.put("/editProfile", async (req, res, next) => {
     const newFirstName = req.body.firstName || user.firstName;
     const newLastname = req.body.lastName || user.lastName;
     const newPhoneNumber = req.body.phoneNumber || user.phoneNumber;
-    const newPassword = req.body.password || user.password;
 
     let updatedUser = await user.update(
       {
         email: newEmail,
         firstName: newFirstName,
         lastName: newLastname,
-        phoneNumber: newPhoneNumber,
-        password: newPassword,
+        phoneNumber: newPhoneNumber
       },
       { where: { id: userId } },
     );
