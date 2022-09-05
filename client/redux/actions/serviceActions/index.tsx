@@ -52,7 +52,7 @@ export const setPickUpVehicle = (data: AddVehicleData) => {
     licenseNumber,
   } = data;
 
-  return (dispatch) => {
+  return (dispatch: (arg0: {type: string; vehicle: AddVehicleData;}) => void) => {
     try {
       dispatch({
         type: "service/setPickUpVehicle",

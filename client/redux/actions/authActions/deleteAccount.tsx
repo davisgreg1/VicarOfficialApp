@@ -1,7 +1,7 @@
 import axios from "../../../utils/axios";
 
 export const deleteAccount = () => {
-  return (dispatch) => {
+  return (dispatch: (arg0: {type: string; userAuthenticated?: any; message?: any;}) => void) => {
     const request = axios.post("/auth/deleteAccount");
     request
       .then((request) => {

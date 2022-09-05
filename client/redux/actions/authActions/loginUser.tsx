@@ -3,10 +3,11 @@ import axios from "../../../utils/axios";
 interface LoginDataType {
   id: number;
   password: string;
+  email: string;
 }
 export const loginUser = (data: LoginDataType) => {
   const { email, password } = data;
-  return (dispatch) => {
+  return (dispatch: (arg0: {type: string; userAuthenticated?: any; userId?: any; userEmail?: any; userFirstName?: any; userLastName?: any; userPhoneNumber?: any; vehicles?: any;}) => void) => {
     const request = axios.post("/auth/login", {
       email: email,
       password: password,
@@ -27,8 +28,8 @@ export const loginUser = (data: LoginDataType) => {
           userEmail: user[0].email,
           userFirstName: user[0].firstName,
           userLastName: user[0].lastName,
-          vehicles: vehicles
-          // userPhoneNumber: data.phoneNumber,
+          userPhoneNumber: user[0].phoneNumber,
+          vehicles: vehicles,
           // userZipCode: data.zipCode,
         })
       })

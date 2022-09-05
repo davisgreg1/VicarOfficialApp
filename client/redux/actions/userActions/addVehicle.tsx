@@ -14,7 +14,7 @@ interface AddVehicleData {
 export const addVehicle = (data: AddVehicleData) => {
   const { year, make, model, type, color, nickName, isCarParked, licenseNumber } = data;
 
-  return (dispatch) => {
+  return (dispatch: (arg0: {type: string; vehicles: any;}) => void) => {
     const request = axios.post("/users/addVehicle", {
       year: year,
       make: make,

@@ -96,7 +96,6 @@ router.post("/deleteAccount", async (req, res, next) => {
   const user = req.user;
   const userID = user.id;
   try {
-
     await VehicleService.destroy({
       where: {
         userId: userID,
@@ -120,7 +119,7 @@ router.post("/deleteAccount", async (req, res, next) => {
       paranoid: false,
       cascade: true,
     });
-    
+
     req.session.destroy(function (err, next) {
       if (err) {
         return next(err);
@@ -136,18 +135,19 @@ router.post("/deleteAccount", async (req, res, next) => {
   }
 });
 
-// router.patch("/updatePW", (req, res, next) => {
-//   User.findOne({ where: { email: req.body.email } })
-//     .then((user) => {
-//       if (!user) {
-//         res.status(401).send("No Email found.");
-//       } else {
-//         user.update({ password: req.body.password });
-//         res.status(200).send("Password successfully Updated");
-//       }
-//     })
-//     .catch(next);
-// });
+router.patch("/updatePW/:id", async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: req.params.id } });
+    if (!user) {
+      res.status(401).send({ message: "No user found." });
+    } else {
+      user.update({ password: req.body.password });
+      res.status(200).send({ message: "Password successfully Updated" });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 // router.patch("/reset_password", async (req, res, next) => {
 //   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;

@@ -1,9 +1,27 @@
 import axios from "../../../utils/axios";
 // import { generateErrorMsg } from "../utils";
 
-export const createAccount = (data) => {
+export const createAccount = (data: {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}) => {
   const { firstName, lastName, email, password } = data;
-  return (dispatch) => {
+  return (
+    dispatch: (arg0: {
+      type: string;
+      userAuthenticated?: boolean;
+      userFirstName?: string;
+      userLastName?: string;
+      userEmail?: string;
+      userId?: number;
+      userPhoneNumber?: any;
+      zipCode?: any;
+      vehicles?: never[];
+      accountCreated?: boolean;
+    }) => void,
+  ) => {
     try {
       const request = axios.post("/auth/signup", {
         firstName: firstName,
@@ -23,10 +41,10 @@ export const createAccount = (data) => {
           userFirstName: data.user.firstName,
           userLastName: data.user.lastName,
           userEmail: data.user.email,
-          id: data.user.id,
+          userId: data.user.id,
           userPhoneNumber: data.user.phoneNumber,
           zipCode: data.user.zipCode,
-          vehicles: []
+          vehicles: [],
         });
       });
     } catch (error) {

@@ -34,7 +34,7 @@ const userReducer = (state = initialState, action) => {
         userFirstName: action.userFirstName,
         userLastName: action.userLastName,
         userEmail: action.userEmail,
-        userId: action.id,
+        userId: action.userId,
         userName: action.userName,
         userPhoneNumber: action.userPhoneNumber,
         userZipCode: action.zipCode,

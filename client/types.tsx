@@ -71,6 +71,7 @@ export type UserState = {
   userEmail: string;
   userPhoneNumber: string;
   userName: string;
+  userId: any
 };
 export type ServiceState = {
   vehicle: VehicleType;

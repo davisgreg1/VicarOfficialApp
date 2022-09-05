@@ -1,6 +1,7 @@
 const initialState = {
   userAuthenticated: false,
   message: "",
+  pwUpdatedMsg: ""
 };
 
 const authReducer = (state = initialState, action: any) => {
@@ -37,11 +38,11 @@ const authReducer = (state = initialState, action: any) => {
         userAuthenticated: action.userAuthenticated,
         message: action.message,
       };
-    // case "auth/updatePW":
-    //   return {
-    //     ...state,
-    //     pwUpdatedMsg: action.pwUpdatedMsg,
-    //   };
+    case "auth/updatePW":
+      return {
+        ...state,
+        pwUpdatedMsg: action.message,
+      };
     default:
       return state;
   }
