@@ -87,14 +87,14 @@ export default function FetchCarScreen({
           <View style={{ alignItems: "center" }}>
             <DateTimePicker
               typeOfSchedule={"return"}
-              buttonTitle={"When would you like it returned?"}
+              buttonTitle={"When would you like your valet to meet you?"}
               selectedDate={parsedDate}
             />
           </View>
         </ProgressStep>
         <ProgressStep label="Location">
           <View style={{ alignItems: "center" }}>
-            <Text>Where would you like the valet to return your vehicle?</Text>
+            <Text>Where would you like your valet to meet you?</Text>
           </View>
           <Formik
             initialValues={{
@@ -127,16 +127,7 @@ export default function FetchCarScreen({
               const handleSetReturnAddress = () => {
                 props.handleSubmit();
               };
-              const {
-                errors,
-                status,
-                touched,
-                isSubmitting,
-                dirty,
-                handleSubmit,
-                values,
-                handleChange,
-              } = props;
+              const { values, handleChange } = props;
 
               const disabled =
                 !values.address &&
@@ -146,12 +137,12 @@ export default function FetchCarScreen({
 
               return (
                 <View style={[styles.contentContainer]}>
-                  <Spacer style={{ margin: 16 }} />
+                  <Spacer style={{ padding: 16 }} />
 
                   <TextInput
                     variant="standard"
                     placeholder={
-                      returnToOwnerAddress ? returnToOwnerAddress : "Address"
+                      returnToOwnerAddress ? returnToOwnerAddress : ""
                     }
                     keyboardType="default"
                     value={values.address}
@@ -163,11 +154,11 @@ export default function FetchCarScreen({
                       cityRef.current?.focus();
                     }}
                   />
-                  <Spacer style={{ margin: 16 }} />
+                  <Spacer style={{ padding: 16 }} />
 
                   <TextInput
                     variant="standard"
-                    placeholder={returnToOwnerCity ? returnToOwnerCity : "City"}
+                    placeholder={returnToOwnerCity ? returnToOwnerCity : ""}
                     keyboardType="default"
                     value={values.city}
                     onChangeText={handleChange("city")}
@@ -178,13 +169,11 @@ export default function FetchCarScreen({
                       stateRef.current?.focus();
                     }}
                   />
-                  <Spacer style={{ margin: 16 }} />
+                  <Spacer style={{ padding: 16 }} />
 
                   <TextInput
                     variant="standard"
-                    placeholder={
-                      returnToOwnerState ? returnToOwnerState : "State"
-                    }
+                    placeholder={returnToOwnerState ? returnToOwnerState : ""}
                     keyboardType="default"
                     value={values.state}
                     onChangeText={handleChange("state")}
@@ -195,12 +184,12 @@ export default function FetchCarScreen({
                       zipCodeRef.current?.focus();
                     }}
                   />
-                  <Spacer style={{ margin: 16 }} />
+                  <Spacer style={{ padding: 16 }} />
 
                   <TextInput
                     variant="standard"
                     placeholder={
-                      returnToOwnerZipCode ? returnToOwnerZipCode : "Zip Code"
+                      returnToOwnerZipCode ? returnToOwnerZipCode : ""
                     }
                     keyboardType="number-pad"
                     value={values.zipCode}
@@ -241,24 +230,9 @@ export default function FetchCarScreen({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   contentContainer: {
-    padding: 16,
+    padding: 30,
     display: "flex",
-
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
   buttonTouch: {
     backgroundColor: "#c64141",

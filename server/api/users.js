@@ -133,6 +133,45 @@ router.get("/getAllVehicles", async (req, res, next) => {
   }
 });
 
+router.put("/editProfile", async (req, res, next) => {
+  const user = req.user;
+  const userId = user.id;
+  if (!user) {
+    res.status(404).send("No user found");
+  }
+
+  try {
+    let user = await User.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    const newEmail = req.body.email || user.email;
+    const newFirstName = req.body.firstName || user.firstName;
+    const newLastname = req.body.lastName || user.lastName;
+    const newPhoneNumber = req.body.phoneNumber || user.phoneNumber;
+    const newPassword = req.body.password || user.password;
+
+    let updatedUser = await user.update(
+      {
+        email: newEmail,
+        firstName: newFirstName,
+        lastName: newLastname,
+        phoneNumber: newPhoneNumber,
+        password: newPassword,
+      },
+      { where: { id: userId } },
+    );
+    return res.json({
+      message: "User Updated Successfully!",
+      updatedUser: updatedUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // router.patch("/removeVehicle/:id", async (req, res, next) => {
 //   try {
 //     let user = await User.create(req.body);

@@ -20,7 +20,6 @@ import { useTheme } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { FormField } from "../components/FormField";
 import { RootTabScreenProps } from "../types";
 import { addVehicle } from "../redux/actions/userActions/addVehicle";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";

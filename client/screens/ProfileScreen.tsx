@@ -14,7 +14,6 @@ import { Text, View } from "../components/Themed";
 import EditProfileSection from "../components/EditProfileSection";
 import { RootTabScreenProps, RootState } from "../types";
 import { deleteAccount } from "../redux/actions/authActions/deleteAccount";
-import { SafeAreaView } from "react-native-safe-area-context";
 import {Spacer} from "@react-native-material/core";
 
 export default function ProfileScreen({
@@ -55,7 +54,7 @@ export default function ProfileScreen({
       keyboardVerticalOffset={10}
       behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ScrollView contentContainerStyle={styles.container}>
-      <Spacer style={{ margin: 16 }} />
+      <Spacer style={{ padding: 16, backgroundColor: 'transparent' }} />
 
         <EditProfileSection
           heading="My Profile"

@@ -55,89 +55,87 @@ export default function SignUpScreen({
         }
       }}>
       {(props) => {
-        const handleLoginPress = () => {
-          props.handleSubmit();
-        };
+        const handleLoginPress = () => props.handleSubmit();
         return (
           <ScrollView contentContainerStyle={styles.contentContainer}>
-              <VStack m={4} spacing={4}>
-                <Spacer style={{ margin: 16 }} />
-                <TextInput
-                  variant="standard"
-                  ref={firstNameInput}
-                  value={props.values.firstName}
-                  onChangeText={props.handleChange("firstName")}
-                  label="Your First Name"
-                  returnKeyType={"next"}
-                  onSubmitEditing={() => lastNameInput?.current?.focus()}
-                />
-                <Spacer style={{ margin: 16 }} />
-                <TextInput
-                  variant="standard"
-                  ref={lastNameInput}
-                  value={props.values.lastName}
-                  onChangeText={props.handleChange("lastName")}
-                  label="Your Last Name"
-                  returnKeyType={"next"}
-                  onSubmitEditing={() => emailInput?.current?.focus()}
-                />
-                <Spacer style={{ margin: 16 }} />
-                <TextInput
-                  variant="standard"
-                  ref={emailInput}
-                  keyboardType="email-address"
-                  value={props.values.email}
-                  onChangeText={props.handleChange("email")}
-                  label="Your Email Address"
-                  returnKeyType={"next"}
-                  onSubmitEditing={() => passwordInput?.current?.focus()}
-                />
-                <Spacer style={{ marginVertical: 80 }} />
-                <TextInput
-                  variant="standard"
-                  ref={passwordInput}
-                  value={props.values.password}
-                  onChangeText={props.handleChange("password")}
-                  label="Your Password"
-                  secureTextEntry={true}
-                  returnKeyType={"next"}
-                  onSubmitEditing={() => confirmPWInput?.current?.focus()}
-                />
-                <Spacer style={{ margin: 16 }} />
-                <TextInput
-                  variant="standard"
-                  ref={confirmPWInput}
-                  value={props.values.confirmPassword}
-                  onChangeText={props.handleChange("confirmPassword")}
-                  label="Repeat Password"
-                  secureTextEntry
-                  returnKeyType={"done"}
-                  // onSubmitEditing={() => handlePasswordInput()}
-                />
-                <Spacer style={{ margin: 16 }} />
-                {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
+            <VStack m={4} spacing={4}>
+              <Spacer style={{ padding: 16 }} />
+              <TextInput
+                variant="standard"
+                ref={firstNameInput}
+                value={props.values.firstName}
+                onChangeText={props.handleChange("firstName")}
+                label="Your First Name"
+                returnKeyType={"next"}
+                onSubmitEditing={() => lastNameInput?.current?.focus()}
+              />
+              <Spacer style={{ padding: 16 }} />
+              <TextInput
+                variant="standard"
+                ref={lastNameInput}
+                value={props.values.lastName}
+                onChangeText={props.handleChange("lastName")}
+                label="Your Last Name"
+                returnKeyType={"next"}
+                onSubmitEditing={() => emailInput?.current?.focus()}
+              />
+              <Spacer style={{ padding: 16 }} />
+              <TextInput
+                variant="standard"
+                ref={emailInput}
+                keyboardType="email-address"
+                value={props.values.email}
+                onChangeText={props.handleChange("email")}
+                label="Your Email Address"
+                returnKeyType={"next"}
+                onSubmitEditing={() => passwordInput?.current?.focus()}
+              />
+              <Spacer style={{ marginVertical: 80 }} />
+              <TextInput
+                variant="standard"
+                ref={passwordInput}
+                value={props.values.password}
+                onChangeText={props.handleChange("password")}
+                label="Your Password"
+                secureTextEntry={true}
+                returnKeyType={"next"}
+                onSubmitEditing={() => confirmPWInput?.current?.focus()}
+              />
+              <Spacer style={{ padding: 16 }} />
+              <TextInput
+                variant="standard"
+                ref={confirmPWInput}
+                value={props.values.confirmPassword}
+                onChangeText={props.handleChange("confirmPassword")}
+                label="Repeat Password"
+                secureTextEntry
+                returnKeyType={"done"}
+                onSubmitEditing={handleLoginPress}
+              />
+              <Spacer style={{ padding: 16 }} />
+              {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
                 <ForgotPasswordLink>I forgot my password</ForgotPasswordLink>
                 <GoForwardButtonContainer>
                   <GoForwardButton />
                 </GoForwardButtonContainer>
               </ForgotPasswordContainer> */}
-              </VStack>
-              <View style={styles.signUpBtn}>
-                <TouchableOpacity
-                  disabled={
-                    !props.values.email &&
-                    !props.values.password &&
-                    !props.values.firstName &&
-                    !props.values.lastName &&
-                    !props.values.confirmPassword &&
-                    props.values.password !== props.values.confirmPassword
-                  }
-                  style={styles.buttonTouch}
-                  onPress={() => handleLoginPress()}>
-                  <Text>{`Sign Up`}</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
+            </VStack>
+            <View style={styles.signUpBtn}>
+              <TouchableOpacity
+                disabled={
+                  !props.values.email &&
+                  !props.values.password &&
+                  !props.values.firstName &&
+                  !props.values.lastName &&
+                  !props.values.confirmPassword &&
+                  props.values.password !== props.values.confirmPassword
+                }
+                style={styles.buttonTouch}
+                onPress={() => handleLoginPress()}>
+                <Text>{`Sign Up`}</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
           // </SafeAreaView>
         );
       }}
@@ -147,7 +145,7 @@ export default function SignUpScreen({
 
 const styles = StyleSheet.create({
   contentContainer: {
-    padding: 20
+    padding: 20,
   },
   container: {
     alignItems: "center",

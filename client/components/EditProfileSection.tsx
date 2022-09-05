@@ -12,7 +12,10 @@ import { VStack, TextInput, Spacer } from "@react-native-material/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Text, View } from "./Themed";
-import { FormField } from "./FormField";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfile } from "../redux/actions/userActions/updateProfile";
+import { updatePassword } from "../redux/actions/authActions/updatePW";
+import { RootState } from "../types";
 
 interface Props {
   heading: string;
@@ -22,6 +25,7 @@ interface Props {
 }
 
 export default function EditProfileSection(props: Props) {
+  const dispatch = useDispatch();
   const { heading, children, data, type } = props;
   const [editOpen, setEditOpen] = useState(false);
 
@@ -32,6 +36,8 @@ export default function EditProfileSection(props: Props) {
   const passwordInput = useRef<HTMLInputElement>(null);
   const confirmPasswordInput = useRef<HTMLInputElement>(null);
 
+  const userId = useSelector((state: RootState) => state.user.userId);;
+  console.log('GREG LOOK!  ~ file: EditProfileSection.tsx ~ line 40 ~ EditProfileSection ~ userId', userId);
   const handleOnPress = () => {
     setEditOpen(!editOpen);
   };
@@ -49,6 +55,7 @@ export default function EditProfileSection(props: Props) {
                   userFirstName: data.userFirstName,
                   userLastName: data.userLastName,
                   userPhoneNumber: data.userPhoneNumber,
+                  userEmail: data.userEmail,
                 }}
                 validationSchema={Yup.object({
                   userPhoneNumber: Yup.number()
@@ -56,16 +63,17 @@ export default function EditProfileSection(props: Props) {
                     .integer("Provide a valid phone number."),
                   userFirstName: Yup.string(),
                   userLastName: Yup.string(),
+                  userEmail: Yup.string(),
                 })}
                 onSubmit={(values, formikActions) => {
                   try {
                     const data = {
-                      userPhoneNumber: values.userPhoneNumber,
-                      userFirstName: values.userFirstName,
-                      userLastName: values.userLastName,
+                      firstName: values.userFirstName,
+                      lastName: values.userLastName,
+                      email: values.userEmail,
+                      phoneNumber: values.userPhoneNumber,
                     };
-                    // dispatch(addVehicle(data));
-                    console.log("data is:", data);
+                    dispatch(updateProfile(data));
                   } catch (error) {
                     console.error("ADD Edit ERROR -> render -> error", error);
                   }
@@ -82,6 +90,18 @@ export default function EditProfileSection(props: Props) {
                       <View style={[styles.contentContainer]}>
                         <TextInput
                           variant="standard"
+                          value={props.values.userEmail}
+                          onChangeText={props.handleChange("userEmail")}
+                          label="Email"
+                          returnKeyType={"next"}
+                          ref={emailInput}
+                          onSubmitEditing={() => {
+                            firstNameInput.current?.focus();
+                          }}
+                        />
+                        <Spacer style={{ padding: 16 }} />
+                        <TextInput
+                          variant="standard"
                           value={props.values.userFirstName}
                           onChangeText={props.handleChange("userFirstName")}
                           label="First name"
@@ -91,7 +111,7 @@ export default function EditProfileSection(props: Props) {
                             lastNameInput.current?.focus();
                           }}
                         />
-                        <Spacer style={{ margin: 16 }} />
+                        <Spacer style={{ padding: 16 }} />
                         <TextInput
                           variant="standard"
                           value={props.values.userLastName}
@@ -103,7 +123,7 @@ export default function EditProfileSection(props: Props) {
                             phoneInput.current?.focus();
                           }}
                         />
-                        <Spacer style={{ margin: 16 }} />
+                        <Spacer style={{ padding: 16 }} />
 
                         <TextInput
                           variant="standard"
@@ -115,7 +135,7 @@ export default function EditProfileSection(props: Props) {
                           ref={phoneInput}
                           onSubmitEditing={handleOnSubmit}
                         />
-                        <Spacer style={{ margin: 16 }} />
+                        <Spacer style={{ padding: 16 }} />
                       </View>
                       <View style={styles.signInLinks}>
                         <TouchableOpacity
@@ -141,46 +161,36 @@ export default function EditProfileSection(props: Props) {
             <ScrollView style={[styles.contentContainer]}>
               <Formik
                 initialValues={{
-                  userEmail: data.userEmail,
                   userPassword: "",
                   confirmUserPassword: "",
                 }}
                 validationSchema={Yup.object({
-                  userEmail: Yup.string(),
                   userPassword: Yup.string(),
                   confirmUserPassword: Yup.string(),
                 })}
                 onSubmit={(values, formikActions) => {
                   try {
                     const data = {
-                      userEmail: values.userEmail,
-                      userPassword: values.userPassword,
-                      confirmUserPassword: values.confirmUserPassword,
+                      password: values.userPassword,
+                      userId: userId,
                     };
-                    // dispatch(addVehicle(data));
-                    console.log("auth data is:", data);
+                    dispatch(updatePassword(data));
                   } catch (error) {
                     console.error("ADD Edit ERROR -> render -> error", error);
                   }
                 }}>
                 {(props) => {
                   const handleOnSubmit = () => {
-                    return props.handleSubmit();
+                    if (
+                      props.values.userPassword ===
+                      props.values.confirmUserPassword
+                    ) {
+                      props.handleSubmit();
+                      setEditOpen(!editOpen);
+                    }
                   };
                   return (
                     <VStack>
-                      <TextInput
-                        variant="standard"
-                        value={props.values.userEmail}
-                        onChangeText={props.handleChange("userEmail")}
-                        label="Email"
-                        returnKeyType={"next"}
-                        ref={emailInput}
-                        onSubmitEditing={() => {
-                          passwordInput.current?.focus();
-                        }}
-                      />
-                      <Spacer style={{ margin: 16 }} />
                       <TextInput
                         variant="standard"
                         keyboardType="visible-password"
@@ -193,7 +203,7 @@ export default function EditProfileSection(props: Props) {
                           confirmPasswordInput.current?.focus();
                         }}
                       />
-                      <Spacer style={{ margin: 16 }} />
+                      <Spacer style={{ padding: 16 }} />
                       <TextInput
                         variant="standard"
                         keyboardType="visible-password"
