@@ -23,7 +23,7 @@ export const updateProfile = (data: EditProfileData) => {
       userId: any;
     }) => void,
   ) => {
-    const request = axios.put("/users/editProfile", {
+    const request = axios.patch("/users/editProfile", {
       email: email,
       firstName: firstName,
       lastName: lastName,
