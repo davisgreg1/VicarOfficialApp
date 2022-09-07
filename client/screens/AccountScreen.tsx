@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
 import { Linking, Modal, StyleSheet, Pressable, Platform } from "react-native";
+import { Button } from "react-native-paper";
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps, RootState } from "../types";
 import { logoutUser } from "../redux/actions/authActions/logoutUser";
@@ -93,16 +94,24 @@ export default function AccountScreen({
       <View style={styles.profileSubSection}>
         <Text style={styles.profileSubSectionTitle}>Contact Us</Text>
         <View style={styles.contactOptionsContainer}>
-          <Pressable
+          <Button
             onPress={() => onPressMobileNumberClick("9172319139", false)}
-            style={styles.optionButton}>
-            <Text style={styles.text}>Text Us</Text>
-          </Pressable>
-          <Pressable
+            mode="elevated"
+            textColor="#eee"
+            style={styles.optionButton}
+            accessibilityLabel="Text us Button"
+            icon="cellphone-message">
+            Text Us
+          </Button>
+          <Button
             onPress={() => onPressMobileNumberClick("9172319139", true)}
-            style={styles.optionButton}>
-            <Text style={styles.text}>Call Us</Text>
-          </Pressable>
+            mode="elevated"
+            textColor="#eee"
+            style={styles.optionButton}
+            accessibilityLabel="Call us Button"
+            icon="cellphone-wireless">
+            Call Us
+          </Button>
         </View>
       </View>
       <View
@@ -178,11 +187,10 @@ const styles = StyleSheet.create({
   optionButton: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
     borderRadius: 4,
-    elevation: 10,
     backgroundColor: "black",
+    width: 150,
+    height: 60,
   },
   text: {
     fontSize: 16,

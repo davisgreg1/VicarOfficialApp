@@ -133,13 +133,11 @@ export default function ParkCarScreen({
               const handleSetAddress = () => {
                 props.handleSubmit();
               };
-              const { values, handleChange } = props;
+              const { values, handleChange, errors } = props;
 
               const disabled =
-                !values.address &&
-                !values.city &&
-                !values.state &&
-                !values.zipCode;
+                errors.address || errors.city || errors.state || errors.zipCode;
+
               return (
                 <View style={[styles.contentContainer]}>
                   <Spacer style={{ padding: 16 }} />
@@ -156,6 +154,12 @@ export default function ParkCarScreen({
                     onSubmitEditing={() => {
                       cityRef.current?.focus();
                     }}
+                    style={{
+                      borderStyle: "dashed",
+                      borderWidth: props.errors.address ? 2 : 0,
+                      padding: props.errors.address ? 4 : 0,
+                      borderColor: "red",
+                    }}
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -170,6 +174,12 @@ export default function ParkCarScreen({
                     ref={cityRef}
                     onSubmitEditing={() => {
                       stateRef.current?.focus();
+                    }}
+                    style={{
+                      borderStyle: "dashed",
+                      borderWidth: props.errors.city ? 2 : 0,
+                      padding: props.errors.city ? 4 : 0,
+                      borderColor: "red",
                     }}
                   />
                   <Spacer style={{ padding: 16 }} />
@@ -186,6 +196,12 @@ export default function ParkCarScreen({
                     onSubmitEditing={() => {
                       zipCodeRef.current?.focus();
                     }}
+                    style={{
+                      borderStyle: "dashed",
+                      borderWidth: props.errors.state ? 2 : 0,
+                      padding: props.errors.state ? 4 : 0,
+                      borderColor: "red",
+                    }}
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -199,6 +215,12 @@ export default function ParkCarScreen({
                     returnKeyType={"done"}
                     ref={zipCodeRef}
                     onSubmitEditing={handleSetAddress}
+                    style={{
+                      borderStyle: "dashed",
+                      borderWidth: props.errors.zipCode ? 2 : 0,
+                      padding: props.errors.zipCode ? 4 : 0,
+                      borderColor: "red",
+                    }}
                   />
                   <TouchableOpacity
                     disabled={disabled}

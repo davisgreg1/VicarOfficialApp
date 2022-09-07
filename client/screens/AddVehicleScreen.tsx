@@ -4,7 +4,6 @@ import {
   ScrollView,
   Keyboard,
   StyleSheet,
-  Button,
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
@@ -14,7 +13,12 @@ import {
   Platform,
   StatusBar,
 } from "react-native";
-import { VStack, TextInput, Divider } from "@react-native-material/core";
+import {
+  VStack,
+  TextInput,
+  Divider,
+  Button,
+} from "@react-native-material/core";
 import { RadioButton } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
@@ -23,6 +27,7 @@ import * as Yup from "yup";
 import { RootTabScreenProps } from "../types";
 import { addVehicle } from "../redux/actions/userActions/addVehicle";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ColorPicker } from "react-native-color-picker";
 
 export default function AddVehicleScreen({
   navigation,
@@ -37,6 +42,8 @@ export default function AddVehicleScreen({
   const colorRef = useRef<HTMLInputElement>(null);
   const licenseRef = useRef<HTMLInputElement>(null);
   const nickNameRef = useRef<HTMLInputElement>(null);
+
+  const [showPicker, setShowPicker] = useState(false);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -84,13 +91,15 @@ export default function AddVehicleScreen({
           }
         }}>
         {(props) => {
-          const handleAddVehicle = () => {
-            return props.handleSubmit();
-          };
+          const handleAddVehicle = () => props.handleSubmit();
+
+          const handleSetColor = (color: string) =>
+            props.setFieldValue("color", color);
+
           return (
             <KeyboardAwareScrollView>
               <View style={[styles.contentContainer]}>
-              <Divider style={{ marginTop: 60 }}/>
+                <Divider style={{ marginTop: 60 }} />
 
                 <TextInput
                   variant="outlined"
@@ -101,6 +110,13 @@ export default function AddVehicleScreen({
                   ref={licenseRef}
                   onSubmitEditing={() => {
                     yearRef.current?.focus();
+                  }}
+                  style={{
+                    borderStyle: "dashed",
+                    borderWidth: props.errors.licenseNumber ? 2 : 0,
+                    padding: props.errors.licenseNumber ? 8 : 0,
+                    marginBottom: props.errors.licenseNumber ? 1 : 0,
+                    borderColor: "red",
                   }}
                 />
                 <TextInput
@@ -114,6 +130,13 @@ export default function AddVehicleScreen({
                   onSubmitEditing={() => {
                     makeRef.current?.focus();
                   }}
+                  style={{
+                    borderStyle: "dashed",
+                    borderWidth: props.errors.year ? 2 : 0,
+                    padding: props.errors.year ? 8 : 0,
+                    marginBottom: props.errors.year ? 1 : 0,
+                    borderColor: "red",
+                  }}
                 />
                 <TextInput
                   variant="outlined"
@@ -126,6 +149,13 @@ export default function AddVehicleScreen({
                   onSubmitEditing={() => {
                     modelRef.current?.focus();
                   }}
+                  style={{
+                    borderStyle: "dashed",
+                    borderWidth: props.errors.make ? 2 : 0,
+                    padding: props.errors.make ? 8 : 0,
+                    marginBottom: props.errors.make ? 1 : 0,
+                    borderColor: "red",
+                  }}
                 />
                 <TextInput
                   variant="outlined"
@@ -136,18 +166,14 @@ export default function AddVehicleScreen({
                   returnKeyType={"next"}
                   ref={modelRef}
                   onSubmitEditing={() => {
-                    colorRef.current?.focus();
-                  }}
-                />
-                <TextInput
-                  variant="outlined"
-                  value={props.values.color}
-                  onChangeText={props.handleChange("color")}
-                  label="Vehicle Color"
-                  returnKeyType={"next"}
-                  ref={colorRef}
-                  onSubmitEditing={() => {
                     nickNameRef.current?.focus();
+                  }}
+                  style={{
+                    borderStyle: "dashed",
+                    borderWidth: props.errors.model ? 2 : 0,
+                    padding: props.errors.model ? 8 : 0,
+                    marginBottom: props.errors.model ? 1 : 0,
+                    borderColor: "red",
                   }}
                 />
                 <TextInput
@@ -159,6 +185,32 @@ export default function AddVehicleScreen({
                   returnKeyType={"next"}
                   ref={nickNameRef}
                 />
+                <Button
+                  variant="text"
+                  title="Select Vehicle Color"
+                  color="#c64141"
+                  onPress={() => {
+                    setShowPicker(!showPicker);
+                  }}
+                  style={{
+                    borderStyle: "dashed",
+                    borderWidth: props.errors.color ? 2 : 0,
+                    padding: props.errors.color ? 8 : 0,
+                    marginBottom: props.errors.color ? 1 : 0,
+                    borderColor: "red",
+                  }}
+                />
+                {showPicker && (
+                  <ColorPicker
+                    onColorSelected={(color) => handleSetColor(color)}
+                    style={{
+                      flex: 1,
+                      width: 300,
+                      height: 300,
+                      alignSelf: "center",
+                    }}
+                  />
+                )}
                 <View style={styles.radios}>
                   <View>
                     <Text style={[styles.btnHeadingText, colorStyle]}>
@@ -184,7 +236,18 @@ export default function AddVehicleScreen({
                     </View>
                   </View>
                   <View>
-                    <Text style={[styles.btnHeadingText, colorStyle]}>
+                    <Text
+                      style={[
+                        styles.btnHeadingText,
+                        colorStyle,
+                        {
+                          borderStyle: "dashed",
+                          borderWidth: props.errors.type ? 2 : 0,
+                          padding: props.errors.type ? 8 : 0,
+                          marginBottom: props.errors.type ? 1 : 0,
+                          borderColor: "red",
+                        },
+                      ]}>
                       Type of Transmission:
                     </Text>
                     <View style={styles.radioBtns}>
@@ -216,9 +279,8 @@ export default function AddVehicleScreen({
               </View>
 
               <TouchableOpacity
-                // style={styles.buttonTouch}
                 style={styles.addVehicleBtn}
-                onPress={() => handleAddVehicle()}>
+                onPress={handleAddVehicle}>
                 <Text>{`Add Vehicle`}</Text>
               </TouchableOpacity>
             </KeyboardAwareScrollView>
@@ -234,6 +296,7 @@ const styles = StyleSheet.create({
     // display: "flex",
     height: Dimensions.get("window").height - StatusBar?.currentHeight,
     marginTop: 16,
+    marginHorizontal: 16,
   },
   contentContainer: {
     display: "flex",
