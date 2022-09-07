@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { VStack, TextInput, Spacer } from "@react-native-material/core";
+import { Button } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Text, View } from "./Themed";
@@ -27,7 +28,7 @@ interface Props {
 export default function EditProfileSection(props: Props) {
   const dispatch = useDispatch();
   const { heading, children, data, type } = props;
-  const [editOpen, setEditOpen] = useState(false);
+  const [profileEditOpen, setProfileEditOpen] = useState(false);
 
   const firstNameInput = useRef<HTMLInputElement>(null);
   const lastNameInput = useRef<HTMLInputElement>(null);
@@ -36,10 +37,9 @@ export default function EditProfileSection(props: Props) {
   const passwordInput = useRef<HTMLInputElement>(null);
   const confirmPasswordInput = useRef<HTMLInputElement>(null);
 
-  const userId = useSelector((state: RootState) => state.user.userId);;
-  console.log('GREG LOOK!  ~ file: EditProfileSection.tsx ~ line 40 ~ EditProfileSection ~ userId', userId);
+  const userId = useSelector((state: RootState) => state.user.userId);
   const handleOnPress = () => {
-    setEditOpen(!editOpen);
+    setProfileEditOpen(!profileEditOpen);
   };
 
   const renderEditFields = () => {
@@ -81,7 +81,7 @@ export default function EditProfileSection(props: Props) {
                 {(props) => {
                   const handleOnSubmit = () => {
                     props.handleSubmit();
-                    setEditOpen(!editOpen);
+                    setProfileEditOpen(!profileEditOpen);
                   };
                   return (
                     <KeyboardAvoidingView
@@ -138,13 +138,16 @@ export default function EditProfileSection(props: Props) {
                         <Spacer style={{ padding: 16 }} />
                       </View>
                       <View style={styles.signInLinks}>
-                        <TouchableOpacity
-                          style={styles.buttonTouch}
-                          onPress={() => handleOnSubmit()}>
-                          <Text style={styles.saveChangesBtn}>
-                            {`Save Changes`}
-                          </Text>
-                        </TouchableOpacity>
+                        <Button
+                          onPress={handleOnSubmit}
+                          mode="contained-tonal"
+                          textColor="#fff"
+                          buttonColor="#000"
+                          disabled={!props.dirty}
+                          accessibilityLabel="Save Changes Button"
+                          icon="content-save">
+                          {`Save Changes`}
+                        </Button>
                       </View>
                     </KeyboardAvoidingView>
                   );
@@ -165,8 +168,12 @@ export default function EditProfileSection(props: Props) {
                   confirmUserPassword: "",
                 }}
                 validationSchema={Yup.object({
-                  userPassword: Yup.string(),
-                  confirmUserPassword: Yup.string(),
+                  userPassword: Yup.string().required(
+                    "Please enter your new password",
+                  ),
+                  confirmUserPassword: Yup.string().required(
+                    "Please confirm your password",
+                  ),
                 })}
                 onSubmit={(values, formikActions) => {
                   try {
@@ -186,7 +193,7 @@ export default function EditProfileSection(props: Props) {
                       props.values.confirmUserPassword
                     ) {
                       props.handleSubmit();
-                      setEditOpen(!editOpen);
+                      setProfileEditOpen(!profileEditOpen);
                     }
                   };
                   return (
@@ -213,17 +220,26 @@ export default function EditProfileSection(props: Props) {
                         returnKeyType={"done"}
                         ref={confirmPasswordInput}
                         onSubmitEditing={handleOnSubmit}
+                        style={{
+                          borderStyle: "dashed",
+                          borderWidth: props.errors.confirmUserPassword ? 2 : 0,
+                          padding: props.errors.confirmUserPassword ? 8 : 0,
+                          borderColor: "red",
+                        }}
                       />
                       <Spacer style={{ margin: 16 }} />
 
                       <View style={styles.signInLinks}>
-                        <TouchableOpacity
-                          style={styles.buttonTouch}
-                          onPress={() => handleOnSubmit()}>
-                          <Text style={styles.saveChangesBtn}>
-                            {`Save Changes`}
-                          </Text>
-                        </TouchableOpacity>
+                        <Button
+                          onPress={handleOnSubmit}
+                          mode="contained-tonal"
+                          textColor="#fff"
+                          buttonColor="#000"
+                          disabled={!props.dirty}
+                          accessibilityLabel="Save Changes Button"
+                          icon="content-save">
+                          {`Save Changes`}
+                        </Button>
                       </View>
                     </VStack>
                   );
@@ -243,11 +259,13 @@ export default function EditProfileSection(props: Props) {
       <View style={styles.topHeader}>
         <Text style={styles.headingText}>{heading}</Text>
         <Pressable onPress={handleOnPress}>
-          <Text style={styles.editLink}>{editOpen ? "Cancel" : "Edit"}</Text>
+          <Text style={styles.editLink}>
+            {profileEditOpen ? "Cancel" : "Edit"}
+          </Text>
         </Pressable>
       </View>
-      {editOpen && renderEditFields()}
-      {!editOpen && <View style={styles.dataSection}>{children}</View>}
+      {profileEditOpen && renderEditFields()}
+      {!profileEditOpen && <View style={styles.dataSection}>{children}</View>}
     </View>
   );
 }

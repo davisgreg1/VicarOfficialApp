@@ -127,19 +127,17 @@ export default function FetchCarScreen({
               const handleSetReturnAddress = () => {
                 props.handleSubmit();
               };
-              const { values, handleChange } = props;
+              const { values, handleChange, errors } = props;
 
               const disabled =
-                !values.address &&
-                !values.city &&
-                !values.state &&
-                !values.zipCode;
+                errors.address || errors.city || errors.state || errors.zipCode;
 
               return (
                 <View style={[styles.contentContainer]}>
                   <Spacer style={{ padding: 16 }} />
 
                   <TextInput
+                    ref={addressRef}
                     variant="standard"
                     placeholder={
                       returnToOwnerAddress ? returnToOwnerAddress : ""
@@ -149,14 +147,20 @@ export default function FetchCarScreen({
                     onChangeText={handleChange("address")}
                     label="Address"
                     returnKeyType={"next"}
-                    ref={addressRef}
                     onSubmitEditing={() => {
                       cityRef.current?.focus();
+                    }}
+                    style={{
+                      borderStyle: "dashed",
+                      borderWidth: errors.address ? 2 : 0,
+                      padding: errors.address ? 4 : 0,
+                      borderColor: "red",
                     }}
                   />
                   <Spacer style={{ padding: 16 }} />
 
                   <TextInput
+                    ref={cityRef}
                     variant="standard"
                     placeholder={returnToOwnerCity ? returnToOwnerCity : ""}
                     keyboardType="default"
@@ -164,14 +168,20 @@ export default function FetchCarScreen({
                     onChangeText={handleChange("city")}
                     label="City"
                     returnKeyType={"next"}
-                    ref={cityRef}
                     onSubmitEditing={() => {
                       stateRef.current?.focus();
+                    }}
+                    style={{
+                      borderStyle: "dashed",
+                      borderWidth: errors.city ? 2 : 0,
+                      padding: errors.city ? 4 : 0,
+                      borderColor: "red",
                     }}
                   />
                   <Spacer style={{ padding: 16 }} />
 
                   <TextInput
+                    ref={stateRef}
                     variant="standard"
                     placeholder={returnToOwnerState ? returnToOwnerState : ""}
                     keyboardType="default"
@@ -179,14 +189,20 @@ export default function FetchCarScreen({
                     onChangeText={handleChange("state")}
                     label="State"
                     returnKeyType={"next"}
-                    ref={stateRef}
                     onSubmitEditing={() => {
                       zipCodeRef.current?.focus();
+                    }}
+                    style={{
+                      borderStyle: "dashed",
+                      borderWidth: errors.state ? 2 : 0,
+                      padding: errors.state ? 4 : 0,
+                      borderColor: "red",
                     }}
                   />
                   <Spacer style={{ padding: 16 }} />
 
                   <TextInput
+                    ref={zipCodeRef}
                     variant="standard"
                     placeholder={
                       returnToOwnerZipCode ? returnToOwnerZipCode : ""
@@ -196,8 +212,13 @@ export default function FetchCarScreen({
                     onChangeText={handleChange("zipCode")}
                     label="Zip Code"
                     returnKeyType={"done"}
-                    ref={zipCodeRef}
                     onSubmitEditing={handleSetReturnAddress}
+                    style={{
+                      borderStyle: "dashed",
+                      borderWidth: errors.zipCode ? 2 : 0,
+                      padding: errors.zipCode ? 4 : 0,
+                      borderColor: "red",
+                    }}
                   />
                   <TouchableOpacity
                     disabled={disabled}
