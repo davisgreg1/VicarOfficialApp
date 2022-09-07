@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector, useDispatch, connect } from "react-redux";
-import { StyleSheet, Alert, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import dayjs from "dayjs";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { VStack, TextInput, Spacer } from "@react-native-material/core";
+import { TextInput, Spacer, Button } from "@react-native-material/core";
 import { Text, View } from "../components/Themed";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import VehicleList from "../components/VehicleList";
@@ -28,6 +28,9 @@ export default function FetchCarScreen({
   const vehicles: Array<VehicleType> = useSelector(
     (state: RootState) => state.user.vehicles,
   );
+
+  const isCarParked = vehicles.some((vehicle) => vehicle.isCarParked);
+
   const returnToOwnerVehicle = useSelector(
     (state: RootState) => state.service.returnToOwnerVehicle,
   );
@@ -53,6 +56,8 @@ export default function FetchCarScreen({
 
   const vehiclesToFetch = vehicles.filter((vehicle) => vehicle.isCarParked);
 
+  const [locationNextDisabled, setLocationNextDisabled] = useState(true);
+
   const handleOnSubmit = () => {
     const timeVal = dayjs(returnToOwnerDate).format("hh:mm A");
     const dateVal = dayjs(returnToOwnerDate).format("MMM DD");
@@ -73,17 +78,17 @@ export default function FetchCarScreen({
   return (
     <View style={{ flex: 1 }}>
       <ProgressSteps>
-        <ProgressStep errors={!returnToOwnerVehicle} label="Vehicle">
+        <ProgressStep nextBtnDisabled={!returnToOwnerVehicle} label="Vehicle">
           <View style={{ alignItems: "center" }}>
-            {!returnToOwnerVehicle ? (
-              <Text>You have no parked vehicles.</Text>
-            ) : (
+            {isCarParked ? (
               <Text>Which vehicle would you like us to bring?</Text>
+            ) : (
+              <Text>You have no parked vehicles.</Text>
             )}
           </View>
           <VehicleList vehicles={vehiclesToFetch} isReturningToOwner={true} />
         </ProgressStep>
-        <ProgressStep label="Schedule">
+        <ProgressStep label="Schedule" nextBtnDisabled={!parsedDate}>
           <View style={{ alignItems: "center" }}>
             <DateTimePicker
               typeOfSchedule={"return"}
@@ -92,22 +97,22 @@ export default function FetchCarScreen({
             />
           </View>
         </ProgressStep>
-        <ProgressStep label="Location">
+        <ProgressStep label="Location" nextBtnDisabled={locationNextDisabled}>
           <View style={{ alignItems: "center" }}>
             <Text>Where would you like your valet to meet you?</Text>
           </View>
           <Formik
             initialValues={{
-              address: "",
-              city: "",
-              state: "",
-              zipCode: "",
+              address: returnToOwnerAddress ? returnToOwnerAddress : "",
+              city: returnToOwnerCity ? returnToOwnerCity : "",
+              state: returnToOwnerState ? returnToOwnerState : "",
+              zipCode: returnToOwnerZipCode ? returnToOwnerZipCode : "",
             }}
             validationSchema={Yup.object({
-              address: Yup.string().required("Provide a valid address."),
-              city: Yup.string().required("Provide a valid city."),
-              state: Yup.string().required("Provide a valid state."),
-              zipCode: Yup.number().required("Provide a valid zipCode."),
+              address: Yup.string().required("Provide a valid address"),
+              city: Yup.string().required("Provide a valid city"),
+              state: Yup.string().required("Provide a valid state"),
+              zipCode: Yup.number().required("Provide a valid zip code"),
             })}
             onSubmit={(values, formikActions) => {
               try {
@@ -117,6 +122,8 @@ export default function FetchCarScreen({
                   state: values.state,
                   zipCode: values.zipCode,
                 };
+                setLocationNextDisabled(false);
+
                 // TODO: type dispatch
                 dispatch(setReturnAddress(data));
               } catch (error) {
@@ -150,12 +157,7 @@ export default function FetchCarScreen({
                     onSubmitEditing={() => {
                       cityRef.current?.focus();
                     }}
-                    style={{
-                      borderStyle: "dashed",
-                      borderWidth: errors.address ? 2 : 0,
-                      padding: errors.address ? 4 : 0,
-                      borderColor: "red",
-                    }}
+                    helperText={errors.address}
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -171,12 +173,7 @@ export default function FetchCarScreen({
                     onSubmitEditing={() => {
                       stateRef.current?.focus();
                     }}
-                    style={{
-                      borderStyle: "dashed",
-                      borderWidth: errors.city ? 2 : 0,
-                      padding: errors.city ? 4 : 0,
-                      borderColor: "red",
-                    }}
+                    helperText={errors.city}
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -192,12 +189,7 @@ export default function FetchCarScreen({
                     onSubmitEditing={() => {
                       zipCodeRef.current?.focus();
                     }}
-                    style={{
-                      borderStyle: "dashed",
-                      borderWidth: errors.state ? 2 : 0,
-                      padding: errors.state ? 4 : 0,
-                      borderColor: "red",
-                    }}
+                    helperText={errors.state}
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -213,19 +205,15 @@ export default function FetchCarScreen({
                     label="Zip Code"
                     returnKeyType={"done"}
                     onSubmitEditing={handleSetReturnAddress}
-                    style={{
-                      borderStyle: "dashed",
-                      borderWidth: errors.zipCode ? 2 : 0,
-                      padding: errors.zipCode ? 4 : 0,
-                      borderColor: "red",
-                    }}
+                    helperText={errors.zipCode}
                   />
-                  <TouchableOpacity
-                    disabled={disabled}
+                  <Button
                     style={styles.buttonTouch}
-                    onPress={() => handleSetReturnAddress()}>
-                    <Text>{`Set Address`}</Text>
-                  </TouchableOpacity>
+                    title="Set Address"
+                    disabled={!!disabled}
+                    onPress={handleSetReturnAddress}
+                    color="#c64141"
+                  />
                 </View>
               );
             }}
@@ -256,10 +244,6 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   buttonTouch: {
-    backgroundColor: "#c64141",
-    borderRadius: 24,
-    width: 315,
-    padding: 16,
     alignItems: "center",
     marginTop: 50,
     alignSelf: "center",

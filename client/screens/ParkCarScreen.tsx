@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { VStack, TextInput, Spacer } from "@react-native-material/core";
+import { Button, TextInput, Spacer } from "@react-native-material/core";
 import VehicleList from "../components/VehicleList";
 import DateTimePicker from "../components/DateTimePicker";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
@@ -39,6 +39,8 @@ export default function ParkCarScreen({
   const city = useSelector((state: RootState) => state.service.city);
   const state = useSelector((state: RootState) => state.service.state);
   const zipCode = useSelector((state: RootState) => state.service.zipCode);
+
+  const [locationNextDisabled, setLocationNextDisabled] = useState(true);
 
   const handleOnSubmit = () => {
     const timeVal = dayjs(date).format("hh:mm A");
@@ -78,7 +80,7 @@ export default function ParkCarScreen({
         activeLabelColor="#c64141"
         activeStepNumColor="#c64141">
         <ProgressStep
-          errors={!vehicleSelected || allCarsAreParked}
+          nextBtnDisabled={!vehicleSelected || allCarsAreParked}
           label="Vehicle">
           <View style={{ alignItems: "center" }}>
             {allCarsAreParked ? (
@@ -89,7 +91,7 @@ export default function ParkCarScreen({
           </View>
           <VehicleList vehicles={vehiclesToPark} isReturningToOwner={false} />
         </ProgressStep>
-        <ProgressStep label="Schedule" errors={!dateSelected}>
+        <ProgressStep label="Schedule" nextBtnDisabled={!dateSelected}>
           <View style={{ alignItems: "center" }}>
             <DateTimePicker
               typeOfSchedule={"pick up"}
@@ -98,22 +100,22 @@ export default function ParkCarScreen({
             />
           </View>
         </ProgressStep>
-        <ProgressStep label="Location" errors={locationErrors}>
+        <ProgressStep label="Location" nextBtnDisabled={locationNextDisabled}>
           <Text style={{ marginLeft: 25 }}>
             Where would you like your valet to meet you?
           </Text>
           <Formik
             initialValues={{
-              address: "",
-              city: "",
-              state: "",
-              zipCode: "",
+              address: address ? address : "",
+              city: city ? city : "",
+              state: state ? state : "",
+              zipCode: zipCode ? zipCode : "",
             }}
             validationSchema={Yup.object({
-              address: Yup.string().required("Provide a valid address."),
-              city: Yup.string().required("Provide a valid city."),
-              state: Yup.string().required("Provide a valid state."),
-              zipCode: Yup.number().required("Provide a valid zipCode."),
+              address: Yup.string().required("Provide a valid address"),
+              city: Yup.string().required("Provide a valid city"),
+              state: Yup.string().required("Provide a valid state"),
+              zipCode: Yup.number().required("Provide a valid zip code"),
             })}
             onSubmit={(values, formikActions) => {
               try {
@@ -123,6 +125,8 @@ export default function ParkCarScreen({
                   state: values.state,
                   zipCode: values.zipCode,
                 };
+                setLocationNextDisabled(false);
+
                 // TODO: type dispatch
                 dispatch(setPickUpAddress(data));
               } catch (error) {
@@ -130,9 +134,8 @@ export default function ParkCarScreen({
               }
             }}>
             {(props) => {
-              const handleSetAddress = () => {
-                props.handleSubmit();
-              };
+              const handleSetAddress = () => props.handleSubmit();
+
               const { values, handleChange, errors } = props;
 
               const disabled =
@@ -143,27 +146,23 @@ export default function ParkCarScreen({
                   <Spacer style={{ padding: 16 }} />
 
                   <TextInput
+                    ref={addressRef}
                     variant="standard"
+                    helperText={errors.address}
                     placeholder={address ? address : ""}
                     keyboardType="default"
                     value={values.address}
                     onChangeText={handleChange("address")}
                     label="Address"
                     returnKeyType={"next"}
-                    ref={addressRef}
                     onSubmitEditing={() => {
                       cityRef.current?.focus();
-                    }}
-                    style={{
-                      borderStyle: "dashed",
-                      borderWidth: props.errors.address ? 2 : 0,
-                      padding: props.errors.address ? 4 : 0,
-                      borderColor: "red",
                     }}
                   />
                   <Spacer style={{ padding: 16 }} />
 
                   <TextInput
+                    ref={cityRef}
                     variant="standard"
                     placeholder={city ? city : ""}
                     keyboardType="default"
@@ -171,20 +170,15 @@ export default function ParkCarScreen({
                     onChangeText={handleChange("city")}
                     label="City"
                     returnKeyType={"next"}
-                    ref={cityRef}
                     onSubmitEditing={() => {
                       stateRef.current?.focus();
                     }}
-                    style={{
-                      borderStyle: "dashed",
-                      borderWidth: props.errors.city ? 2 : 0,
-                      padding: props.errors.city ? 4 : 0,
-                      borderColor: "red",
-                    }}
+                    helperText={errors.city}
                   />
                   <Spacer style={{ padding: 16 }} />
 
                   <TextInput
+                    ref={stateRef}
                     variant="standard"
                     placeholder={state ? state : ""}
                     keyboardType="default"
@@ -192,20 +186,15 @@ export default function ParkCarScreen({
                     onChangeText={handleChange("state")}
                     label="State"
                     returnKeyType={"next"}
-                    ref={stateRef}
                     onSubmitEditing={() => {
                       zipCodeRef.current?.focus();
                     }}
-                    style={{
-                      borderStyle: "dashed",
-                      borderWidth: props.errors.state ? 2 : 0,
-                      padding: props.errors.state ? 4 : 0,
-                      borderColor: "red",
-                    }}
+                    helperText={errors.state}
                   />
                   <Spacer style={{ padding: 16 }} />
 
                   <TextInput
+                    ref={zipCodeRef}
                     variant="standard"
                     placeholder={zipCode ? zipCode : ""}
                     keyboardType="number-pad"
@@ -213,21 +202,16 @@ export default function ParkCarScreen({
                     onChangeText={handleChange("zipCode")}
                     label="Zip Code"
                     returnKeyType={"done"}
-                    ref={zipCodeRef}
                     onSubmitEditing={handleSetAddress}
-                    style={{
-                      borderStyle: "dashed",
-                      borderWidth: props.errors.zipCode ? 2 : 0,
-                      padding: props.errors.zipCode ? 4 : 0,
-                      borderColor: "red",
-                    }}
+                    helperText={errors.zipCode}
                   />
-                  <TouchableOpacity
-                    disabled={disabled}
+                  <Button
                     style={styles.buttonTouch}
-                    onPress={() => handleSetAddress()}>
-                    <Text>{`Set Address`}</Text>
-                  </TouchableOpacity>
+                    title="Set Address"
+                    disabled={!!disabled}
+                    onPress={handleSetAddress}
+                    color="#c64141"
+                  />
                 </View>
               );
             }}
@@ -258,10 +242,6 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   buttonTouch: {
-    backgroundColor: "#c64141",
-    borderRadius: 24,
-    width: 315,
-    padding: 16,
     alignItems: "center",
     marginTop: 50,
     alignSelf: "center",
