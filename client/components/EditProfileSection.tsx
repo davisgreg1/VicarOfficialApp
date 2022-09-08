@@ -42,6 +42,28 @@ export default function EditProfileSection(props: Props) {
     setProfileEditOpen(!profileEditOpen);
   };
 
+  const FormSchema = Yup.object({
+    userFirstName: Yup.string()
+      .matches(/^[a-zA-ZÀ-ÖÙ-öù-ÿĀ-žḀ-ỿ\s\-\/.]+$/, "please enter valid name")
+      .max(40)
+      .required("first name is required"),
+    userLastName: Yup.string()
+      .matches(/^[a-zA-ZÀ-ÖÙ-öù-ÿĀ-žḀ-ỿ\s\-\/.]+$/, "please enter valid name")
+      .max(40)
+      .required("last name is required"),
+    email: Yup.string().email().required("email is required"),
+    userPhoneNumber: Yup.number()
+      .positive()
+      .integer("phone number is required"),
+  });
+
+  const AuthFormSchema = Yup.object({
+    userPassword: Yup.string().required("password is required"),
+    confirmUserPassword: Yup.string()
+      .required("please retype your password")
+      .oneOf([Yup.ref("userPassword")], "your passwords do not match"),
+  });
+
   const renderEditFields = () => {
     switch (type) {
       case "personal":
@@ -55,22 +77,15 @@ export default function EditProfileSection(props: Props) {
                   userFirstName: data.userFirstName,
                   userLastName: data.userLastName,
                   userPhoneNumber: data.userPhoneNumber,
-                  userEmail: data.userEmail,
+                  email: data.userEmail,
                 }}
-                validationSchema={Yup.object({
-                  userPhoneNumber: Yup.number()
-                    .positive()
-                    .integer("Provide a valid phone number."),
-                  userFirstName: Yup.string(),
-                  userLastName: Yup.string(),
-                  userEmail: Yup.string(),
-                })}
+                validationSchema={FormSchema}
                 onSubmit={(values, formikActions) => {
                   try {
                     const data = {
                       firstName: values.userFirstName,
                       lastName: values.userLastName,
-                      email: values.userEmail,
+                      email: values.email,
                       phoneNumber: values.userPhoneNumber,
                     };
                     dispatch(updateProfile(data));
@@ -78,72 +93,83 @@ export default function EditProfileSection(props: Props) {
                     console.error("ADD Edit ERROR -> render -> error", error);
                   }
                 }}>
-                {(props) => {
+                {({
+                  errors,
+                  handleSubmit,
+                  handleChange,
+                  values,
+                  dirty,
+                  ...props
+                }) => {
                   const handleOnSubmit = () => {
-                    props.handleSubmit();
+                    handleSubmit();
                     setProfileEditOpen(!profileEditOpen);
                   };
+
                   return (
                     <KeyboardAvoidingView
                       keyboardVerticalOffset={10}
                       behavior={Platform.OS === "ios" ? "padding" : "height"}>
                       <View style={[styles.contentContainer]}>
                         <TextInput
+                          ref={emailInput}
                           variant="standard"
-                          value={props.values.userEmail}
-                          onChangeText={props.handleChange("userEmail")}
+                          value={values.email}
+                          onChangeText={handleChange("email")}
                           label="Email"
                           returnKeyType={"next"}
-                          ref={emailInput}
                           onSubmitEditing={() => {
                             firstNameInput.current?.focus();
                           }}
+                          helperText={errors.email}
                         />
                         <Spacer style={{ padding: 16 }} />
                         <TextInput
+                          ref={firstNameInput}
                           variant="standard"
-                          value={props.values.userFirstName}
-                          onChangeText={props.handleChange("userFirstName")}
+                          value={values.userFirstName}
+                          onChangeText={handleChange("userFirstName")}
                           label="First name"
                           returnKeyType={"next"}
-                          ref={firstNameInput}
                           onSubmitEditing={() => {
                             lastNameInput.current?.focus();
                           }}
+                          helperText={errors.userFirstName}
                         />
                         <Spacer style={{ padding: 16 }} />
                         <TextInput
+                          ref={lastNameInput}
                           variant="standard"
-                          value={props.values.userLastName}
-                          onChangeText={props.handleChange("userLastName")}
+                          value={values.userLastName}
+                          onChangeText={handleChange("userLastName")}
                           label="Last name"
                           returnKeyType={"next"}
-                          ref={lastNameInput}
                           onSubmitEditing={() => {
                             phoneInput.current?.focus();
                           }}
+                          helperText={errors.userLastName}
                         />
                         <Spacer style={{ padding: 16 }} />
 
                         <TextInput
+                          ref={phoneInput}
                           variant="standard"
                           keyboardType="phone-pad"
-                          value={props.values.userPhoneNumber}
-                          onChangeText={props.handleChange("userPhoneNumber")}
+                          value={values.userPhoneNumber}
+                          onChangeText={handleChange("userPhoneNumber")}
                           label="Phone Number"
                           returnKeyType={"done"}
-                          ref={phoneInput}
                           onSubmitEditing={handleOnSubmit}
                         />
                         <Spacer style={{ padding: 16 }} />
                       </View>
-                      <View style={styles.signInLinks}>
+                      <View>
                         <Button
                           onPress={handleOnSubmit}
                           mode="contained-tonal"
                           textColor="#fff"
                           buttonColor="#000"
-                          disabled={!props.dirty}
+                          disabled={!dirty}
                           accessibilityLabel="Save Changes Button"
                           icon="content-save">
                           {`Save Changes`}
@@ -167,14 +193,7 @@ export default function EditProfileSection(props: Props) {
                   userPassword: "",
                   confirmUserPassword: "",
                 }}
-                validationSchema={Yup.object({
-                  userPassword: Yup.string().required(
-                    "Please enter your new password",
-                  ),
-                  confirmUserPassword: Yup.string().required(
-                    "Please confirm your password",
-                  ),
-                })}
+                validationSchema={AuthFormSchema}
                 onSubmit={(values, formikActions) => {
                   try {
                     const data = {
@@ -186,56 +205,52 @@ export default function EditProfileSection(props: Props) {
                     console.error("ADD Edit ERROR -> render -> error", error);
                   }
                 }}>
-                {(props) => {
+                {({ errors, handleChange, handleSubmit, values, ...props }) => {
+                  const authDisabled =
+                    errors.userPassword || errors.confirmUserPassword;
+
                   const handleOnSubmit = () => {
-                    if (
-                      props.values.userPassword ===
-                      props.values.confirmUserPassword
-                    ) {
-                      props.handleSubmit();
+                    if (values.userPassword === values.confirmUserPassword) {
+                      handleSubmit();
                       setProfileEditOpen(!profileEditOpen);
                     }
                   };
                   return (
                     <VStack>
                       <TextInput
+                        ref={passwordInput}
                         variant="standard"
-                        keyboardType="visible-password"
-                        value={props.values.userPassword}
-                        onChangeText={props.handleChange("userPassword")}
+                        secureTextEntry={true}
+                        value={values.userPassword}
+                        onChangeText={handleChange("userPassword")}
                         label="Password"
                         returnKeyType={"next"}
-                        ref={passwordInput}
                         onSubmitEditing={() => {
                           confirmPasswordInput.current?.focus();
                         }}
+                        helperText={errors.userPassword}
                       />
                       <Spacer style={{ padding: 16 }} />
                       <TextInput
+                        ref={confirmPasswordInput}
                         variant="standard"
-                        keyboardType="visible-password"
-                        value={props.values.confirmUserPassword}
-                        onChangeText={props.handleChange("confirmUserPassword")}
+                        secureTextEntry={true}
+                        value={values.confirmUserPassword}
+                        onChangeText={handleChange("confirmUserPassword")}
                         label="Confirm Password"
                         returnKeyType={"done"}
-                        ref={confirmPasswordInput}
                         onSubmitEditing={handleOnSubmit}
-                        style={{
-                          borderStyle: "dashed",
-                          borderWidth: props.errors.confirmUserPassword ? 2 : 0,
-                          padding: props.errors.confirmUserPassword ? 8 : 0,
-                          borderColor: "red",
-                        }}
+                        helperText={errors.confirmUserPassword}
                       />
                       <Spacer style={{ margin: 16 }} />
 
-                      <View style={styles.signInLinks}>
+                      <View>
                         <Button
                           onPress={handleOnSubmit}
                           mode="contained-tonal"
                           textColor="#fff"
                           buttonColor="#000"
-                          disabled={!props.dirty}
+                          disabled={!!authDisabled}
                           accessibilityLabel="Save Changes Button"
                           icon="content-save">
                           {`Save Changes`}
