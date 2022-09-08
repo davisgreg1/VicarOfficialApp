@@ -75,6 +75,16 @@ export default function FetchCarScreen({
 
     navigation.navigate("VicarAnimationScreen");
   };
+
+  const FormSchema = Yup.object({
+    address: Yup.string().required("provide a valid address"),
+    city: Yup.string().required("provide a valid city"),
+    state: Yup.string().required("provide a valid state"),
+    zipCode: Yup.string()
+      .matches(/^[0-9]{5}(?:-[0-9]{4})?$/, "please enter valid zip code")
+      .required("zip code is required"),
+  });
+
   return (
     <View style={{ flex: 1 }}>
       <ProgressSteps>
@@ -108,12 +118,7 @@ export default function FetchCarScreen({
               state: returnToOwnerState ? returnToOwnerState : "",
               zipCode: returnToOwnerZipCode ? returnToOwnerZipCode : "",
             }}
-            validationSchema={Yup.object({
-              address: Yup.string().required("Provide a valid address"),
-              city: Yup.string().required("Provide a valid city"),
-              state: Yup.string().required("Provide a valid state"),
-              zipCode: Yup.number().required("Provide a valid zip code"),
-            })}
+            validationSchema={FormSchema}
             onSubmit={(values, formikActions) => {
               try {
                 const data = {

@@ -16,7 +16,7 @@ interface VehiclePropType {
 export default function Vehicle(props: VehiclePropType) {
   const dispatch = useDispatch();
   const {
-    vehicle: { color, year, make, model, licenseNumber },
+    vehicle: { color, year, make, model, licenseNumber, nickName },
     isReturningToOwner,
   } = props;
 
@@ -29,6 +29,7 @@ export default function Vehicle(props: VehiclePropType) {
   return (
     <TouchableOpacity onPress={handleOnPress} style={styles.container}>
       <View style={styles.carView}>
+        <Text>{nickName ? `"${nickName}"` : ""}</Text>
         <FontAwesome name="car" size={50} color={color} />
         <Text>
           {year} {make} {model}
@@ -47,7 +48,8 @@ const styles = StyleSheet.create({
     width: 250,
     height: 200,
     borderColor: "#c64141",
-    borderWidth: 5,
+    borderWidth: 2,
+    borderRadius: 30,
     display: "flex",
     alignContent: "center",
     alignSelf: "center",

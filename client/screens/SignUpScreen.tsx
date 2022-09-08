@@ -7,7 +7,7 @@ import {
   View,
   Text,
 } from "react-native";
-import { VStack, TextInput, Spacer } from "@react-native-material/core";
+import { VStack, TextInput, Spacer, Button } from "@react-native-material/core";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -25,6 +25,22 @@ export default function SignUpScreen({
   const passwordInput = useRef<HTMLInputElement>(null);
   const confirmPWInput = useRef<HTMLInputElement>(null);
 
+  const FormSchema = Yup.object({
+    email: Yup.string().email().required("provide a valid email"),
+    firstName: Yup.string()
+      .matches(/^[a-zA-ZÀ-ÖÙ-öù-ÿĀ-žḀ-ỿ\s\-\/.]+$/, "please enter valid name")
+      .max(40)
+      .required("your first name is required"),
+    lastName: Yup.string()
+      .matches(/^[a-zA-ZÀ-ÖÙ-öù-ÿĀ-žḀ-ỿ\s\-\/.]+$/, "please enter valid name")
+      .max(40)
+      .required("your last name is required"),
+    password: Yup.string().required("password is required"),
+    confirmPassword: Yup.string()
+      .required("please retype your password")
+      .oneOf([Yup.ref("password")], "your passwords do not match"),
+  });
+
   return (
     <Formik
       initialValues={{
@@ -34,13 +50,7 @@ export default function SignUpScreen({
         lastName: "",
         confirmPassword: "",
       }}
-      validationSchema={Yup.object({
-        email: Yup.string().email().required("Provide a valid email."),
-        firstName: Yup.string().required("First name is required."),
-        lastName: Yup.string().required("Last name is required."),
-        password: Yup.string().required("Password is required."),
-        confirmPassword: Yup.string().required("Password is required."),
-      })}
+      validationSchema={FormSchema}
       onSubmit={(values) => {
         try {
           const data = {
@@ -54,63 +64,74 @@ export default function SignUpScreen({
           console.error("SIGN IN ERROR -> render -> error", error);
         }
       }}>
-      {(props) => {
-        const handleLoginPress = () => props.handleSubmit();
+      {({ errors, handleSubmit, ...props }) => {
+        const handleLoginPress = () => handleSubmit();
+        const disabled =
+          errors.firstName ||
+          errors.lastName ||
+          errors.email ||
+          errors.password ||
+          errors.confirmPassword;
         return (
           <ScrollView contentContainerStyle={styles.contentContainer}>
             <VStack m={4} spacing={4}>
               <Spacer style={{ padding: 16 }} />
               <TextInput
-                variant="standard"
                 ref={firstNameInput}
+                variant="standard"
                 value={props.values.firstName}
                 onChangeText={props.handleChange("firstName")}
-                label="Your First Name"
+                label="First Name"
                 returnKeyType={"next"}
                 onSubmitEditing={() => lastNameInput?.current?.focus()}
+                helperText={errors.firstName}
               />
               <Spacer style={{ padding: 16 }} />
               <TextInput
-                variant="standard"
                 ref={lastNameInput}
+                variant="standard"
                 value={props.values.lastName}
                 onChangeText={props.handleChange("lastName")}
-                label="Your Last Name"
+                label="Last Name"
                 returnKeyType={"next"}
                 onSubmitEditing={() => emailInput?.current?.focus()}
+                helperText={errors.lastName}
               />
               <Spacer style={{ padding: 16 }} />
               <TextInput
-                variant="standard"
                 ref={emailInput}
+                variant="standard"
                 keyboardType="email-address"
                 value={props.values.email}
                 onChangeText={props.handleChange("email")}
-                label="Your Email Address"
+                label="Email Address"
                 returnKeyType={"next"}
                 onSubmitEditing={() => passwordInput?.current?.focus()}
+                helperText={errors.email}
               />
               <Spacer style={{ marginVertical: 80 }} />
               <TextInput
-                variant="standard"
                 ref={passwordInput}
+                variant="standard"
                 value={props.values.password}
                 onChangeText={props.handleChange("password")}
-                label="Your Password"
+                label="Password"
                 secureTextEntry={true}
                 returnKeyType={"next"}
                 onSubmitEditing={() => confirmPWInput?.current?.focus()}
+                helperText={errors.password}
               />
               <Spacer style={{ padding: 16 }} />
               <TextInput
-                variant="standard"
                 ref={confirmPWInput}
+                variant="standard"
                 value={props.values.confirmPassword}
                 onChangeText={props.handleChange("confirmPassword")}
                 label="Repeat Password"
                 secureTextEntry
                 returnKeyType={"done"}
                 onSubmitEditing={handleLoginPress}
+                helperText={errors.confirmPassword}
               />
               <Spacer style={{ padding: 16 }} />
               {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
@@ -121,22 +142,15 @@ export default function SignUpScreen({
               </ForgotPasswordContainer> */}
             </VStack>
             <View style={styles.signUpBtn}>
-              <TouchableOpacity
-                disabled={
-                  !props.values.email &&
-                  !props.values.password &&
-                  !props.values.firstName &&
-                  !props.values.lastName &&
-                  !props.values.confirmPassword &&
-                  props.values.password !== props.values.confirmPassword
-                }
+              <Button
                 style={styles.buttonTouch}
-                onPress={() => handleLoginPress()}>
-                <Text>{`Sign Up`}</Text>
-              </TouchableOpacity>
+                title="Sign Up"
+                disabled={!!disabled}
+                onPress={handleLoginPress}
+                color="#c64141"
+              />
             </View>
           </ScrollView>
-          // </SafeAreaView>
         );
       }}
     </Formik>
@@ -158,10 +172,8 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   buttonTouch: {
-    backgroundColor: "#c64141",
-    borderRadius: 24,
-    width: 315,
-    padding: 16,
     alignItems: "center",
+    marginTop: 50,
+    alignSelf: "center",
   },
 });

@@ -4,7 +4,6 @@ import {
   ScrollView,
   Keyboard,
   StyleSheet,
-  Button,
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
@@ -13,7 +12,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { VStack, TextInput, Divider } from "@react-native-material/core";
+import {
+  VStack,
+  TextInput,
+  Divider,
+  Button,
+} from "@react-native-material/core";
 import { useTheme } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
@@ -33,16 +37,18 @@ export default function WelcomeScreen({
   const emailInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
 
+  const FormSchema = Yup.object({
+    email: Yup.string().email().required("provide a valid email"),
+    password: Yup.string().required("password is required"),
+  });
+
   return (
     <Formik
       initialValues={{
         email: "",
         password: "",
       }}
-      validationSchema={Yup.object({
-        email: Yup.string().email().required("Provide a valid email."),
-        password: Yup.string().required("Password is required."),
-      })}
+      validationSchema={FormSchema}
       onSubmit={(values, formikActions) => {
         try {
           const data = {
@@ -66,15 +72,19 @@ export default function WelcomeScreen({
           values,
           handleChange,
         } = props;
-        const handleLoginPress = () => {
-          handleSubmit();
-        };
+
+        const handleLoginPress = () => handleSubmit();
+
+        const handleOnNavigate = (): void =>
+          navigation.navigate("SignUpScreen");
+
+        const disabled = errors.email || errors.password;
+
         return (
           <SafeAreaView>
-            <View style={styles.mainCont}>
+            <View>
               <VStack m={12} spacing={24}>
                 <Divider style={{ marginTop: 60 }} />
-
                 <TextInput
                   ref={emailInput}
                   color={"black"}
@@ -85,20 +95,19 @@ export default function WelcomeScreen({
                   label="Email"
                   returnKeyType={"next"}
                   onSubmitEditing={() => passwordInput?.current?.focus()}
+                  helperText={errors.email}
                 />
                 <TextInput
                   ref={passwordInput}
                   variant="outlined"
                   value={values.password}
                   onChangeText={handleChange("password")}
-                  label="Your Password"
+                  label="Password"
                   maxLength={16}
                   secureTextEntry
                   returnKeyType={"done"}
-                  // onFocus={() => {
-                  //   alert('fuck you');
-                  // }}
-                  onSubmitEditing={() => handleLoginPress()}
+                  onSubmitEditing={handleLoginPress}
+                  helperText={errors.password}
                 />
                 {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
                 <ForgotPasswordLink>I forgot my password</ForgotPasswordLink>
@@ -107,17 +116,16 @@ export default function WelcomeScreen({
                 </GoForwardButtonContainer>
               </ForgotPasswordContainer> */}
                 <View style={styles.signInLinks}>
-                  <TouchableOpacity
-                    disabled={!values.email && !values.password}
+                  <Button
                     style={styles.buttonTouch}
-                    onPress={() => handleLoginPress()}>
-                    <Text>{`Sign In`}</Text>
-                  </TouchableOpacity>
+                    title="Sign In"
+                    disabled={!!disabled}
+                    onPress={handleLoginPress}
+                    color="#c64141"
+                  />
                   <Text
                     style={[styles.signInText, colorStyle]}
-                    onPress={(): void => {
-                      navigation.navigate("SignUpScreen");
-                    }}>
+                    onPress={handleOnNavigate}>
                     Don't have an account? Sign up now
                   </Text>
                 </View>
@@ -136,12 +144,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexGrow: 1,
   },
-  mainCont: {
-    // display: "flex",
-    // justifyContent: "center",
-    // alignSelf: "center",
-    // height: "100%",
-  },
   signInLinks: {
     justifyContent: "flex-end",
     marginBottom: 20,
@@ -150,11 +152,9 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   buttonTouch: {
-    backgroundColor: "#c64141",
-    borderRadius: 24,
-    width: 315,
-    padding: 16,
     alignItems: "center",
+    marginTop: 50,
+    alignSelf: "center",
   },
   signInText: {
     textDecorationLine: "underline",

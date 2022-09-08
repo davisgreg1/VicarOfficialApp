@@ -45,6 +45,17 @@ export default function AddVehicleScreen({
 
   const [showPicker, setShowPicker] = useState(false);
 
+  const FormSchema = Yup.object({
+    year: Yup.number().required().positive().integer("provide a valid year"),
+    make: Yup.string().required("vehicle make is required"),
+    licenseNumber: Yup.string().required("vehicle license number is required"),
+    model: Yup.string().required("vehicle model is required"),
+    type: Yup.string().required("vehicle transmission type is required"),
+    color: Yup.string().required("vehicle color is required"),
+    isCarParked: Yup.string().required("this field must be checked"),
+    nickName: Yup.string(),
+  });
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Formik
@@ -58,21 +69,7 @@ export default function AddVehicleScreen({
           type: "",
           isCarParked: "no",
         }}
-        validationSchema={Yup.object({
-          year: Yup.number()
-            .required()
-            .positive()
-            .integer("Provide a valid year."),
-          make: Yup.string().required("Vehicle make is required."),
-          licenseNumber: Yup.string().required(
-            "Vehicle license number is required.",
-          ),
-          model: Yup.string().required("Vehicle model is required."),
-          type: Yup.string().required("Vehicle transmission type is required."),
-          color: Yup.string().required("Vehicle color is required."),
-          isCarParked: Yup.string().required("This field must be checked"),
-          nickName: Yup.string(),
-        })}
+        validationSchema={FormSchema}
         onSubmit={(values, formikActions) => {
           try {
             const data = {
