@@ -18,11 +18,12 @@ import {
   Divider,
   Button,
 } from "@react-native-material/core";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { RootTabScreenProps } from "../types";
+import { RootState, RootTabScreenProps } from "../types";
 import { loginUser } from "../redux/actions/authActions/loginUser";
 
 export default function WelcomeScreen({
@@ -33,6 +34,10 @@ export default function WelcomeScreen({
   const backGroundStyle = { color: colors.background };
 
   const dispatch = useDispatch();
+
+  const loginError: string = useSelector(
+    (state: RootState) => state.auth.message,
+  );
 
   const emailInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
@@ -95,6 +100,7 @@ export default function WelcomeScreen({
                   label="Email"
                   returnKeyType={"next"}
                   onSubmitEditing={() => passwordInput?.current?.focus()}
+                  leading={props => <Icon name="email" {...props} />}
                   helperText={errors.email}
                 />
                 <TextInput
@@ -108,7 +114,12 @@ export default function WelcomeScreen({
                   returnKeyType={"done"}
                   onSubmitEditing={handleLoginPress}
                   helperText={errors.password}
+                  leading={props => <Icon name="lock" {...props} />}
                 />
+                {values.email && values.password && (
+                  <Text style={styles.errorStyle}>{loginError}</Text>
+                )}
+
                 {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
                 <ForgotPasswordLink>I forgot my password</ForgotPasswordLink>
                 <GoForwardButtonContainer>
@@ -160,5 +171,10 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     padding: 8,
     marginBottom: 16,
+  },
+  errorStyle: {
+    color: "red",
+    fontSize: 16,
+    alignSelf: "center",
   },
 });

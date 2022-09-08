@@ -62,6 +62,7 @@ export type VehicleType = {
   isCarParked: boolean;
 };
 export type AuthState = {
+  message: string;
   userAuthenticated: boolean;
 };
 export type UserState = {

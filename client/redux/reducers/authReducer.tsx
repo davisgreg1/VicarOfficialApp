@@ -10,6 +10,17 @@ const authReducer = (state = initialState, action: any) => {
       return {
         ...state,
         userAuthenticated: action.userAuthenticated,
+        message: action.message,
+      };
+    case "auth/loginError":
+      return {
+        ...state,
+        message: action.message,
+      };
+    case "auth/clearLoginError":
+      return {
+        ...state,
+        message: "",
       };
     case "auth/logout":
       return {

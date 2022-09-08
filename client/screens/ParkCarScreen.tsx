@@ -13,6 +13,9 @@ import {
   createPickUpJob,
 } from "../redux/actions/serviceActions";
 import dayjs from "dayjs";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Octicons } from '@expo/vector-icons'; 
+
 import { ScrollView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -68,9 +71,9 @@ export default function ParkCarScreen({
   const vehiclesToPark = vehicles.filter((vehicle) => !vehicle.isCarParked);
 
   const FormSchema = Yup.object({
-    address: Yup.string().required("provide a valid address"),
-    city: Yup.string().required("provide a valid city"),
-    state: Yup.string().required("provide a valid state"),
+    address: Yup.string().required("address is required"),
+    city: Yup.string().required("city is required"),
+    state: Yup.string().required("state is required"),
     zipCode: Yup.string()
       .matches(/^[0-9]{5}(?:-[0-9]{4})?$/, "please enter valid zip code")
       .required("zip code is required"),
@@ -142,7 +145,6 @@ export default function ParkCarScreen({
               return (
                 <View style={[styles.contentContainer]}>
                   <Spacer style={{ padding: 16 }} />
-
                   <TextInput
                     ref={addressRef}
                     variant="standard"
@@ -156,9 +158,9 @@ export default function ParkCarScreen({
                     onSubmitEditing={() => {
                       cityRef.current?.focus();
                     }}
+                    leading={(props) => <Icon name="city" {...props} />}
                   />
                   <Spacer style={{ padding: 16 }} />
-
                   <TextInput
                     ref={cityRef}
                     variant="standard"
@@ -172,6 +174,8 @@ export default function ParkCarScreen({
                       stateRef.current?.focus();
                     }}
                     helperText={errors.city}
+                    leading={(props) => <Icon name="city-variant" {...props} />}
+
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -188,6 +192,8 @@ export default function ParkCarScreen({
                       zipCodeRef.current?.focus();
                     }}
                     helperText={errors.state}
+                    leading={(props) => <Icon name="home-city" {...props} />}
+
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -202,6 +208,8 @@ export default function ParkCarScreen({
                     returnKeyType={"done"}
                     onSubmitEditing={handleSetAddress}
                     helperText={errors.zipCode}
+                    leading={(props) => <Octicons name="number" {...props} />}
+
                   />
                   <Button
                     style={styles.buttonTouch}
