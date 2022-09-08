@@ -40,7 +40,9 @@ router.post("/signup", async (req, res, next) => {
     );
   } catch (err) {
     if (err.name === "SequelizeUniqueConstraintError") {
-      res.status(403).send("User already exists.");
+      res.status(403).json({
+        message: "try using a different email",
+      });
     } else {
       next(err);
     }
@@ -52,12 +54,12 @@ router.post("/login", (req, res, next) => {
     .then(async (user) => {
       if (!user) {
         res.status(401).json({
-          message: "No user found.",
+          message: "no user found",
           userAuthenticated: false,
         });
       } else if (!user.correctPassword(req.body.password)) {
         res.status(403).json({
-          message: "Wrong email and/or password",
+          message: "check your credentials and try again.",
           userAuthenticated: false,
         });
       } else {
@@ -88,7 +90,7 @@ router.post("/logout", async (req, res, next) => {
   });
   res.json({
     userAuthenticated: false,
-    message: "User successfully logged out",
+    message: "successfully logged out",
   });
 });
 
@@ -128,7 +130,7 @@ router.post("/deleteAccount", async (req, res, next) => {
 
     res.json({
       userAuthenticated: false,
-      message: "Account successfully deleted",
+      message: "account successfully deleted",
     });
   } catch (error) {
     next(error);
@@ -139,13 +141,13 @@ router.patch("/updatePW/:id", async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { id: req.params.id } });
     if (!user) {
-      res.status(401).send({ message: "No user found." });
+      res.status(401).json({ message: "no user found" });
     } else {
       user.update({ password: req.body.password });
-      res.status(200).send({ message: "Password successfully Updated" });
+      res.status(200).json({ message: "password successfully updated" });
     }
   } catch (error) {
-    res.status(500).send({ message: "Please try a different phone number." });
+    res.status(500).json({ message: "please try a different phone number" });
 
     next(error);
   }

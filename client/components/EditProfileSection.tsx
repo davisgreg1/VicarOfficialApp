@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { VStack, TextInput, Spacer } from "@react-native-material/core";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -122,6 +123,7 @@ export default function EditProfileSection(props: Props) {
                             firstNameInput.current?.focus();
                           }}
                           helperText={errors.email}
+                          leading={(props) => <Icon name="email" {...props} />}
                         />
                         <Spacer style={{ padding: 16 }} />
                         <TextInput
@@ -135,6 +137,7 @@ export default function EditProfileSection(props: Props) {
                             lastNameInput.current?.focus();
                           }}
                           helperText={errors.userFirstName}
+                          leading={(props) => <Icon name="account-edit" {...props} />}
                         />
                         <Spacer style={{ padding: 16 }} />
                         <TextInput
@@ -148,6 +151,8 @@ export default function EditProfileSection(props: Props) {
                             phoneInput.current?.focus();
                           }}
                           helperText={errors.userLastName}
+                          leading={(props) => <Icon name="account-edit" {...props} />}
+
                         />
                         <Spacer style={{ padding: 16 }} />
 
@@ -160,6 +165,7 @@ export default function EditProfileSection(props: Props) {
                           label="Phone Number"
                           returnKeyType={"done"}
                           onSubmitEditing={handleOnSubmit}
+                          leading={(props) => <Icon name="cellphone" {...props} />}
                         />
                         <Spacer style={{ padding: 16 }} />
                       </View>
@@ -229,6 +235,7 @@ export default function EditProfileSection(props: Props) {
                           confirmPasswordInput.current?.focus();
                         }}
                         helperText={errors.userPassword}
+                        leading={(props) => <Icon name="form-textbox-password" {...props} />}
                       />
                       <Spacer style={{ padding: 16 }} />
                       <TextInput
@@ -241,6 +248,7 @@ export default function EditProfileSection(props: Props) {
                         returnKeyType={"done"}
                         onSubmitEditing={handleOnSubmit}
                         helperText={errors.confirmUserPassword}
+                        leading={(props) => <Icon name="form-textbox-password" {...props} />}
                       />
                       <Spacer style={{ margin: 16 }} />
 

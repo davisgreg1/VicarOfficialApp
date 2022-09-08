@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextInput, Spacer, Button } from "@react-native-material/core";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Octicons } from "@expo/vector-icons";
 import { Text, View } from "../components/Themed";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import VehicleList from "../components/VehicleList";
@@ -77,9 +79,9 @@ export default function FetchCarScreen({
   };
 
   const FormSchema = Yup.object({
-    address: Yup.string().required("provide a valid address"),
-    city: Yup.string().required("provide a valid city"),
-    state: Yup.string().required("provide a valid state"),
+    address: Yup.string().required("address is required"),
+    city: Yup.string().required("city is required"),
+    state: Yup.string().required("state is required"),
     zipCode: Yup.string()
       .matches(/^[0-9]{5}(?:-[0-9]{4})?$/, "please enter valid zip code")
       .required("zip code is required"),
@@ -147,7 +149,6 @@ export default function FetchCarScreen({
               return (
                 <View style={[styles.contentContainer]}>
                   <Spacer style={{ padding: 16 }} />
-
                   <TextInput
                     ref={addressRef}
                     variant="standard"
@@ -163,6 +164,7 @@ export default function FetchCarScreen({
                       cityRef.current?.focus();
                     }}
                     helperText={errors.address}
+                    leading={(props) => <Icon name="city" {...props} />}
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -179,6 +181,7 @@ export default function FetchCarScreen({
                       stateRef.current?.focus();
                     }}
                     helperText={errors.city}
+                    leading={(props) => <Icon name="city-variant" {...props} />}
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -195,6 +198,7 @@ export default function FetchCarScreen({
                       zipCodeRef.current?.focus();
                     }}
                     helperText={errors.state}
+                    leading={(props) => <Icon name="home-city" {...props} />}
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -211,6 +215,7 @@ export default function FetchCarScreen({
                     returnKeyType={"done"}
                     onSubmitEditing={handleSetReturnAddress}
                     helperText={errors.zipCode}
+                    leading={(props) => <Octicons name="number" {...props} />}
                   />
                   <Button
                     style={styles.buttonTouch}
