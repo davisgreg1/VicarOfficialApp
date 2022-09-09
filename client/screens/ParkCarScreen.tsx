@@ -14,7 +14,7 @@ import {
 } from "../redux/actions/serviceActions";
 import dayjs from "dayjs";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Octicons } from '@expo/vector-icons'; 
+import { Octicons } from "@expo/vector-icons";
 
 import { ScrollView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -36,7 +36,6 @@ export default function ParkCarScreen({
   const vehicleToPark = useSelector(
     (state: RootState) => state.service.vehicle,
   );
-
   const date = useSelector((state: RootState) => state.service.date);
   const address = useSelector((state: RootState) => state.service.address);
   const city = useSelector((state: RootState) => state.service.city);
@@ -63,8 +62,9 @@ export default function ParkCarScreen({
     navigation.navigate("VicarAnimationScreen");
   };
 
-  const vehicleSelected = vehicleToPark === null ? false : true;
-  const dateSelected = date === "" ? false : true;
+  const vehicleSelected = Boolean(vehicleToPark);
+
+  const dateSelected = Boolean(date);
 
   const parsedDate = date ? dayjs(date).format("MMM DD, YYYY hh:mm A") : "";
   const allCarsAreParked = vehicles.every((vehicle) => vehicle.isCarParked);
@@ -175,7 +175,6 @@ export default function ParkCarScreen({
                     }}
                     helperText={errors.city}
                     leading={(props) => <Icon name="city-variant" {...props} />}
-
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -193,7 +192,6 @@ export default function ParkCarScreen({
                     }}
                     helperText={errors.state}
                     leading={(props) => <Icon name="home-city" {...props} />}
-
                   />
                   <Spacer style={{ padding: 16 }} />
 
@@ -209,7 +207,6 @@ export default function ParkCarScreen({
                     onSubmitEditing={handleSetAddress}
                     helperText={errors.zipCode}
                     leading={(props) => <Octicons name="number" {...props} />}
-
                   />
                   <Button
                     style={styles.buttonTouch}
