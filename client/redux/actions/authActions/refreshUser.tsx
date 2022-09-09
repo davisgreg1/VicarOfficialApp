@@ -1,17 +1,14 @@
 import axios from "../../../utils/axios";
-import * as SecureStore from "expo-secure-store";
 
-interface LoginDataType {
-  id: number;
-  password: string;
-  email: string;
+
+interface RefreshUserType {
+  user: any;
+  userAuthenticated: boolean;
 }
 
-const save = async (key: any, value: any) => {
-  await SecureStore.setItemAsync(key, value);
-};
-export const loginUser = (data: LoginDataType) => {
-  const { email, password } = data;
+export const refreshUser = (data: RefreshUserType) => {
+  const { user, userAuthenticated } = data;
+  const vehicles = user.slice(1);
   return async (
     dispatch: (arg0: {
       type: string;
@@ -27,17 +24,6 @@ export const loginUser = (data: LoginDataType) => {
     }) => void,
   ) => {
     try {
-      const request = await axios.post("/auth/login", {
-        email: email,
-        password: password,
-      });
-
-      const { data, status } = request;
-      const accessToken = data.accessToken;
-      const userAuthenticated = data?.userAuthenticated;
-      const user = data?.user;
-      const vehicles = user.slice(1);
-      save("accessToken", accessToken);
       dispatch({
         type: "auth/login",
         userAuthenticated: userAuthenticated,

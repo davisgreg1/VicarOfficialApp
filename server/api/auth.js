@@ -1,8 +1,11 @@
 require("dotenv").config();
 const router = require("express").Router();
+var jwt = require("jsonwebtoken");
 const User = require("../db/models/user");
 const Vehicle = require("../db/models/vehicle");
 const VehicleService = require("../db/models/vehicleService");
+const config = require("../config/auth.config");
+
 // const crypto = require("crypto");
 // const seedrandom = require("seedrandom");
 // const moment = require("moment");
@@ -68,9 +71,18 @@ router.post("/login", (req, res, next) => {
             userId: user.id,
           },
         });
+        var token = jwt.sign({ id: user.id }, config.secret, {
+          expiresIn: '15m', // 15 minutes
+        });
         const data = [user, ...vehicles];
         req.logIn(user, (err) =>
-          err ? next(err) : res.json({ user: data, userAuthenticated: true }),
+          err
+            ? next(err)
+            : res.json({
+                user: data,
+                userAuthenticated: true,
+                accessToken: token,
+              }),
         );
       }
     })

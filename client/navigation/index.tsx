@@ -12,8 +12,10 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { ColorSchemeName, Pressable, Image, View, Text } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import axios from "../utils/axios";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import ModalScreen from "../screens/ModalScreen";
@@ -35,6 +37,8 @@ import {
   RootState,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { refreshUser } from "../../client/redux/actions/authActions/refreshUser";
+import { logoutUser } from "../redux/actions/authActions/logoutUser";
 
 export default function Navigation({
   colorScheme,
@@ -57,6 +61,7 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const dispatch = useDispatch();
   const userAuthenticated: boolean = useSelector(
     (state: RootState) => state.auth.userAuthenticated,
   );
@@ -64,6 +69,55 @@ function RootNavigator() {
     (state: RootState) => state.user.vehicles,
   );
   const hasVehicles = vehicles.length > 0;
+
+  async function getValueFor(key: any) {
+    let result = await SecureStore.getItemAsync(key);
+    if (result) {
+      return result;
+    } else {
+      return "";
+    }
+  }
+
+  React.useEffect(() => {
+    const checkJWT = async () => {
+      try {
+        const accessToken = await getValueFor("accessToken");
+
+        const response = await axios({
+          method: "get",
+          url: "/users/test",
+          headers: {
+            "x-access-token": accessToken,
+          },
+        });
+        const { data } = response;
+        dispatch(refreshUser(data));
+      } catch (error: any) {
+        const {
+          data: { message },
+          status,
+        } = error.response;
+
+        dispatch(logoutUser());
+        switch (status) {
+          case 403:
+            return dispatch({
+              type: "auth/loginError",
+              message: "",
+            });
+          default:
+            return dispatch({
+              type: "auth/loginError",
+              message: message,
+            });
+        }
+      }
+    };
+
+    checkJWT();
+  }, []);
+
   return (
     <>
       {!userAuthenticated ? (
