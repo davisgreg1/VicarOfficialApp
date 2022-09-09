@@ -8,6 +8,8 @@ import {
   Text,
 } from "react-native";
 import { VStack, TextInput, Spacer, Button } from "@react-native-material/core";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Octicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -85,6 +87,7 @@ export default function SignUpScreen({
                 returnKeyType={"next"}
                 onSubmitEditing={() => lastNameInput?.current?.focus()}
                 helperText={errors.firstName}
+                leading={(props) => <Icon name="account-edit" {...props} />}
               />
               <Spacer style={{ padding: 16 }} />
               <TextInput
@@ -96,6 +99,7 @@ export default function SignUpScreen({
                 returnKeyType={"next"}
                 onSubmitEditing={() => emailInput?.current?.focus()}
                 helperText={errors.lastName}
+                leading={(props) => <Icon name="account-edit" {...props} />}
               />
               <Spacer style={{ padding: 16 }} />
               <TextInput
@@ -108,6 +112,7 @@ export default function SignUpScreen({
                 returnKeyType={"next"}
                 onSubmitEditing={() => passwordInput?.current?.focus()}
                 helperText={errors.email}
+                leading={(props) => <Icon name="email" {...props} />}
               />
               <Spacer style={{ marginVertical: 80 }} />
               <TextInput
@@ -120,6 +125,9 @@ export default function SignUpScreen({
                 returnKeyType={"next"}
                 onSubmitEditing={() => confirmPWInput?.current?.focus()}
                 helperText={errors.password}
+                leading={(props) => (
+                  <Icon name="lock" {...props} />
+                )}
               />
               <Spacer style={{ padding: 16 }} />
               <TextInput
@@ -132,6 +140,9 @@ export default function SignUpScreen({
                 returnKeyType={"done"}
                 onSubmitEditing={handleLoginPress}
                 helperText={errors.confirmPassword}
+                leading={(props) => (
+                  <Icon name="form-textbox-password" {...props} />
+                )}
               />
               <Spacer style={{ padding: 16 }} />
               {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>

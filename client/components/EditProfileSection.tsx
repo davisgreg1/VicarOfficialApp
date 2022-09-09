@@ -235,7 +235,7 @@ export default function EditProfileSection(props: Props) {
                           confirmPasswordInput.current?.focus();
                         }}
                         helperText={errors.userPassword}
-                        leading={(props) => <Icon name="form-textbox-password" {...props} />}
+                        leading={(props) => <Icon name="lock" {...props} />}
                       />
                       <Spacer style={{ padding: 16 }} />
                       <TextInput
