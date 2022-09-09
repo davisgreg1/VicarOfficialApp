@@ -116,7 +116,7 @@ export default function WelcomeScreen({
                   helperText={errors.password}
                   leading={props => <Icon name="lock" {...props} />}
                 />
-                {values.email && values.password && (
+                {!values.email && !values.password && (
                   <Text style={styles.errorStyle}>{loginError}</Text>
                 )}
 
