@@ -1,4 +1,5 @@
 import axios from "../../../utils/axios";
+
 // import { generateErrorMsg } from "../utils";
 
 export const createAccount = (data: {

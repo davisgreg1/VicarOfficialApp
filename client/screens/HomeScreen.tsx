@@ -8,15 +8,44 @@ import {
   // Button,
   SafeAreaView,
   View,
+  Pressable,
+  Image,
 } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Colors } from "react-native-paper";
 import { useDispatch } from "react-redux";
 import { RootTabScreenProps } from "../types";
 import { refreshVehicles } from "../redux/actions/serviceActions";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function HomeScreen({
   navigation,
 }: RootTabScreenProps<"HomeScreen">) {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerRight: () => (
+        <Pressable
+          onPress={() => navigation.navigate("Modal")}
+          style={({ pressed }) => ({
+            opacity: pressed ? 0.5 : 1,
+          })}>
+          <FontAwesome
+            name="cogs"
+            size={25}
+            color={"black"}
+            style={{ marginRight: 15 }}
+          />
+        </Pressable>
+      ),
+      headerTitle: (props) => (
+        <Image
+          style={{ width: 60, height: 60 }}
+          source={require("../assets/images/vicarLogo1.png")}
+          resizeMode="contain"
+        />
+      ),
+    });
+  }, [navigation]);
   const dispatch = useDispatch();
 
   const handleParkMyCarClick = () => {

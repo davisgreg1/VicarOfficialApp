@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { StyleSheet } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -20,6 +21,8 @@ import {
 export default function FetchCarScreen({
   navigation,
 }: RootTabScreenProps<"FetchCarScreen">) {
+  const { colors } = useTheme();
+  const colorStyle = { color: colors.text };
   const dispatch = useDispatch();
 
   const addressRef = useRef<HTMLInputElement>(null);
@@ -151,6 +154,7 @@ export default function FetchCarScreen({
                   <Spacer style={{ padding: 16 }} />
                   <TextInput
                     ref={addressRef}
+                    inputStyle={[colorStyle]}
                     variant="standard"
                     placeholder={
                       returnToOwnerAddress ? returnToOwnerAddress : ""
@@ -170,6 +174,7 @@ export default function FetchCarScreen({
 
                   <TextInput
                     ref={cityRef}
+                    inputStyle={[colorStyle]}
                     variant="standard"
                     placeholder={returnToOwnerCity ? returnToOwnerCity : ""}
                     keyboardType="default"
@@ -187,6 +192,7 @@ export default function FetchCarScreen({
 
                   <TextInput
                     ref={stateRef}
+                    inputStyle={[colorStyle]}
                     variant="standard"
                     placeholder={returnToOwnerState ? returnToOwnerState : ""}
                     keyboardType="default"
@@ -204,6 +210,7 @@ export default function FetchCarScreen({
 
                   <TextInput
                     ref={zipCodeRef}
+                    inputStyle={[colorStyle]}
                     variant="standard"
                     placeholder={
                       returnToOwnerZipCode ? returnToOwnerZipCode : ""

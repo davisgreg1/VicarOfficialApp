@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-start",
     padding: 16,
-    height: Dimensions.get("window").height - StatusBar?.currentHeight,
+    height: Dimensions.get("window").height,
     backgroundColor: "white",
   },
   headingText: {

@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
-import { Linking, Modal, StyleSheet, Pressable, Platform } from "react-native";
+import {
+  Linking,
+  Modal,
+  StyleSheet,
+  Pressable,
+  Platform,
+  Image,
+} from "react-native";
 import { Button } from "react-native-paper";
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps, RootState } from "../types";
@@ -19,21 +26,31 @@ export default function AccountScreen({
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <Pressable
-          accessibilityLabel="Settings Button"
-          onPress={() => setModalVisible(true)}
-          style={({ pressed }) => ({
-            paddingRight: 16,
-            opacity: pressed ? 0.5 : 1,
-          })}>
-          <FontAwesome
-            name="ellipsis-v"
-            size={25}
-            color={"#c64141"}
-            style={{ marginRight: 15 }}
-          />
-        </Pressable>
+      headerShown: true,
+      headerRight: () => {
+        return (
+          <Pressable
+            accessibilityLabel="Settings Button"
+            onPress={() => setModalVisible(true)}
+            style={({ pressed }) => ({
+              paddingRight: 16,
+              opacity: pressed ? 0.5 : 1,
+            })}>
+            <FontAwesome
+              name="ellipsis-v"
+              size={25}
+              color={"#c64141"}
+              style={{ marginRight: 15 }}
+            />
+          </Pressable>
+        );
+      },
+      headerTitle: () => (
+        <Image
+          style={{ width: 60, height: 60 }}
+          source={require("../assets/images/vicarLogo1.png")}
+          resizeMode="contain"
+        />
       ),
     });
   }, [navigation]);
@@ -43,9 +60,7 @@ export default function AccountScreen({
     setModalVisible(!modalVisible);
   };
 
-  const handleOnClose = () => {
-    setModalVisible(!modalVisible);
-  };
+  const handleOnClose = () => setModalVisible(!modalVisible);
 
   const renderGreeting = () => {
     const currentHour = dayjs().hour();

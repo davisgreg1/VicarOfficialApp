@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View } from "../components/Themed";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button, TextInput, Spacer } from "@react-native-material/core";
@@ -18,10 +19,13 @@ import { Octicons } from "@expo/vector-icons";
 
 import { ScrollView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useTheme } from "@react-navigation/native";
 
 export default function ParkCarScreen({
   navigation,
 }: RootTabScreenProps<"ParkCarScreen">) {
+  const { colors } = useTheme();
+  const colorStyle = { color: colors.text };
   const dispatch = useDispatch();
 
   const addressRef = useRef<HTMLInputElement>(null);
@@ -147,8 +151,9 @@ export default function ParkCarScreen({
                   <Spacer style={{ padding: 16 }} />
                   <TextInput
                     ref={addressRef}
+                    inputStyle={[colorStyle]}
+                    styles={colorStyle}
                     variant="standard"
-                    helperText={errors.address}
                     placeholder={address ? address : ""}
                     keyboardType="default"
                     value={values.address}
@@ -158,11 +163,13 @@ export default function ParkCarScreen({
                     onSubmitEditing={() => {
                       cityRef.current?.focus();
                     }}
+                    helperText={errors.address}
                     leading={(props) => <Icon name="city" {...props} />}
                   />
                   <Spacer style={{ padding: 16 }} />
                   <TextInput
                     ref={cityRef}
+                    inputStyle={[colorStyle]}
                     variant="standard"
                     placeholder={city ? city : ""}
                     keyboardType="default"
@@ -180,6 +187,7 @@ export default function ParkCarScreen({
 
                   <TextInput
                     ref={stateRef}
+                    inputStyle={[colorStyle]}
                     variant="standard"
                     placeholder={state ? state : ""}
                     keyboardType="default"
@@ -197,6 +205,7 @@ export default function ParkCarScreen({
 
                   <TextInput
                     ref={zipCodeRef}
+                    inputStyle={[colorStyle]}
                     variant="standard"
                     placeholder={zipCode ? zipCode : ""}
                     keyboardType="number-pad"
