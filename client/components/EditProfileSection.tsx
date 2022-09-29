@@ -137,7 +137,9 @@ export default function EditProfileSection(props: Props) {
                             lastNameInput.current?.focus();
                           }}
                           helperText={errors.userFirstName}
-                          leading={(props) => <Icon name="account-edit" {...props} />}
+                          leading={(props) => (
+                            <Icon name="account-edit" {...props} />
+                          )}
                         />
                         <Spacer style={{ padding: 16 }} />
                         <TextInput
@@ -151,8 +153,9 @@ export default function EditProfileSection(props: Props) {
                             phoneInput.current?.focus();
                           }}
                           helperText={errors.userLastName}
-                          leading={(props) => <Icon name="account-edit" {...props} />}
-
+                          leading={(props) => (
+                            <Icon name="account-edit" {...props} />
+                          )}
                         />
                         <Spacer style={{ padding: 16 }} />
 
@@ -165,7 +168,9 @@ export default function EditProfileSection(props: Props) {
                           label="Phone Number"
                           returnKeyType={"done"}
                           onSubmitEditing={handleOnSubmit}
-                          leading={(props) => <Icon name="cellphone" {...props} />}
+                          leading={(props) => (
+                            <Icon name="cellphone" {...props} />
+                          )}
                         />
                         <Spacer style={{ padding: 16 }} />
                       </View>
@@ -248,7 +253,9 @@ export default function EditProfileSection(props: Props) {
                         returnKeyType={"done"}
                         onSubmitEditing={handleOnSubmit}
                         helperText={errors.confirmUserPassword}
-                        leading={(props) => <Icon name="form-textbox-password" {...props} />}
+                        leading={(props) => (
+                          <Icon name="form-textbox-password" {...props} />
+                        )}
                       />
                       <Spacer style={{ margin: 16 }} />
 
@@ -271,7 +278,6 @@ export default function EditProfileSection(props: Props) {
             </ScrollView>
           </KeyboardAvoidingView>
         );
-
       default:
         break;
     }

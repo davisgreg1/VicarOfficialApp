@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { VStack, TextInput, Spacer, Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Octicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";

@@ -72,7 +72,7 @@ router.post("/login", (req, res, next) => {
           },
         });
         var token = jwt.sign({ id: user.id }, config.secret, {
-          expiresIn: '15m', // 15 minutes
+          expiresIn: '1h', // 1 hour
         });
         const data = [user, ...vehicles];
         req.logIn(user, (err) =>

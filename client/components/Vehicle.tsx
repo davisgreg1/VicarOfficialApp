@@ -1,5 +1,7 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
+import {  TouchableOpacity, StyleSheet, } from "react-native";
+import { Text, View } from "../components/Themed";
+
 import { FontAwesome } from "@expo/vector-icons";
 import { VehicleType } from "../types";
 import { useDispatch } from "react-redux";
