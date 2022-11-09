@@ -32,7 +32,7 @@ export default function Vehicle(props: VehiclePropType) {
     <TouchableOpacity onPress={handleOnPress} style={styles.container}>
       <View style={styles.carView}>
         <Text>{nickName ? `"${nickName}"` : ""}</Text>
-        <FontAwesome name="car" size={50} color={color} />
+        <FontAwesome style={styles.carImage} name="car" size={50} color={'#c64141'} />
         <Text>
           {year} {make} {model}
         </Text>
@@ -59,6 +59,9 @@ const styles = StyleSheet.create({
   },
   carView: {
     alignItems: "center",
+  },
+  carImage: {
+    margin: 16
   },
   separator: {
     marginVertical: 30,
