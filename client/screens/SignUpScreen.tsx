@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   View,
-  Text,
 } from "react-native";
 import { VStack, TextInput, Spacer, Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";

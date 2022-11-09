@@ -81,43 +81,45 @@ function RootNavigator() {
     }
   }
 
-  React.useEffect(() => {
-    const checkJWT = async () => {
-      try {
-        const accessToken = await getValueFor("accessToken");
+  const checkJWT = async () => {
+    try {
+      const accessToken = await getValueFor("accessToken");
 
-        const response = await axios({
-          method: "get",
-          url: "/users/test",
-          headers: {
-            "x-access-token": accessToken,
-          },
-        });
-        const { data } = response;
-        dispatch(refreshUser(data));
-      } catch (error: any) {
-        const {
-          data: { message },
-          status,
-        } = error.response;
+      const response = await axios({
+        method: "get",
+        url: "/users/test",
+        headers: {
+          "x-access-token": accessToken,
+        },
+      });
+      console.log('GREG LOOK!  ~ file: index.tsx ~ line 97 ~ checkJWT ~ response', response);
+      const { data } = response;
+      console.log('GREG LOOK!  ~ file: index.tsx ~ line 97 ~ checkJWT ~ data', data);
+      dispatch(refreshUser(data));
+    } catch (error: any) {
+      const {
+        data: { message },
+        status,
+      } = error.response;
 
-        dispatch(logoutUser());
+      dispatch(logoutUser());
 
-        switch (status) {
-          case 403:
-            return dispatch({
-              type: "auth/loginError",
-              message: "",
-            });
-          default:
-            return dispatch({
-              type: "auth/loginError",
-              message: message,
-            });
-        }
+      switch (status) {
+        case 403:
+          return dispatch({
+            type: "auth/loginError",
+            message: "",
+          });
+        default:
+          return dispatch({
+            type: "auth/loginError",
+            message: message,
+          });
       }
-    };
+    }
+  };
 
+  React.useEffect(() => {
     checkJWT();
   }, []);
 

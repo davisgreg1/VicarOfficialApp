@@ -9,8 +9,8 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
+  Text, View
 } from "react-native";
-import { Text, View } from "../components/Themed";
 import EditProfileSection from "../components/EditProfileSection";
 import { RootTabScreenProps, RootState } from "../types";
 import { deleteAccount } from "../redux/actions/authActions/deleteAccount";

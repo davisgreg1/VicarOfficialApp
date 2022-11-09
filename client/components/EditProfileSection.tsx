@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Text, View
 } from "react-native";
 import { VStack, TextInput, Spacer } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Button } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Text, View } from "./Themed";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../redux/actions/userActions/updateProfile";
 import { updatePassword } from "../redux/actions/authActions/updatePW";

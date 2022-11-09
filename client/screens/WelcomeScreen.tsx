@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   TextInputProps,
   ScrollView,
@@ -11,6 +11,7 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
 } from "react-native";
 import {
   VStack,
@@ -25,6 +26,12 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { RootState, RootTabScreenProps } from "../types";
 import { loginUser } from "../redux/actions/authActions/loginUser";
+
+const HideKeyboard = ({ children }: any) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
 
 export default function WelcomeScreen({
   navigation,
@@ -41,6 +48,7 @@ export default function WelcomeScreen({
 
   const emailInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
+  const signInScreenRef = useRef<HTMLDivElement>(null);
 
   const FormSchema = Yup.object({
     email: Yup.string().email().required("provide a valid email"),
@@ -87,61 +95,61 @@ export default function WelcomeScreen({
 
         return (
           <SafeAreaView>
-            <View>
-              <VStack m={12} spacing={24}>
-                <Divider style={{ marginTop: 60 }} />
-                <TextInput
-                  ref={emailInput}
-                  color={"black"}
-                  variant="outlined"
-                  keyboardType="email-address"
-                  value={values.email}
-                  onChangeText={handleChange("email")}
-                  label="Email"
-                  returnKeyType={"next"}
-                  onSubmitEditing={() => passwordInput?.current?.focus()}
-                  leading={props => <Icon name="email" {...props} />}
-                  helperText={errors.email}
-                />
-                <TextInput
-                  ref={passwordInput}
-                  variant="outlined"
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  label="Password"
-                  maxLength={16}
-                  secureTextEntry
-                  returnKeyType={"done"}
-                  onSubmitEditing={handleLoginPress}
-                  helperText={errors.password}
-                  leading={props => <Icon name="lock" {...props} />}
-                />
-                {!values.email && !values.password && (
-                  <Text style={styles.errorStyle}>{loginError}</Text>
-                )}
+            <HideKeyboard>
+              <View ref={signInScreenRef}>
+                <VStack m={50} spacing={24}>
+                  <TextInput
+                    ref={emailInput}
+                    variant="standard"
+                    keyboardType="email-address"
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    label="Email"
+                    returnKeyType={"next"}
+                    onSubmitEditing={() => passwordInput?.current?.focus()}
+                    leading={(props) => <Icon name="email" {...props} />}
+                    helperText={errors.email}
+                  />
+                  <TextInput
+                    ref={passwordInput}
+                    variant="standard"
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    label="Password"
+                    maxLength={16}
+                    secureTextEntry
+                    returnKeyType={"done"}
+                    onSubmitEditing={handleLoginPress}
+                    helperText={errors.password}
+                    leading={(props) => <Icon name="lock" {...props} />}
+                  />
+                  {!values.email && !values.password && (
+                    <Text style={styles.errorStyle}>{loginError}</Text>
+                  )}
 
-                {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
+                  {/* <ForgotPasswordContainer onPress={() => handleOnPress()}>
                 <ForgotPasswordLink>I forgot my password</ForgotPasswordLink>
                 <GoForwardButtonContainer>
                   <GoForwardButton />
                 </GoForwardButtonContainer>
               </ForgotPasswordContainer> */}
-                <View style={styles.signInLinks}>
-                  <Button
-                    style={styles.buttonTouch}
-                    title="Sign In"
-                    disabled={!!disabled}
-                    onPress={handleLoginPress}
-                    color="#c64141"
-                  />
-                  <Text
-                    style={[styles.signInText, colorStyle]}
-                    onPress={handleOnNavigate}>
-                    Don't have an account? Sign up now
-                  </Text>
-                </View>
-              </VStack>
-            </View>
+                  <View style={styles.signInLinks}>
+                    <Button
+                      style={styles.buttonTouch}
+                      title="Sign In"
+                      disabled={!!disabled}
+                      onPress={handleLoginPress}
+                      color="#c64141"
+                    />
+                    <Text
+                      style={[styles.signInText, colorStyle]}
+                      onPress={handleOnNavigate}>
+                      Don't have an account? Sign up now
+                    </Text>
+                  </View>
+                </VStack>
+              </View>
+            </HideKeyboard>
           </SafeAreaView>
         );
       }}
@@ -149,12 +157,6 @@ export default function WelcomeScreen({
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    flexGrow: 1,
-  },
   signInLinks: {
     justifyContent: "flex-end",
     marginBottom: 20,
@@ -165,6 +167,7 @@ const styles = StyleSheet.create({
   buttonTouch: {
     alignItems: "center",
     marginTop: 50,
+    marginBottom: 40,
     alignSelf: "center",
   },
   signInText: {
