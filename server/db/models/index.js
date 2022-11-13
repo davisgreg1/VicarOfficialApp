@@ -1,7 +1,7 @@
 const User = require("./user");
 const Vehicle = require("./vehicle");
 const VehicleService = require("./VehicleService");
-// const Item = require('./item');
+const Valet = require("./valet");
 // const Budget = require('./budget');
 // const Goal = require('./goal');
 // const CreditCard = require('./creditCard');
@@ -26,6 +26,12 @@ Vehicle.hasMany(VehicleService, {
 });
 VehicleService.belongsTo(Vehicle);
 
+User.hasOne(Valet, {
+  foreignKey: "id",
+  onDelete: "cascade",
+  hooks: true,
+});
+
 // User.hasMany(Account);
 // Account.belongsTo(User);
 
@@ -45,7 +51,7 @@ module.exports = {
   User,
   Vehicle,
   VehicleService,
-  //   Item,
+  Valet,
   //   Budget,
   //   Goal,
   //   CreditCard

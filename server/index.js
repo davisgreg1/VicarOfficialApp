@@ -14,6 +14,7 @@ const sessionStore = new SequelizeStore({ db });
 const indexRouter = require("./routes/index");
 const usersRouter = require("./api/users");
 const authRouter = require("./api/auth");
+const valetRouter = require("./api/valet");
 const PORT = process.env.PORT || "5000";
 
 const app = express();
@@ -75,6 +76,7 @@ app.use(function(req, res, next) {
   app.use("/", indexRouter);
   app.use("/users", usersRouter);
   app.use("/auth", authRouter);
+  app.use("/valet", valetRouter);
 
   // passport registration
   passport.serializeUser((user, done) => done(null, user.id));

@@ -135,6 +135,20 @@ router.get("/getAllVehicles", async (req, res, next) => {
   }
 });
 
+router.get("/getAllVehiclesById/", async (req, res, next) => {
+  const userId = req.query.id;
+  try {
+    let vehicles = await Vehicle.findAll({
+      where: {
+        userId: userId,
+      },
+    });
+    return res.json({ message: "Got all vehicles by id!", vehicles: vehicles });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/test", async (req, res, next) => {
   let token = req.headers["x-access-token"];
   if (!token) {
@@ -150,7 +164,7 @@ router.get("/test", async (req, res, next) => {
       });
     }
     req.user.id = decoded.id;
-    
+
     const vehicles = await Vehicle.findAll({
       where: {
         userId: req.user.id,
@@ -158,7 +172,7 @@ router.get("/test", async (req, res, next) => {
     });
     const data = [req.user, ...vehicles];
 
-    res.status(200).json({user: data, userAuthenticated: true});
+    res.status(200).json({ user: data, userAuthenticated: true });
     next();
   });
 });
@@ -187,7 +201,7 @@ router.patch("/editProfile", async (req, res, next) => {
         email: newEmail,
         firstName: newFirstName,
         lastName: newLastname,
-        phoneNumber: newPhoneNumber
+        phoneNumber: newPhoneNumber,
       },
       { where: { id: userId } },
     );
